@@ -13,6 +13,7 @@ import {
   PaginationContainer,
   PageNavigationButton,
   PageNumberContainer,
+  PageButtonContainer,
 } from "./styles.table";
 import Box from "../../atoms/box.atom";
 
@@ -31,13 +32,29 @@ export const Table = ({
 }) => {
   console.log(tableData?.length, "hisfdoi");
 
+  const noDataString = "No data available";
+
   const [allSelected, setAllSelected] = useState(false);
   const [selectedIndexArray, setSelectedIndexArray] = useState([]);
-  const [entriesPerPage, setEntriesPerPage] = useState(15);
-  const [pageNumber, setPageNumber] = useState([1, 2, 3, 4, 5]);
+  const [entriesPerPage, setEntriesPerPage] = useState(10);
+  const [currentPageNumbersPalette, setCurrentPageNumbersPalette] = useState([
+    1, 2, 3,
+  ]);
+  const [currentPage, setCurrrentPage] = useState(1);
+  const [tableDataToBeShown, setTableDataToBeShown] = useState([]);
   const [numberOfPages, setNumberOfPages] = useState(
     tableData?.length / entriesPerPage
   );
+  const [isForwardPalleteButtonDisabled, setIsForwardPalleteButtonDisabled] =
+    useState(false);
+
+  const [isBackPalleteButtonDisabled, setIsBackPalleteButtonDisabled] =
+    useState(false);
+  const handleBackPaleteSelect = () => {};
+  const handleForwardPaleteSelect = () => {};
+  const handlePageSelect = (pageNumber) => {
+    setCurrrentPage(pageNumber);
+  };
 
   const handleMultiSelect = () => {
     if (allSelected) {
@@ -67,6 +84,14 @@ export const Table = ({
     }
   };
 
+  useEffect(() => {
+    const pageData = [];
+    const startingIndexForPage = (currentPage - 1) * entriesPerPage;
+    for (let i = 0; i < entriesPerPage; i++) {
+      pageData?.push(tableData[startingIndexForPage + i]);
+    }
+    setTableDataToBeShown(pageData);
+  }, [currentPage]);
   useEffect(() => {
     if (selectedIndexArray?.length == entriesPerPage) {
       setAllSelected(true);
@@ -102,7 +127,7 @@ export const Table = ({
             })}
           </TableHeaderContainer>
 
-          {tableData.map((dataItem, dataIndex) => {
+          {tableDataToBeShown.map((dataItem, dataIndex) => {
             return (
               <TableRowContainer key={`dataItemRowCheckBox_${dataIndex}`}>
                 {multiSelectCheckBox && (
@@ -198,12 +223,47 @@ export const Table = ({
         </TableBodyContainer>
       </TableContainer>
       <PaginationContainer>
-        <PageNavigationButton />
-        <PageNumberContainer></PageNumberContainer>
-        <PageNumberContainer></PageNumberContainer>
-        <PageNumberContainer></PageNumberContainer>
-        <PageNavigationButton />
+        <PageButtonContainer>
+          <PageNavigationButton
+            isDisabled={false}
+            onClick={handleBackPaleteSelect}
+          >
+            {"<"}
+          </PageNavigationButton>
+
+          {currentPageNumbersPalette?.map((currentPageNumber, index) => {
+            return (
+              <PageNumberContainer
+                isSelected={currentPage == currentPageNumber}
+                key={`${currentPageNumber}+${index}`}
+                onClick={() => handlePageSelect(currentPageNumber)}
+              >
+                {currentPageNumber}
+              </PageNumberContainer>
+            );
+          })}
+          <PageNavigationButton
+            isDisabled={false}
+            onClick={handleForwardPaleteSelect}
+          >
+            {">"}
+          </PageNavigationButton>
+        </PageButtonContainer>
       </PaginationContainer>
     </TableBoxContainer>
   );
 };
+
+/*
+Backend request - 
+Backend response - {
+  1. TableData to be displayed (assuming to be 100 entires per call for now)
+  2. If more data is available flag (if it returns an array of less than 100 entries or if there are only 100 and not 101)
+
+
+
+The default values of usestate hooks are displayed on top of the function, can be changed later
+Request to be sent if search params or sorting param changes, or when more data is required.
+Meanwhile, not giving user the liberty to change no. of entries per page and keeping it default for now. 
+}
+*/

@@ -83,18 +83,52 @@ export const CheckBoxInput = styled.input`
 
 export const PaginationContainer = styled(Box)`
   width: 100%;
-  height: 3.5rem;
-  background-color: red;
+  height: 2.8rem;
+  margin-top: 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 
-export const PageNavigationButton = styled("img")`
-  src: ${(props) => props?.src};
-  alt: ${(props) => props?.alt};
-  width: ${(props) => props?.width};
-  height: ${(props) => props?.height};
+// export const PageNavigationButton = styled("img")`
+//   src: ${(props) => props?.src};
+//   alt: ${(props) => props?.alt};
+//   width: ${(props) => props?.width};
+//   height: ${(props) => props?.height};
+// `;
+
+export const PageNavigationButton = styled(Box)`
+  height: 100%;
+  display: flex;
+  align-items: center;
+  color: rgb(107, 114, 128);
+  padding: 0px 16px;
+  border: 1px solid rgb(209, 213, 219);
+  cursor: pointer;
 `;
 
-export const PageNumberContainer = styled(Box)``;
+export const PageNumberContainer = styled(Box)`
+  height: 100%;
+  display: flex;
+  align-items: center;
+  color: ${(props) =>
+    props?.isSelected ? "rgb(28,100,242)" : "rgb(107, 114, 128)"};
+    background-color: ${(props) =>
+      props?.isSelected ? "rgb(235,245,255)" : "rgb(255,255,255)"};
+  padding: 0px 16px;
+  border: ${(props) =>
+    props?.isSelected
+      ? "1px solid rgb(164, 202, 254)"
+      : "1px solid rgb(209, 213, 219)"};
+      cursor: pointer;
+`;
+
+export const PageButtonContainer = styled(Box)`
+  height: 100%;
+  width: max-content;
+  border: 1px solid rgb(209, 213, 219);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+`;
