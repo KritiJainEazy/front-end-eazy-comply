@@ -5,6 +5,7 @@ import {
   PageLayoutContainer,
   MainBodyContainer,
   MainPageContainer,
+  NavBarPageLayoutContainer
 } from "./styles.pagelayout";
 import { Navbar } from "../Navbar";
 import Box from "../../atoms/box.atom";
@@ -12,7 +13,10 @@ import Box from "../../atoms/box.atom";
 export const PageLayout = ({ children }) => {
   return (
     <PageLayoutContainer>
-      <Navbar />
+      <NavBarPageLayoutContainer>
+        <Navbar />
+      </NavBarPageLayoutContainer>
+
       <MainBodyContainer>
         <SideBar />
         <MainPageContainer>{children}</MainPageContainer>

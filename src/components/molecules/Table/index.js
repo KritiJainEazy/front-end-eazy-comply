@@ -10,6 +10,9 @@ import {
   ActionMenuIcons,
   TableBoxContainer,
   CheckBoxInput,
+  PaginationContainer,
+  PageNavigationButton,
+  PageNumberContainer,
 } from "./styles.table";
 import Box from "../../atoms/box.atom";
 
@@ -24,11 +27,17 @@ export const Table = ({
   actionMenuContent = <ActionMenu actionMenuItems={[]} />,
   primaryKey = "",
   multiSelectCheckBox = true,
+  getData = () => void 0,
 }) => {
+  console.log(tableData?.length, "hisfdoi");
+
   const [allSelected, setAllSelected] = useState(false);
   const [selectedIndexArray, setSelectedIndexArray] = useState([]);
-  const [entriesPerPage, setEntriesPerPage] = useState(5);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [entriesPerPage, setEntriesPerPage] = useState(15);
+  const [pageNumber, setPageNumber] = useState([1, 2, 3, 4, 5]);
+  const [numberOfPages, setNumberOfPages] = useState(
+    tableData?.length / entriesPerPage
+  );
 
   const handleMultiSelect = () => {
     if (allSelected) {
@@ -188,6 +197,13 @@ export const Table = ({
           })}
         </TableBodyContainer>
       </TableContainer>
+      <PaginationContainer>
+        <PageNavigationButton />
+        <PageNumberContainer></PageNumberContainer>
+        <PageNumberContainer></PageNumberContainer>
+        <PageNumberContainer></PageNumberContainer>
+        <PageNavigationButton />
+      </PaginationContainer>
     </TableBoxContainer>
   );
 };

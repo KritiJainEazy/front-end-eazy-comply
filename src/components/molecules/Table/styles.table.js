@@ -4,6 +4,7 @@ import styled from "styled-components";
 export const TableBoxContainer = styled(Box)`
   width: 100%;
   padding: 32px 40px;
+  overflow-y: auto;
 `;
 export const TableContainer = styled("table")`
   width: 100%;
@@ -79,3 +80,21 @@ export const CheckBoxInput = styled.input`
   height: ${(props) => props?.height || "15px"};
   border-color: transparent;
 `;
+
+export const PaginationContainer = styled(Box)`
+  width: 100%;
+  height: 3.5rem;
+  background-color: red;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const PageNavigationButton = styled("img")`
+  src: ${(props) => props?.src};
+  alt: ${(props) => props?.alt};
+  width: ${(props) => props?.width};
+  height: ${(props) => props?.height};
+`;
+
+export const PageNumberContainer = styled(Box)``;

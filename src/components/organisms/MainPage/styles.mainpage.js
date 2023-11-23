@@ -4,18 +4,26 @@ import Box from "../../atoms/box.atom";
 export const MainPageBodyContainer = styled(Box)`
   height: 100%;
   width: 100%;
+  overflow: hidden;
 `;
 
 export const MainBodyContainer = styled(Box)`
   width: 100%;
-  height: 100%;
+  height: 79%;
+  overflow-y: auto;
+  ::-webkit-scrollbar{
+    display: none;
+  }
 `;
 
-export const HeaderContainer = styled(Box)``;
+export const HeaderContainer = styled(Box)`
+  width: 100%;
+  height: 21%;
+`;
 
 export const Header = styled(Box)`
   width: 100%;
-  height: 15%;
+  height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;

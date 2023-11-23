@@ -4,7 +4,7 @@ import Box from "../../atoms/box.atom";
 export const NavbarContainer = styled(Box)`
   width: 100%;
   max-width: 100%;
-  height: 3.5em;
+  height: 3.5rem;
   display: flex;
   justify-content: space-between;
   padding: 0px;
@@ -12,7 +12,6 @@ export const NavbarContainer = styled(Box)`
   border-bottom: 2px solid #e5e7eb;
   position: fixed;
   top: 0;
-  background-color: #fff;
   z-index: 1;
 `;
 

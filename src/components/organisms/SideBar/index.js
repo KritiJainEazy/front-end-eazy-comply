@@ -50,7 +50,7 @@ export const SideBar = () => {
     setIsExpanded(!isExpanded);
   };
   return (
-    <SideBarContainer width={isExpanded ? "18%" : "5%"}>
+    <SideBarContainer width={isExpanded ? "17.5%" : "4.5%"}>
       <CollapseButtonContainer>
         <CollapseButtonImageContainer
           onClick={handleSidebarCollapseButton}
