@@ -83,9 +83,10 @@ export const CheckBoxInput = styled.input`
 
 export const PaginationContainer = styled(Box)`
   width: 100%;
-  height: 2.8rem;
+  height: max-content;
   margin-top: 2rem;
   display: flex;
+  flex-direction: column; 
   justify-content: center;
   align-items: center;
 `;
@@ -104,7 +105,7 @@ export const PageNavigationButton = styled(Box)`
   color: rgb(107, 114, 128);
   padding: 0px 16px;
   border: 1px solid rgb(209, 213, 219);
-  cursor: pointer;
+  cursor: ${props => props?.buttonState || "pointer"};
 `;
 
 export const PageNumberContainer = styled(Box)`
@@ -124,7 +125,8 @@ export const PageNumberContainer = styled(Box)`
 `;
 
 export const PageButtonContainer = styled(Box)`
-  height: 100%;
+  height: 2.8rem;
+  margin-bottom: 20px;
   width: max-content;
   border: 1px solid rgb(209, 213, 219);
   border-radius: 10px;

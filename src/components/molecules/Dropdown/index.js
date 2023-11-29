@@ -58,7 +58,11 @@ const Dropdown = ({
   };
 
   const handleItemSelect = (selectedValue) => {
-    onItemSelect({ value: selectedValue?.title, isError: false });
+    onItemSelect({
+      value: selectedValue?.value,
+      title: selectedValue?.title,
+      isError: false,
+    });
     setSelectedValue(selectedValue?.title);
     //  handleSelect(selectedValue?.value);
     handleDropdownClose(true);

@@ -126,7 +126,7 @@ export const CreateForm = ({
           ...responseFieldValid,
           isTenantNameValid: !action?.payload?.isError,
         });
-        return { ...state, tenantName: action?.payload?.value };
+        return { ...state, tenantName: action?.payload?.title };
     }
   };
 

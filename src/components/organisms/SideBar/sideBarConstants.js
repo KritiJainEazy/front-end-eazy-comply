@@ -8,7 +8,7 @@ export const menuItems = [
       {
         subMenuTitle: "Organization",
         subMenuAction: () => {
-          console.log("heyyya");
+          console.log("Organization");
         },
       },
     ],

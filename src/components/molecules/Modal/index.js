@@ -17,7 +17,6 @@ export const Modal = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const modalContentRef = useRef();
-  //console.log(modalContentRef, "fijoiaoeifo");
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
