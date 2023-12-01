@@ -7,7 +7,6 @@ import {
   TableRowData,
   TableContainer,
   ActionMenu,
-  ActionMenuIcons,
   TableBoxContainer,
   CheckBoxInput,
   PaginationContainer,
@@ -33,6 +32,7 @@ export const Table = ({
   multiSelectCheckBox = true,
   //getMoreData = () => void 0,
 }) => {
+  //to change
   const entriesPerPageDropdownItems = [
     {
       title: "10 per page",
@@ -49,6 +49,12 @@ export const Table = ({
       value: "50",
       action: "",
     },
+    {
+      title: "59 per page",
+      value: "59",
+      action: "",
+    },
+
     // {
     //   title: "100 per page",
     //   value: "100",
@@ -60,11 +66,11 @@ export const Table = ({
 
   const noDataString = "No data available";
 
-  const checkForwardPaletteData = () => {};
-
   // temporary code to append data upto a certain point and a fake function for the time being
   const [tempDataAppend, setTempDataAppend] = useState(0);
   const MAX_APPENDS = 2;
+
+  let changeButtonAnswer = true;
 
   const MAX_PAGES_PER_PALLETE = 3;
 
@@ -75,15 +81,16 @@ export const Table = ({
   };
   const [isMoreDataAvailable, setIsMoreData] = useState(true);
 
-  const [allSelected, setAllSelected] = useState(false); //checkbox
-  const [selectedIndexArray, setSelectedIndexArray] = useState([]); //checkbox
+  const [allSelected, setAllSelected] = useState(false);
 
-  const [entriesPerPage, setEntriesPerPage] = useState(48); //pagination
+  const [selectedIndexArray, setSelectedIndexArray] = useState([]);
+
+  const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [currentPageNumbersPalette, setCurrentPageNumbersPalette] = useState(
     []
-  ); //pagination
-  const [currentPage, setCurrrentPage] = useState(1); //pagination
-  const [tableDataToBeShown, setTableDataToBeShown] = useState([]); //pagination
+  );
+  const [currentPage, setCurrrentPage] = useState(1);
+  const [tableDataToBeShown, setTableDataToBeShown] = useState([]);
   const [forwardPalletButtonState, setForwardPalletButtonState] = useState(
     PALLETE_BUTTON_STATES?.POINTER
   );
@@ -95,22 +102,14 @@ export const Table = ({
     const newPageNumberPallete = [];
     let tableDataLength = tableData?.length;
     for (let i = 0; i < MAX_PAGES_PER_PALLETE && tableDataLength > 0; i++) {
-      // if (tableDataLength / entriesPerPage > 0) {
       tableDataLength = tableDataLength - entriesPerPage;
       newPageNumberPallete.push(i + 1);
-      //}
     }
     setCurrentPageNumbersPalette(newPageNumberPallete);
+    setCurrrentPage(1);
   };
   const getMoreData = () => {
     setForwardPalletButtonState(PALLETE_BUTTON_STATES?.LOADING);
-    // const awaitFlag = setTimeout(() => {
-    //   console.log("Just wasting time to get api call effect");
-    //   return true;
-    // }, 2000);
-    // if (awaitFlag) {
-    //   console.log("await flag waited");
-    // }
     console.log("entering append data getMoreData");
     if (tempDataAppend <= MAX_APPENDS - 1) {
       tableData.push(...userTableAppendData);
@@ -148,34 +147,6 @@ export const Table = ({
     }
   };
 
-  useEffect(() => {
-    initializePagePallete();
-    getData();
-  }, []);
-
-  useEffect(() => {
-    if (!isMoreDataAvailable) {
-      const maxPageNumber = Math.ceil(tableData?.length / entriesPerPage);
-
-      if (
-        currentPageNumbersPalette[currentPageNumbersPalette?.length - 1] ==
-        maxPageNumber
-      ) {
-        setForwardPalletButtonState(PALLETE_BUTTON_STATES?.DISABLED);
-      } else {
-        setForwardPalletButtonState(PALLETE_BUTTON_STATES?.POINTER);
-      }
-    }
-  }, [currentPageNumbersPalette]);
-
-  const handleMultiSelectAction = () => {
-    const multiSelectArray = [];
-    selectedIndexArray?.map((selectedItemIndex) => {
-      multiSelectArray?.push(tableData[selectedItemIndex]);
-    });
-    console.log(multiSelectArray, selectedIndexArray);
-  };
-
   const handleBackPalleteSelect = () => {
     const firstPage = currentPageNumbersPalette[0];
     if (firstPage != 1) {
@@ -211,16 +182,16 @@ export const Table = ({
       );
 
       // to remove
-      let numberOfEntriesLeftToBeDisplayed =
-        tableData?.length - numberOfEntriesDisplayedSoFar;
-      console.log(
-        numberOfEntriesLeftToBeDisplayed,
-        "numberOfEntriesLeftToBeDisplayed"
-      );
+      // let numberOfEntriesLeftToBeDisplayed =
+      //   tableData?.length - numberOfEntriesDisplayedSoFar;
+      // console.log(
+      //   numberOfEntriesLeftToBeDisplayed,
+      //   "numberOfEntriesLeftToBeDisplayed"
+      // );
 
       getData();
 
-      numberOfEntriesLeftToBeDisplayed =
+      let numberOfEntriesLeftToBeDisplayed =
         tableData?.length - numberOfEntriesDisplayedSoFar;
       if (numberOfEntriesLeftToBeDisplayed > 0) {
         const newPageNumberPallet = [];
@@ -244,38 +215,7 @@ export const Table = ({
     setCurrrentPage(pageNumber);
   };
 
-  const handleMultiSelect = () => {
-    if (allSelected) {
-      setSelectedIndexArray([]);
-    } else {
-      const allSelectedNewArray = [];
-      const firstIndex = entriesPerPage * (currentPage - 1);
-      const createAllNewSelectedArray = () => {
-        for (let entry = 0; entry < entriesPerPage; entry++) {
-          //allSelectedNewArray?.push((pageNumber - 1) * entriesPerPage + entry);
-          allSelectedNewArray?.push(entry + firstIndex);
-        }
-      };
-      createAllNewSelectedArray();
-      setSelectedIndexArray(allSelectedNewArray);
-      console.log(allSelectedNewArray, "isfk");
-    }
-    setAllSelected(!allSelected);
-  };
-  const handleCheckboxSelect = (dataIndex) => {
-    if (selectedIndexArray?.includes(dataIndex)) {
-      setSelectedIndexArray(
-        selectedIndexArray?.filter((selectedIndexElement) => {
-          return selectedIndexElement != dataIndex;
-        })
-      );
-    } else {
-      setSelectedIndexArray([...selectedIndexArray, dataIndex]);
-    }
-  };
-
-  //re-rendering pagedata
-  useEffect(() => {
+  const renderingPageData = () => {
     const pageData = [];
     const startingIndexForPage = (currentPage - 1) * entriesPerPage;
     for (let i = 0; i < entriesPerPage; i++) {
@@ -285,20 +225,118 @@ export const Table = ({
       pageData?.push(tableData[startingIndexForPage + i]);
     }
     setTableDataToBeShown(pageData);
+  };
 
-    setAllSelected(false);
-    setSelectedIndexArray([]);
+  const handleMultiSelect = () => {
+    // setAllSelected(!allSelected);
+    const firstIndex = entriesPerPage * (currentPage - 1);
+    if (allSelected) {
+      const currentIndices = [];
+      for (let entry = 0; entry < entriesPerPage; entry++) {
+        currentIndices?.push(firstIndex + entry);
+      }
+
+      setSelectedIndexArray(() => {
+        return selectedIndexArray?.filter((selectedIndex) => {
+          return !currentIndices?.includes(selectedIndex);
+        });
+      }, setAllSelected(false));
+    } else {
+      const allSelectedNewArray = [];
+      for (let entry = 0; entry < entriesPerPage; entry++) {
+        if (!selectedIndexArray?.includes(entry + firstIndex)) {
+          allSelectedNewArray?.push(entry + firstIndex);
+        }
+      }
+      setSelectedIndexArray(() => {
+        return [...selectedIndexArray, ...allSelectedNewArray];
+      }, setAllSelected(true));
+    }
+  };
+
+  const handleCheckboxSelect = (dataIndex) => {
+    const tableDataIndex = entriesPerPage * (currentPage - 1) + dataIndex; //index as in tableData
+    if (selectedIndexArray?.includes(tableDataIndex)) {
+      setSelectedIndexArray(
+        selectedIndexArray?.filter((selectedIndex) => {
+          return selectedIndex != tableDataIndex;
+        })
+      );
+    } else {
+      setSelectedIndexArray([...selectedIndexArray, tableDataIndex]);
+    }
+  };
+  const handleMultiSelectAction = () => {
+    changeButtonAnswer = false;
+
+    // const multiSelectArray = [];
+    // selectedIndexArray?.map((selectedItemIndex) => {
+    //   multiSelectArray?.push(tableData[selectedItemIndex]);
+    // });
+    // console.log(multiSelectArray, selectedIndexArray);
+    console.log(selectedIndexArray, "selectedIndexArray");
+  };
+
+  const checkAllSelected = () => {
+    //      if(tableDataToBeShown?.length)     //not applicable on first render
+
+    if (tableDataToBeShown?.length) {
+      const firstIndex = entriesPerPage * (currentPage - 1);
+      const isAllSelected = tableDataToBeShown.every((dataIndex) => {
+        console.log(dataIndex, "checkallselected");
+        return selectedIndexArray.includes(firstIndex + dataIndex);
+      });
+      console.log(isAllSelected, "isAllSelected");
+      console.log(selectedIndexArray, tableDataToBeShown, "hi there");
+
+      setAllSelected(isAllSelected);
+    }
+  };
+
+  useEffect(() => {
+    initializePagePallete();
+    getData();
+  }, []);
+
+  //to be removed
+  useEffect(() => {
+    console.log(selectedIndexArray, "kajfhsgdn");
+  }, [selectedIndexArray]);
+
+  // useEffect(() => {
+  //   console.log(allSelected, "allSelectedhahah");
+  // }, [allSelected]);
+
+  useEffect(() => {
+    if (!isMoreDataAvailable) {
+      const maxPageNumber = Math.ceil(tableData?.length / entriesPerPage);
+
+      if (
+        currentPageNumbersPalette[currentPageNumbersPalette?.length - 1] ==
+        maxPageNumber
+      ) {
+        setForwardPalletButtonState(PALLETE_BUTTON_STATES?.DISABLED);
+      } else {
+        setForwardPalletButtonState(PALLETE_BUTTON_STATES?.POINTER);
+      }
+    }
+  }, [currentPageNumbersPalette]);
+
+  useEffect(() => {
+    renderingPageData();
+    // checkAllSelected();
   }, [currentPage]);
 
   useEffect(() => {
-    if (selectedIndexArray?.length == entriesPerPage) {
-      setAllSelected(true);
-    }
+    // if (selectedIndexArray?.length == entriesPerPage) {
+    //   setAllSelected(true);
+    // }
+    //checkAllSelected();
   }, [selectedIndexArray]);
 
   useEffect(() => {
-    setCurrrentPage(1);
-    //  setCurrentPageNumbersPalette([1, 2, 3]);
+    initializePagePallete();
+    renderingPageData();
   }, [entriesPerPage]);
   return (
     <TableBoxContainer>
@@ -307,10 +345,6 @@ export const Table = ({
           <TableHeaderContainer>
             {multiSelectCheckBox && (
               <TableHeaderData width="4%" key={`headerItemCheckBox`}>
-                {/* <CheckBoxInput
-                  onChange={handleMultiSelect}
-                  checked={allSelected}
-                /> */}
                 <CheckBoxInput
                   type={"checkbox"}
                   onChange={handleMultiSelect}
@@ -335,47 +369,20 @@ export const Table = ({
               <TableRowContainer key={`dataItemRowCheckBox_${dataIndex}`}>
                 {multiSelectCheckBox && (
                   <TableRowData key={`rowItemCheckBox${dataIndex}`}>
-                    {/* <CheckBoxInput
-                      onChange={() => handleCheckboxSelect(dataIndex)}
-                    /> */}
                     <CheckBoxInput
                       type={"checkbox"}
                       onChange={() => handleCheckboxSelect(dataIndex)}
                       checked={
-                        selectedIndexArray?.includes(dataIndex) ? true : false
+                        selectedIndexArray?.includes(
+                          dataIndex + entriesPerPage * (currentPage - 1)
+                        )
+                          ? true
+                          : false
                       }
                     />
                   </TableRowData>
                 )}
-                {/* {tableHeaderData.map((headerData, dataHeaderIndex) => {
-                  if (isActionMenu) {
-                    if (
-                      headerData?.value != constantStrings?.TABLE_ACTION_MENU
-                    ) {
-                      return (
-                        <TableRowData
-                          key={`dataHeaderIndex_${dataHeaderIndex}`}
-                          color={headerData?.value == primaryKey ? 0.6 : 0.4}
-                        >
-                          {dataItem[headerData?.value]}
-                        </TableRowData>
-                      );
-                    } else {
-                      return (
-                        <TableRowData
-                          key={`dataHeaderIndex_${dataHeaderIndex}`}
-                        >
-                          {actionMenuContent}
-                        </TableRowData>
-                      );
-                    }
-                  }
-                  return (
-                    <TableRowData key={`dataHeaderIndex_${dataHeaderIndex}`}>
-                      {dataItem[headerData?.value]}
-                    </TableRowData>
-                  );
-                })} */}
+
                 {tableHeaderData.map((headerData, dataHeaderIndex) => {
                   switch (headerData?.value) {
                     case actionMenuHeaderTitle:
@@ -459,7 +466,7 @@ export const Table = ({
         <Dropdown
           dropdownItems={entriesPerPageDropdownItems}
           title={entriesPerPageDropdownTitle}
-          dropdownFieldBoxHeader={entriesPerPage + "per page"}
+          dropdownFieldBoxHeader={entriesPerPage + "\u0020 per page"}
           onItemSelect={(selectedItem) =>
             setEntriesPerPage(selectedItem?.value)
           }
