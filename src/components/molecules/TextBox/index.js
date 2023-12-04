@@ -19,6 +19,7 @@ export const Textbox = ({
   validationCheck = () => void 0,
   isRequired = false,
   onPayloadChange = () => void 0,
+  type = "text",
 }) => {
   const [isValidationError, setIsValidationError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -50,7 +51,7 @@ export const Textbox = ({
       {textBoxTitle && <TextboxTitle>{textBoxTitle}</TextboxTitle>}
 
       <TextboxInputField
-        type="text"
+        type={type}
         placeholder={placeholder}
         border={border}
         focusBorder={focusBorder}

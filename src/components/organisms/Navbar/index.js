@@ -6,7 +6,7 @@ import {
   RightContainer,
   LogoNameContainer,
 } from "./styles.navbar";
-import HawkEyeLogo from "../../../assets/hawkeye.png";
+import EasyComplyLogo from "../../../assets/easyComply.png";
 import NotificationIcon from "../../../assets/notification.png";
 import ProfileIcon from "../../../assets/profile-user.png";
 import { companyName } from "../../../mockData/mockdata";
@@ -24,7 +24,7 @@ export const Navbar = () => {
     <NavbarContainer>
       <LeftContainer>
         <LogoContainer>
-          <img height="100%" src={HawkEyeLogo} />
+          <img height="100%" src={EasyComplyLogo} />
         </LogoContainer>
         <LogoNameContainer>{companyName}</LogoNameContainer>
       </LeftContainer>

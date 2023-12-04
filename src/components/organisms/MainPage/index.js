@@ -43,11 +43,11 @@ export const MainPage = ({
             {showHeaderButton && (
               <Button
                 margin="0 0 0 2.5em"
-                height="28px"
-                width="98px"
+                height="2.75rem"
+                width="9rem"
                 buttonTitle={headerButtonTitle}
                 handleButtonClick={handleHeaderButton}
-                padding={"8px 24px"}
+                padding={"0.5rem 1.5rem"}
                 buttonIcon={headerButtonIcon}
                 iconHeight={iconHeight}
               />

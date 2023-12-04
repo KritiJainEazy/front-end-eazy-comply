@@ -238,12 +238,12 @@ export const CreateForm = ({
       </Box>
       <Box width="100%" display="flex" justifyContent="center" mt="20px">
         <Button
-          margin="0 0 0 2.5em"
-          height="28px"
-          width="98px"
+          margin="0 0 0 2.5rem"
+          height="2.75rem"
+          width="9rem"
           buttonTitle={formSubmitButtonTitle}
           handleButtonClick={handleFormSubmitButton}
-          padding={"8px 24px"}
+          padding={"0.5rem 1.5rem"}
           buttonIcon={AddIcon}
           iconHeight={"16px"}
           disabled={checkDisabled()}
