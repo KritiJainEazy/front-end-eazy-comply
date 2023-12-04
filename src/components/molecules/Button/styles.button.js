@@ -3,6 +3,7 @@ import Box from "../../atoms/box.atom";
 
 export const ButtonContainer = styled("button")`
   all: unset;
+  box-sizing: border-box;
   height: ${(props) => props?.height || "max-content"};
   width: ${(props) => props?.width || "max-content"};
   border-radius: ${(props) => props?.borderRadius || "5px"};
@@ -15,7 +16,7 @@ export const ButtonContainer = styled("button")`
   font-size: ${(props) => props.fontSize || "18px"};
   font-weight: ${(props) => props.fontWeight || "400"};
   display: flex;
-  justify-content: space-between;
+  justify-content: ${(props) => props.justifyContent};
   align-items: center;
   &:hover {
     background-color: ${(props) => props?.hoverBgColor || "rgb(37 99 235)"};

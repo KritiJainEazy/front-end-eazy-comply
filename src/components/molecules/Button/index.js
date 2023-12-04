@@ -30,8 +30,9 @@ export const Button = ({
       padding={padding}
       margin={margin}
       onClick={handleButtonClick}
+      justifyContent={buttonIcon ? "space-between" : "center"}
     >
-      <img src={buttonIcon} height={iconHeight} />
+      {buttonIcon && <img src={buttonIcon} height={iconHeight} />}
       {buttonTitle}
     </ButtonContainer>
   );
