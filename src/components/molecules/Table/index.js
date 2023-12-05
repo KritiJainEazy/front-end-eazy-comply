@@ -224,11 +224,12 @@ export const Table = ({
       }
       pageData?.push(tableData[startingIndexForPage + i]);
     }
-    setTableDataToBeShown(pageData);
+    setTableDataToBeShown(() => {
+      return pageData;
+    }, checkAllSelected());
   };
 
   const handleMultiSelect = () => {
-    // setAllSelected(!allSelected);
     const firstIndex = entriesPerPage * (currentPage - 1);
     if (allSelected) {
       const currentIndices = [];
@@ -267,14 +268,12 @@ export const Table = ({
     }
   };
   const handleMultiSelectAction = () => {
-    changeButtonAnswer = false;
-
-    // const multiSelectArray = [];
-    // selectedIndexArray?.map((selectedItemIndex) => {
-    //   multiSelectArray?.push(tableData[selectedItemIndex]);
-    // });
-    // console.log(multiSelectArray, selectedIndexArray);
-    console.log(selectedIndexArray, "selectedIndexArray");
+    const multiSelectArray = [];
+    selectedIndexArray?.map((selectedItemIndex) => {
+      multiSelectArray?.push(tableData[selectedItemIndex]);
+    });
+    console.log(multiSelectArray, selectedIndexArray);
+    //  console.log(selectedIndexArray, "selectedIndexArray");
   };
 
   const checkAllSelected = () => {
@@ -324,7 +323,6 @@ export const Table = ({
 
   useEffect(() => {
     renderingPageData();
-    // checkAllSelected();
   }, [currentPage]);
 
   useEffect(() => {
