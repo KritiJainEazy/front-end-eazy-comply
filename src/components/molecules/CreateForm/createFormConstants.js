@@ -5,7 +5,7 @@ export const formConstants = {
     userName: "Username",
     email: "Email",
     contact: "Contact",
-    selectTenantName: "Select Tenant Name",
+    selectUserType: "Select User Type",
   },
   placeholder: {
     firstName: "Enter first name",
@@ -15,4 +15,3 @@ export const formConstants = {
     contact: "Enter contact",
   },
 };
-

@@ -5,7 +5,7 @@ import { Button } from "../Button";
 import Box from "../../atoms/box.atom";
 import { formConstants } from "./createFormConstants";
 import Dropdown from "../Dropdown";
-import { tenantDropdownMockdata } from "../../../mockData/mockdata";
+import { userTypeDropDownMockData } from "../../../mockData/mockdata";
 import AddIcon from "../../../assets/addIcon.png";
 import {
   isEmailValidCheck,
@@ -22,7 +22,7 @@ export const CreateForm = ({
   response = {},
 }) => {
   const res = {
-    tenantName: {
+    userType: {
       value: "",
       isValid: true,
       isRequired: true,
@@ -54,7 +54,7 @@ export const CreateForm = ({
     },
   };
   const FIELD_NAMES = {
-    TENANT_NAME: "tenantName",
+    USER_TYPE: "userType",
     FIRST_NAME: "firstName",
     LAST_NAME: "lastName",
     USERNAME: "userName",
@@ -63,7 +63,7 @@ export const CreateForm = ({
   };
 
   const responseToBeSubmitted = {
-    tenantName: "",
+    userType: "",
     firstName: "",
     lastName: "",
     userName: "",
@@ -72,7 +72,7 @@ export const CreateForm = ({
   };
 
   const [responseFieldValid, setResponseFieldValid] = useState({
-    isTenantNameValid: false,
+    isUserTypeValid: false,
     isFirstNameValid: false,
     isLastNameValid: false,
     isUserNameValid: false,
@@ -86,7 +86,7 @@ export const CreateForm = ({
     UPDATE_USERNAME: "updateUserName",
     UPDATE_EMAIL: "updateEmail",
     UPDATE_CONTACT: "updateContact",
-    UPDATE_TENANT_NAME: "updateTenantName",
+    UPDATE_USER_TYPE: "updateUserType",
   };
 
   const formResponseReducer = (state, action) => {
@@ -121,12 +121,12 @@ export const CreateForm = ({
           isContactValid: !action?.payload?.isError,
         });
         return { ...state, contact: action?.payload?.value };
-      case ACTIONS?.UPDATE_TENANT_NAME:
+      case ACTIONS?.UPDATE_USER_TYPE:
         setResponseFieldValid({
           ...responseFieldValid,
-          isTenantNameValid: !action?.payload?.isError,
+          isUserTypeValid: !action?.payload?.isError,
         });
-        return { ...state, tenantName: action?.payload?.title };
+        return { ...state, userType: action?.payload?.title };
     }
   };
 
@@ -144,7 +144,7 @@ export const CreateForm = ({
       responseFieldValid?.isEmailValid &&
       responseFieldValid?.isFirstNameValid &&
       responseFieldValid?.isLastNameValid &&
-      responseFieldValid?.isTenantNameValid &&
+      responseFieldValid?.isUserTypeValid &&
       responseFieldValid?.isUserNameValid
     ) {
       return false;
@@ -156,12 +156,12 @@ export const CreateForm = ({
       <Box width="100%" mb="1em">
         <Dropdown
           isRequired={true}
-          title={formConstants?.title?.selectTenantName}
-          dropdownItems={tenantDropdownMockdata}
-          onItemSelect={(tenantNamePayload) => {
+          title={formConstants?.title?.selectUserType}
+          dropdownItems={userTypeDropDownMockData}
+          onItemSelect={(userTypePayload) => {
             formResponseDispatch({
-              type: ACTIONS?.UPDATE_TENANT_NAME,
-              payload: tenantNamePayload,
+              type: ACTIONS?.UPDATE_USER_TYPE,
+              payload: userTypePayload,
             });
           }}
         />

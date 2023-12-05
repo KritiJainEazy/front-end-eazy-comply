@@ -3,20 +3,20 @@ export const userData = {
   organisation: "johndoe@xyz.com",
 };
 
-export const tenantDropdownMockdata = [
+export const userTypeDropDownMockData = [
   {
-    title: "Tenant 1",
-    value: "tenant1",
+    title: "User role 1",
+    value: "User role1",
     action: "",
   },
   {
-    title: "Tenant 2",
-    value: "tenant2",
+    title: "User role 2",
+    value: "User role2",
     action: "",
   },
   {
-    title: "Tenant 3",
-    value: "tenant3",
+    title: "User role 3",
+    value: "User role3",
     action: "",
   },
 ];
