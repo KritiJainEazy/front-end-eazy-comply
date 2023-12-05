@@ -46,6 +46,7 @@ import { CheckBoxInput } from "../../../molecules/Table/styles.table";
 import { emailIdVaildation } from "./loginPageValidationCheck";
 import { LoginTextBox } from "../../../molecules/LoginTextBox";
 import { LoginPageCard } from "../../../molecules/LoginPageCard";
+import { fieldRequiredCheck } from "../../../../validationChecks/validationChecks";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -68,6 +69,10 @@ export const LoginPage = () => {
 
         return { ...state, emailId: action?.payload?.value };
       case LOGIN_FORM_ACTIONS?.UPDATE_PASSWORD:
+        setLoginFormResponseStateValid({
+          ...loginFormResponseStateValid,
+          isPasswordValid: !action?.payload?.isError,
+        });
         return { ...state, password: action?.payload?.value };
       case LOGIN_FORM_ACTIONS?.RESET_LOGIN_FORM:
         setLoginFormResponseStateValid(initialLoginFormResponseValid);
@@ -176,7 +181,13 @@ export const LoginPage = () => {
         type={"text"}
         margin="0 0 1.3rem 0"
         placeholder={LOGIN_CARD_VALUES?.LOGIN_BODY_MAIN_EMAIL}
-        value={loginFormResponseState?.emailId}
+        isRequired={true}
+        handleIsRequired={(errorStatus) => {
+          setLoginFormResponseStateValid({
+            ...loginFormResponseStateValid,
+            isEmailValid: !errorStatus,
+          });
+        }}
         validationCheck={emailIdVaildation}
         onChange={(payload) => {
           loginFormResponseDispatch({
@@ -190,7 +201,8 @@ export const LoginPage = () => {
         type={"password"}
         margin="0 0 1.3rem 0"
         placeholder={LOGIN_CARD_VALUES?.LOGIN_BODY_MAIN_PASSWORD}
-        value={loginFormResponseState?.password}
+        isRequired={true}
+        validationCheck={fieldRequiredCheck}
         onChange={(payload) => {
           loginFormResponseDispatch({
             type: LOGIN_FORM_ACTIONS?.UPDATE_PASSWORD,
@@ -207,7 +219,8 @@ export const LoginPage = () => {
         type={"text"}
         margin="0 0 1.3rem 0"
         placeholder={LOGIN_CARD_VALUES?.FORGOT_PASSWORD_BODY_MAIN_USERNAME}
-        value={requestPasswordFormResponseState?.userName}
+        isRequired={true}
+        validationCheck={fieldRequiredCheck}
         onChange={(payload) => {
           requestPasswordFormResponseDispatch({
             type: REQUEST_PASSWORD_FORM_ACTIONS?.UPDATE_USERNAME,
@@ -219,7 +232,7 @@ export const LoginPage = () => {
         type={"text"}
         margin="0 0 1.3rem 0"
         placeholder={LOGIN_CARD_VALUES?.FORGOT_PASSWORD_BODY_MAIN_EMAIL}
-        value={requestPasswordFormResponseState?.workEmailId}
+        isRequired={true}
         validationCheck={emailIdVaildation}
         onChange={(payload) => {
           requestPasswordFormResponseDispatch({
