@@ -62,7 +62,6 @@ export const Table = ({
     // },
   ];
   const entriesPerPageDropdownTitle = "Select number of entries per page";
-  console.log(tableData?.length, "hisfdoi");
 
   const noDataString = "No data available";
 
@@ -215,6 +214,24 @@ export const Table = ({
     setCurrrentPage(pageNumber);
   };
 
+  const checkAllSelected = () => {
+    //      if(tableDataToBeShown?.length)     //not applicable on first render
+    if (tableDataToBeShown?.length) {
+      const firstIndex = entriesPerPage * (currentPage - 1);
+      const isAllSelected = tableDataToBeShown.every((dataItem, dataIndex) => {
+        console.log(
+          selectedIndexArray.includes(firstIndex + dataIndex),
+          "dataItem huahua"
+        );
+        return selectedIndexArray.includes(firstIndex + dataIndex);
+      });
+      console.log(isAllSelected, "huahua isAllSelected");
+      console.log(selectedIndexArray, tableDataToBeShown, "huahua  hi there");
+
+      return isAllSelected;
+    }
+  };
+
   const renderingPageData = () => {
     const pageData = [];
     const startingIndexForPage = (currentPage - 1) * entriesPerPage;
@@ -224,9 +241,8 @@ export const Table = ({
       }
       pageData?.push(tableData[startingIndexForPage + i]);
     }
-    setTableDataToBeShown(() => {
-      return pageData;
-    }, checkAllSelected());
+    setTableDataToBeShown(pageData);
+    setAllSelected(checkAllSelected());
   };
 
   const handleMultiSelect = () => {
@@ -273,23 +289,6 @@ export const Table = ({
       multiSelectArray?.push(tableData[selectedItemIndex]);
     });
     console.log(multiSelectArray, selectedIndexArray);
-    //  console.log(selectedIndexArray, "selectedIndexArray");
-  };
-
-  const checkAllSelected = () => {
-    //      if(tableDataToBeShown?.length)     //not applicable on first render
-
-    if (tableDataToBeShown?.length) {
-      const firstIndex = entriesPerPage * (currentPage - 1);
-      const isAllSelected = tableDataToBeShown.every((dataIndex) => {
-        console.log(dataIndex, "checkallselected");
-        return selectedIndexArray.includes(firstIndex + dataIndex);
-      });
-      console.log(isAllSelected, "isAllSelected");
-      console.log(selectedIndexArray, tableDataToBeShown, "hi there");
-
-      setAllSelected(isAllSelected);
-    }
   };
 
   useEffect(() => {
@@ -301,10 +300,6 @@ export const Table = ({
   useEffect(() => {
     console.log(selectedIndexArray, "kajfhsgdn");
   }, [selectedIndexArray]);
-
-  // useEffect(() => {
-  //   console.log(allSelected, "allSelectedhahah");
-  // }, [allSelected]);
 
   useEffect(() => {
     if (!isMoreDataAvailable) {
@@ -326,10 +321,7 @@ export const Table = ({
   }, [currentPage]);
 
   useEffect(() => {
-    // if (selectedIndexArray?.length == entriesPerPage) {
-    //   setAllSelected(true);
-    // }
-    //checkAllSelected();
+    setAllSelected(checkAllSelected());
   }, [selectedIndexArray]);
 
   useEffect(() => {
