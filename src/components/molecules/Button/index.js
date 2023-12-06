@@ -1,6 +1,6 @@
 import React from "react";
 import Box from "../../atoms/box.atom";
-import { ButtonContainer } from "./styles.button";
+import { ButtonContainer, ButtonIconContainer } from "./styles.button";
 
 export const Button = ({
   buttonTitle = "",
@@ -32,7 +32,9 @@ export const Button = ({
       onClick={handleButtonClick}
       justifyContent={buttonIcon ? "space-between" : "center"}
     >
-      {buttonIcon && <img src={buttonIcon} height={iconHeight} />}
+      {buttonIcon && (
+        <ButtonIconContainer src={buttonIcon} height={iconHeight} />
+      )}
       {buttonTitle}
     </ButtonContainer>
   );

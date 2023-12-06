@@ -26,9 +26,8 @@ export const ButtonContainer = styled("button")`
     rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px;
 `;
 
-export const ButtonIconContainer = styled("img")`
+export const ButtonIconContainer = styled.img`
   height: ${(props) => props?.height || "100%"};
-  width: ${(props) => props?.width || "100%"};
   src: ${(props) => props?.src};
   alt: ${(props) => props?.alt};
   margin-right: ${(props) => props?.mr || "5px"};
