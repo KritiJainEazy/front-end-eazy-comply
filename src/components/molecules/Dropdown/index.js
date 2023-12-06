@@ -10,7 +10,7 @@ import {
   DropdownContainer,
   DropdownErrorMessage,
 } from "./styles.dropdown";
-import DownArrow from "../../../assets/down-arrow-coloured.png";
+import DownArrow from "../../../assets/down-arrow-solid.png";
 
 const Dropdown = ({
   width = "",

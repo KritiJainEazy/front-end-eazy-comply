@@ -38,7 +38,7 @@ export const DropdownMenuContainer = styled(Box)`
 
 export const DropdownArrow = styled("img")`
   src: ${(props) => props?.src};
-  height: ${(props) => props?.height || "1rem"};
+  height: ${(props) => props?.height || "0.25rem"};
 `;
 export const DropdownMenuItem = styled(Box)`
   box-sizing: content-box;
