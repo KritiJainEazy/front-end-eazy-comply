@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MainPage } from "../MainPage";
 import { Table } from "../../molecules/Table";
 import {
@@ -10,19 +10,32 @@ import { ActionMenu } from "../../molecules/ActionMenu";
 import EditIcon from "../../../assets/edit-icon.png";
 import DeleteIcon from "../../../assets/delete-icon.png";
 import AddIcon from "../../../assets/addIcon.png";
-import { GetAssetAddress } from "../../../assets";
+import ExportIcon from "../../../assets/export.png";
 import { NAV_CONFIG } from "../../../constants/navConfig";
 import { useNavigate } from "react-router-dom";
 import {
   constantStrings,
   placeholderStrings,
 } from "../../../constants/magicString";
+import { jsonToCSV } from "../../../utils/jsonToCSV";
 
 export const UserPage = () => {
+  const [dataSelected, setDataSelected] = useState([]);
+
   const navigate = useNavigate();
   const handleHeaderButton = () => {
     navigate(NAV_CONFIG?.NAV_ADD_USER);
   };
+
+  const getSelectedData = (data = []) => {
+    setDataSelected(data);
+  };
+
+  const handleExportButton = () => {
+    console.log(dataSelected, "dataSelectedfs");
+    jsonToCSV(constantStrings?.USER_PAGE_EXPORT_FILENAME, dataSelected);
+  };
+
   const handleEditClick = () => {
     console.log("Edit");
   };
@@ -49,6 +62,7 @@ export const UserPage = () => {
       actionMenuHeaderTitle="userActionMenu"
       activeStatusHeaderTitle="userStatus"
       actionMenuContent={userTableActionMenuContent}
+      getMultipleSelectedArray={getSelectedData}
       primaryKey="userId"
     />
   );
@@ -59,15 +73,20 @@ export const UserPage = () => {
     showHeaderButton: true,
     headerButtonTitle: constantStrings?.USER_PAGE_HEADER_BUTTON_TITLE,
     headerButtonIcon: AddIcon,
+    headerButtonIconHeight: "16px",
+    handleExportButton: handleExportButton,
+    showExportButton: true,
+    exportButtonTitle: constantStrings?.EXPORT,
+    exportButtonIcon: ExportIcon,
+    exportButtonIconHeight: "16px",
     mainPageContent: userPageMainComponent,
-    iconHeight: "16px",
     showSearchBar: true,
-    searchBoxPlaceholder: placeholderStrings?.SEARCH_BAR_USER_PAGE,
     SearchbarAcion: (text) => {
       setTimeout(() => {
         console.log("userpage search", text);
       }, 300);
     },
+    searchBoxPlaceholder: placeholderStrings?.SEARCH_BAR_USER_PAGE,
   };
 
   return <MainPage {...userPageProps} />;

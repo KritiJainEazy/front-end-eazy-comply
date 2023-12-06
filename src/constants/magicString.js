@@ -6,6 +6,8 @@ export const constantStrings = {
   ACTIVE_STATUS: "status",
   USER_PAGE_HEADER_TITLE: "User",
   USER_PAGE_HEADER_BUTTON_TITLE: "Add User",
+  EXPORT: "Export",
+  USER_PAGE_EXPORT_FILENAME: "User Details"
 };
 
 export const placeholderStrings = {

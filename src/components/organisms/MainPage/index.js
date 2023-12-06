@@ -14,10 +14,15 @@ import { SearchBox } from "../../molecules/SearchBox";
 export const MainPage = ({
   headerTitle = "",
   handleHeaderButton = () => void 0,
+  showHeaderButton = false,
   headerButtonTitle = "",
   headerButtonIcon = "",
-  iconHeight = "",
-  showHeaderButton = false,
+  headerButtonIconHeight = "",
+  handleExportButton = () => void 0,
+  showExportButton = false,
+  exportButtonTitle = "",
+  exportButtonIcon = "",
+  exportButtonIconHeight = "",
   mainPageContent = <></>,
   showSearchBar = false,
   SearchbarAcion = () => void 0,
@@ -49,7 +54,19 @@ export const MainPage = ({
                 handleButtonClick={handleHeaderButton}
                 padding={"0.5rem 1.5rem"}
                 buttonIcon={headerButtonIcon}
-                iconHeight={iconHeight}
+                iconHeight={headerButtonIconHeight}
+              />
+            )}
+            {showExportButton && (
+              <Button
+                margin="0 0 0 2.5em"
+                height="2.75rem"
+                width="9rem"
+                buttonTitle={exportButtonTitle}
+                handleButtonClick={handleExportButton}
+                padding={"0.5rem 1.5rem"}
+                buttonIcon={exportButtonIcon}
+                iconHeight={exportButtonIconHeight}
               />
             )}
           </Box>

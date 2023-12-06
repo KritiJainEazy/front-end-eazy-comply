@@ -30,6 +30,7 @@ export const Table = ({
   actionMenuContent = <ActionMenu actionMenuItems={[]} />,
   primaryKey = "",
   multiSelectCheckBox = true,
+  getMultipleSelectedArray = () => void 0,
   //getMoreData = () => void 0,
 }) => {
   //to change
@@ -283,11 +284,16 @@ export const Table = ({
       setSelectedIndexArray([...selectedIndexArray, tableDataIndex]);
     }
   };
-  const handleMultiSelectAction = () => {
+
+  const getDataFromSelectedIndex = () => {
     const multiSelectArray = [];
     selectedIndexArray?.map((selectedItemIndex) => {
       multiSelectArray?.push(tableData[selectedItemIndex]);
     });
+    return multiSelectArray;
+  };
+  const handleMultiSelectAction = () => {
+    const multiSelectArray = getDataFromSelectedIndex();
     console.log(multiSelectArray, selectedIndexArray);
   };
 
@@ -299,6 +305,8 @@ export const Table = ({
   //to be removed
   useEffect(() => {
     console.log(selectedIndexArray, "kajfhsgdn");
+
+    getMultipleSelectedArray(getDataFromSelectedIndex());
   }, [selectedIndexArray]);
 
   useEffect(() => {
