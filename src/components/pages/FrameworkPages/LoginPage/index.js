@@ -40,17 +40,16 @@ import {
   REQUEST_PASSWORD_FORM_ACTIONS,
   initialRequestPasswordFormResponseValid,
 } from "./loginPageConstants";
-import { Textbox } from "../../../molecules/TextBox";
-import Box from "../../../atoms/box.atom";
-import { CheckBoxInput } from "../../../molecules/Table/styles.table";
 import { emailIdVaildation } from "./loginPageValidationCheck";
 import { LoginTextBox } from "../../../molecules/LoginTextBox";
 import { LoginPageCard } from "../../../molecules/LoginPageCard";
 import { fieldRequiredCheck } from "../../../../validationChecks/validationChecks";
+import { useCsrfToken } from "../../../../utils/useCsrfToken";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const [rememberMeActive, setRememberMeActive] = useState(false);
+  const { postLoginCredentials } = useCsrfToken();
 
   const [isForgotPasswordPanel, setIsForgotPasswordPanel] = useState(false);
 
@@ -120,8 +119,15 @@ export const LoginPage = () => {
   );
 
   const handleLoginClick = () => {
-    console.log(loginFormResponseState, "Sign in");
-    // navigate(NAV_CONFIG?.NAV_USER_PAGE);
+    console.log(loginFormResponseState, "checking the flow 1");
+    const loginResponse = postLoginCredentials(
+      NAV_CONFIG?.NAV_LOGIN_LANDING_PAGE,
+      loginFormResponseState
+    );
+
+    if (loginResponse?.token) {
+      navigate(NAV_CONFIG?.NAV_USER_PAGE);
+    }
   };
 
   const handleRequestPasswordClick = () => {

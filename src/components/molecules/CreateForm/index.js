@@ -13,6 +13,8 @@ import {
   isLastNameValidCheck,
   isUsernameValidCheck,
 } from "./validationCheck";
+import { useCsrfToken } from "../../../utils/useCsrfToken";
+import { NAV_CONFIG, REQUEST_TYPES } from "../../../constants/navConfig";
 
 export const CreateForm = ({
   formFields = {},
@@ -21,6 +23,7 @@ export const CreateForm = ({
   fieldRequired = {},
   response = {},
 }) => {
+  const { makeRequestWithCSRFToken } = useCsrfToken();
   const res = {
     userType: {
       value: "",
@@ -137,6 +140,11 @@ export const CreateForm = ({
 
   const handleFormSubmitButton = () => {
     console.log(formResponseState);
+    makeRequestWithCSRFToken(
+      `${NAV_CONFIG?.NAV_USER_PAGE}${NAV_CONFIG?.NAV_ADD_USER}`,
+      REQUEST_TYPES?.POST,
+      formResponseState
+    );
   };
   const checkDisabled = () => {
     if (
