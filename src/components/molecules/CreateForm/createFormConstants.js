@@ -2,16 +2,16 @@ export const formConstants = {
   title: {
     firstName: "First Name",
     lastName: "Last Name",
-    userName: "Username",
+    name: "name",
     email: "Email",
-    contact: "Contact",
+    password: "Password",
     selectUserType: "Select User Type",
   },
   placeholder: {
     firstName: "Enter first name",
     lastName: "Enter last name",
-    userName: "Enter username",
+    name: "Enter name",
     email: "Enter email",
-    contact: "Enter contact",
+    password: "Enter password",
   },
 };

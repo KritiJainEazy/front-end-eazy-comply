@@ -5,18 +5,18 @@ export const userData = {
 
 export const userTypeDropDownMockData = [
   {
-    title: "User role 1",
-    value: "User role1",
+    title: "Admin",
+    value: "Admin",
     action: "",
   },
   {
-    title: "User role 2",
-    value: "User role2",
+    title: "User",
+    value: "User",
     action: "",
   },
   {
-    title: "User role 3",
-    value: "User role3",
+    title: "Vendor",
+    value: "Vendor",
     action: "",
   },
 ];

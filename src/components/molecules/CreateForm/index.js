@@ -11,7 +11,7 @@ import {
   isEmailValidCheck,
   isFirstNameValidCheck,
   isLastNameValidCheck,
-  isUsernameValidCheck,
+  isNameValidCheck,
 } from "./validationCheck";
 import { useCsrfToken } from "../../../utils/useCsrfToken";
 import { NAV_CONFIG, REQUEST_TYPES } from "../../../constants/navConfig";
@@ -23,7 +23,7 @@ export const CreateForm = ({
   fieldRequired = {},
   response = {},
 }) => {
-  const { makeRequestWithCSRFToken } = useCsrfToken();
+  const { makeRequestWithCSRFToken, testPostFuncion } = useCsrfToken();
   const res = {
     userType: {
       value: "",
@@ -40,7 +40,7 @@ export const CreateForm = ({
       isValid: true,
       isRequired: true,
     },
-    userName: {
+    name: {
       value: "",
       isValid: true,
       isRequired: true,
@@ -50,7 +50,7 @@ export const CreateForm = ({
       isValid: true,
       isRequired: true,
     },
-    contact: {
+    password: {
       value: "",
       isValid: true,
       isRequired: true,
@@ -60,35 +60,35 @@ export const CreateForm = ({
     USER_TYPE: "userType",
     FIRST_NAME: "firstName",
     LAST_NAME: "lastName",
-    USERNAME: "userName",
+    NAME: "name",
     EMAIL: "email",
-    CONTACT: "contact",
+    PASSWORD: "password",
   };
 
-  const responseToBeSubmitted = {
-    userType: "",
+  const initialFormResponse = {
+    name: "",
     firstName: "",
     lastName: "",
-    userName: "",
     email: "",
-    contact: "",
+    pwd: "",
+    userType: "",
   };
 
   const [responseFieldValid, setResponseFieldValid] = useState({
     isUserTypeValid: false,
     isFirstNameValid: false,
     isLastNameValid: false,
-    isUserNameValid: false,
+    isNameValid: false,
     isEmailValid: false,
-    isContactValid: false,
+    isPasswordValid: false,
   });
 
   const ACTIONS = {
     UPDATE_FIRST_NAME: "updateFirstName",
     UPDATE_LAST_NAME: "updateLastName",
-    UPDATE_USERNAME: "updateUserName",
+    UPDATE_NAME: "updateName",
     UPDATE_EMAIL: "updateEmail",
-    UPDATE_CONTACT: "updateContact",
+    UPDATE_PASSWORD: "updatePassword",
     UPDATE_USER_TYPE: "updateUserType",
   };
 
@@ -106,24 +106,24 @@ export const CreateForm = ({
           isLastNameValid: !action?.payload?.isError,
         });
         return { ...state, lastName: action?.payload?.value };
-      case ACTIONS?.UPDATE_USERNAME:
+      case ACTIONS?.UPDATE_NAME:
         setResponseFieldValid({
           ...responseFieldValid,
-          isUserNameValid: !action?.payload?.isError,
+          isNameValid: !action?.payload?.isError,
         });
-        return { ...state, userName: action?.payload?.value };
+        return { ...state, name: action?.payload?.value };
       case ACTIONS?.UPDATE_EMAIL:
         setResponseFieldValid({
           ...responseFieldValid,
           isEmailValid: !action?.payload?.isError,
         });
         return { ...state, email: action?.payload?.value };
-      case ACTIONS?.UPDATE_CONTACT:
+      case ACTIONS?.UPDATE_PASSWORD:
         setResponseFieldValid({
           ...responseFieldValid,
-          isContactValid: !action?.payload?.isError,
+          isPasswordValid: !action?.payload?.isError,
         });
-        return { ...state, contact: action?.payload?.value };
+        return { ...state, pwd: action?.payload?.value };
       case ACTIONS?.UPDATE_USER_TYPE:
         setResponseFieldValid({
           ...responseFieldValid,
@@ -135,25 +135,27 @@ export const CreateForm = ({
 
   const [formResponseState, formResponseDispatch] = useReducer(
     formResponseReducer,
-    responseToBeSubmitted
+    initialFormResponse
   );
 
   const handleFormSubmitButton = () => {
-    console.log(formResponseState);
-    makeRequestWithCSRFToken(
-      `${NAV_CONFIG?.NAV_USER_PAGE}${NAV_CONFIG?.NAV_ADD_USER}`,
-      REQUEST_TYPES?.POST,
-      formResponseState
-    );
+    console.log(JSON.stringify(formResponseState));
+    // makeRequestWithCSRFToken(
+    //   `${NAV_CONFIG?.NAV_USER_PAGE}${NAV_CONFIG?.NAV_ADD_USER}`,
+    //   REQUEST_TYPES?.POST,
+    //   formResponseState
+    // );
+
+    testPostFuncion(formResponseState);
   };
   const checkDisabled = () => {
     if (
-      responseFieldValid?.isContactValid &&
+      responseFieldValid?.isPasswordValid &&
       responseFieldValid?.isEmailValid &&
       responseFieldValid?.isFirstNameValid &&
       responseFieldValid?.isLastNameValid &&
       responseFieldValid?.isUserTypeValid &&
-      responseFieldValid?.isUserNameValid
+      responseFieldValid?.isNameValid
     ) {
       return false;
     }
@@ -205,14 +207,14 @@ export const CreateForm = ({
           />
         </Box>
         <Textbox
-          textBoxTitle={formConstants?.title?.userName}
-          placeholder={formConstants?.placeholder?.userName}
-          validationCheck={isUsernameValidCheck}
+          textBoxTitle={formConstants?.title?.name}
+          placeholder={formConstants?.placeholder?.name}
+          validationCheck={isNameValidCheck}
           isRequired={true}
-          onPayloadChange={(usernamePayload) => {
+          onPayloadChange={(namePayload) => {
             formResponseDispatch({
-              type: ACTIONS?.UPDATE_USERNAME,
-              payload: usernamePayload,
+              type: ACTIONS?.UPDATE_NAME,
+              payload: namePayload,
             });
           }}
         />
@@ -231,14 +233,15 @@ export const CreateForm = ({
             }}
           />
           <Textbox
+            type="password"
             width="40%"
-            textBoxTitle={formConstants?.title?.contact}
-            placeholder={formConstants?.placeholder?.contact}
+            textBoxTitle={formConstants?.title?.password}
+            placeholder={formConstants?.placeholder?.password}
             isError={false}
-            onPayloadChange={(contactPayload) => {
+            onPayloadChange={(passwordPayload) => {
               formResponseDispatch({
-                type: ACTIONS?.UPDATE_CONTACT,
-                payload: contactPayload,
+                type: ACTIONS?.UPDATE_PASSWORD,
+                payload: passwordPayload,
               });
             }}
           />

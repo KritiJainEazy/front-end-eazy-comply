@@ -66,7 +66,7 @@ export const LoginPage = () => {
           isEmailValid: !action?.payload?.isError,
         });
 
-        return { ...state, emailId: action?.payload?.value };
+        return { ...state, username: action?.payload?.value };
       case LOGIN_FORM_ACTIONS?.UPDATE_PASSWORD:
         setLoginFormResponseStateValid({
           ...loginFormResponseStateValid,

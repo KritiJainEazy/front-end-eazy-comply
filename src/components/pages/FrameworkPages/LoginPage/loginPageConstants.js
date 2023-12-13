@@ -31,7 +31,7 @@ export const LOGIN_FORM_RESPONSE = {
 };
 
 export const initialLoginformResponse = {
-  emailId: "",
+  username: "",
   password: "",
 };
 

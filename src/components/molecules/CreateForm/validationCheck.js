@@ -1,7 +1,7 @@
 const ERROR_MESSAGES = {
-  firstUserNameCharacterExceeded: "length should not exceed 20 characters",
-  lastUserNameCharacterExceeded: "length should not exceed 20 characters",
-  userNameCharacterExceeded: "length should not exceed 20 characters",
+  firstNameCharacterExceeded: "length should not exceed 20 characters",
+  lastNameCharacterExceeded: "length should not exceed 20 characters",
+  nameCharacterExceeded: "length should not exceed 20 characters",
   fieldCanNotBEmpty: "field can not be empty",
   emailInvalid: "email invalid",
   fieldIsRequired: "field is required",
@@ -10,9 +10,9 @@ const ERROR_MESSAGES = {
 export default ERROR_MESSAGES;
 
 const MAX_CHARACTERS = {
-  FIRST_NAME: 5,
-  LAST_NAME: 5,
-  USERNAME: 5,
+  FIRST_NAME: 35,
+  LAST_NAME: 35,
+  NAME: 35,
   MAX_CHARACTERS: 999,
 };
 
@@ -47,8 +47,7 @@ export const isFirstNameValidCheck = (firstName = "") => {
     textboxInputValue: firstName,
     isRequired: true,
     isRequiredErrorMessage: ERROR_MESSAGES?.fieldIsRequired,
-    characterExceededErrorMessage:
-      ERROR_MESSAGES?.firstUserNameCharacterExceeded,
+    characterExceededErrorMessage: ERROR_MESSAGES?.firstNameCharacterExceeded,
     maxCharacters: MAX_CHARACTERS?.FIRST_NAME,
   });
 };
@@ -58,19 +57,18 @@ export const isLastNameValidCheck = (lastName = "") => {
     textboxInputValue: lastName,
     isRequired: true,
     isRequiredErrorMessage: ERROR_MESSAGES?.fieldIsRequired,
-    characterExceededErrorMessage:
-      ERROR_MESSAGES?.lastUserNameCharacterExceeded,
+    characterExceededErrorMessage: ERROR_MESSAGES?.lastNameCharacterExceeded,
     maxCharacters: MAX_CHARACTERS?.LAST_NAME,
   });
 };
 
-export const isUsernameValidCheck = (userName = "") => {
+export const isNameValidCheck = (name = "") => {
   return textBoxValidationChecks({
-    textboxInputValue: userName,
+    textboxInputValue: name,
     isRequired: true,
     isRequiredErrorMessage: ERROR_MESSAGES?.fieldIsRequired,
-    characterExceededErrorMessage: ERROR_MESSAGES?.userNameCharacterExceeded,
-    maxCharacters: MAX_CHARACTERS?.USERNAME,
+    characterExceededErrorMessage: ERROR_MESSAGES?.nameCharacterExceeded,
+    maxCharacters: MAX_CHARACTERS?.NAME,
   });
 };
 
@@ -83,3 +81,5 @@ export const isEmailValidCheck = (email = "") => {
     errorMessage: ERROR_MESSAGES?.emailInvalid,
   };
 };
+
+
