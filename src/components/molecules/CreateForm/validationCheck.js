@@ -7,6 +7,10 @@ const ERROR_MESSAGES = {
   fieldIsRequired: "field is required",
 };
 
+export const ERROR_CODES = {
+  OK: 200,
+};
+
 export default ERROR_MESSAGES;
 
 const MAX_CHARACTERS = {
@@ -81,5 +85,3 @@ export const isEmailValidCheck = (email = "") => {
     errorMessage: ERROR_MESSAGES?.emailInvalid,
   };
 };
-
-

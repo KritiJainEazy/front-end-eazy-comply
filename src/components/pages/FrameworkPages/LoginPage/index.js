@@ -45,11 +45,13 @@ import { LoginTextBox } from "../../../molecules/LoginTextBox";
 import { LoginPageCard } from "../../../molecules/LoginPageCard";
 import { fieldRequiredCheck } from "../../../../validationChecks/validationChecks";
 import { useCsrfToken } from "../../../../utils/useCsrfToken";
+import { ERROR_CODES } from "../../../molecules/CreateForm/validationCheck";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const [rememberMeActive, setRememberMeActive] = useState(false);
-  const { postLoginCredentials } = useCsrfToken();
+  const [requestError, setRequestError] = useState(null);
+  const { postLoginCredentialsXMLhttpRequest } = useCsrfToken();
 
   const [isForgotPasswordPanel, setIsForgotPasswordPanel] = useState(false);
 
@@ -120,14 +122,24 @@ export const LoginPage = () => {
 
   const handleLoginClick = () => {
     console.log(loginFormResponseState, "checking the flow 1");
-    const loginResponse = postLoginCredentials(
-      NAV_CONFIG?.NAV_LOGIN_LANDING_PAGE,
+    const loginResponse = postLoginCredentialsXMLhttpRequest(
       loginFormResponseState
     );
 
-    if (loginResponse?.token) {
-      navigate(NAV_CONFIG?.NAV_USER_PAGE);
-    }
+    loginResponse
+      ?.then((response) => {
+        console.log(response);
+        if (response?.status != ERROR_CODES?.OK) {
+          setRequestError({ value: true, message: response?.message });
+        } else {
+          setRequestError(null);
+          
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setRequestError({ value: true, message: error?.message });
+      });
   };
 
   const handleRequestPasswordClick = () => {
@@ -280,6 +292,8 @@ export const LoginPage = () => {
       <RightContainer>
         {!isForgotPasswordPanel && (
           <LoginPageCard
+            isError={requestError?.value}
+            errorMessage={requestError?.message}
             showGoBackPanel={false}
             showBottomContainer={true}
             loginCardBodyContainer={loginBodyMainPageContainer}

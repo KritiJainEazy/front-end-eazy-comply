@@ -1,49 +1,70 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BASE_END_POINT, REQUEST_TYPES } from "../constants/navConfig";
+import axios from "axios";
 
 export const useCsrfToken = () => {
   const [csrfToken, setCsrfToken] = useState("");
 
-  const postLoginCredentials = async (apiEndPoint, loginCredentials = {}) => {
-    const urlToSendRequest = `http://localhost:8080${BASE_END_POINT}${apiEndPoint}`;
+  useEffect(() => {
+    console.log(csrfToken, "csrfToken");
+  }, [csrfToken]);
 
-    const dataToSend = JSON.stringify(loginCredentials);
-    console.log(
-      "checking the flow 2",
-      apiEndPoint,
-      loginCredentials,
-      dataToSend,
-      `${BASE_END_POINT}${apiEndPoint}`
-    );
-
-    try {
-      console.log("checking the flow 3");
-      const response = await fetch(
-        "http://localhost:8080/base-api/v1/user-login",
-        {
-          method: "POST",
-          mode: "cors",
-          credentials: "same-origin",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: dataToSend,
-        }
+  const postLoginCredentialsXMLhttpRequest = (loginCredentails) => {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", "http://localhost:8080/base-api/v1/user-login", true);
+      xhr.setRequestHeader(
+        "Authorization",
+        "Basic " +
+          btoa(loginCredentails?.username + ":" + loginCredentails?.password)
       );
+      xhr.send();
+      const headersObj = {};
+      xhr.onerror = (error) => {
+        console.error(error);
+        reject({
+          error: error,
+          value: true,
+          message: "Couldn't make a request, try afer some time.",
+        });
+      };
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === xhr.HEADERS_RECEIVED) {
+          console.log("entering onreadystatechange", xhr.readyState);
+          const headers = xhr.getAllResponseHeaders();
+          const headersArrayString = headers.trim().split(/[\r\n]+/);
 
-      if (!response.ok) {
-        console.log("checking the flow 4");
-        console.log(response);
-        throw new Error(
-          `Request to ${apiEndPoint} failed with status ${response.status}`
-        );
-      }
-      setCsrfToken(await response.json()?.token);
-      return await response.json();
-    } catch (error) {
-      console.error(`Request to ${apiEndPoint} failed:`, error);
-      throw error;
-    }
+          console.log({
+            headers: headers,
+            headersArrayString: headersArrayString,
+            text: "yoohoo, finally",
+            responseText: xhr.responseText,
+            status: xhr.status,
+            statusText: xhr.statusText,
+          });
+
+          headersArrayString?.map((headerString) => {
+            const headerParts = headerString?.split(":");
+            const key = headerParts[0].trim();
+            const value = headerParts[1].trim();
+            headersObj[key] = value;
+          });
+
+          console.log(headersObj, "headeersObj");
+          // if (xhr.readyState == this.HEADERS_RECEIVED) {
+          //   const headers = xhr.getAllResponseHeaders();
+          //   console.log({ headers: headers, text: "yoohoo, finally" });
+          // }
+          setCsrfToken(headersObj["authorization"]);
+          resolve({
+            status: xhr.status,
+            statusText: xhr.statusText,
+            token: headersObj["authorization"],
+            message: "Yeah I waited",
+          });
+        }
+      };
+    });
   };
   const makeRequestWithCSRFToken = async (
     api,
@@ -80,40 +101,10 @@ export const useCsrfToken = () => {
     }
   };
 
-  const testPostFuncion = async (requestBody = {}) => {
-    const dataToSend = JSON.stringify(requestBody);
-    // const urlToSendRequest = `http://localhost:8080${BASE_END_POINT}${apiEndPoint}`;
-    try {
-      const response = await fetch(
-        `http://localhost:8080/base-api/v1/user-login`,
-        {
-          method: "POST",
-          mode: "cors",
-          credentials: "same-origin",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: dataToSend,
-        }
-      );
-
-      if (!response.ok) {
-        console.log("checking the flow 4");
-        throw new Error(`Request failed with status ${response.status}`);
-      }
-      setCsrfToken(await response.json()?.token);
-      return await response.json();
-    } catch (error) {
-      console.error(`Request to failed:`, error);
-      throw error;
-    }
-  };
-
   return {
-    postLoginCredentials,
+    postLoginCredentialsXMLhttpRequest,
     makeRequestWithCSRFToken,
     csrfToken,
-    testPostFuncion,
   };
 };
 

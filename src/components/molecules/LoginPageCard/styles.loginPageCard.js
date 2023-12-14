@@ -3,7 +3,8 @@ import Box from "../../atoms/box.atom";
 
 export const LoginCard = styled(Box)`
   width: 25.5rem;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: ${(props) =>
+    props?.isError ? "1px solid red" : "1px solid rgba(0, 0, 0, 0.15)"};
   border-radius: 1.5rem;
   display: flex;
   justify-content: center;
@@ -79,4 +80,15 @@ export const BottomContainerText = styled(Box)`
   line-height: 1rem;
   color: ${(props) => props?.color};
   cursor: ${(props) => props?.cursor};
+`;
+
+export const LoginCardErrorContainer = styled(Box)`
+  width: 100%;
+  float: right;
+  margin-top: 1.5rem;
+  text-align: right;
+  font-weight: 500;
+  font-size: 0.875rem;
+  word-wrap: break-word;
+  color: ${(props) => "red"};
 `;

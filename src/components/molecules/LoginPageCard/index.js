@@ -10,6 +10,7 @@ import {
   LoginCardSubHeader,
   BottomContainer,
   BottomContainerText,
+  LoginCardErrorContainer,
 } from "./styles.loginPageCard";
 
 import { Button } from "../Button";
@@ -18,6 +19,8 @@ import { CheckBoxInput } from "../Table/styles.table";
 import GoBack from "../../../assets/goBack.png";
 
 export const LoginPageCard = ({
+  isError = false,
+  errorMessage = "",
   showGoBackPanel = false,
   showBottomContainer = false,
   loginCardBodyContainer = <></>,
@@ -36,7 +39,7 @@ export const LoginPageCard = ({
 }) => {
   const [rememberMeActive, setRememberMeActive] = useState(false);
   return (
-    <LoginCard>
+    <LoginCard isError={isError}>
       <LoginCardContainer>
         {showGoBackPanel && (
           <LoginCardGoBackContainer onClick={handleGoBackClick}>
@@ -90,6 +93,9 @@ export const LoginPageCard = ({
           margin={margin}
           //   margin={isForgotPasswordPanel ? "1.4rem 0 0 0" : "2.25rem 0 0 0"}
         />
+        {isError && (
+          <LoginCardErrorContainer>{errorMessage}</LoginCardErrorContainer>
+        )}
       </LoginCardContainer>
     </LoginCard>
   );
