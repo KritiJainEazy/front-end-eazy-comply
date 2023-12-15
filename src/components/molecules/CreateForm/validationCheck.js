@@ -1,14 +1,12 @@
 const ERROR_MESSAGES = {
-  firstNameCharacterExceeded: "length should not exceed 20 characters",
-  lastNameCharacterExceeded: "length should not exceed 20 characters",
-  nameCharacterExceeded: "length should not exceed 20 characters",
+  firstNameCharacterExceeded: "length should not exceed 35 characters",
+  lastNameCharacterExceeded: "length should not exceed 35 characters",
+  nameCharacterExceeded: "length should not exceed 35 characters",
   fieldCanNotBEmpty: "field can not be empty",
   emailInvalid: "email invalid",
   fieldIsRequired: "field is required",
-};
-
-export const ERROR_CODES = {
-  OK: 200,
+  passwordMinimumCharacter: "password should be atleast 5 characters long",
+  passwordCharacterExceeded: "length should not exceed 20 characters",
 };
 
 export default ERROR_MESSAGES;
@@ -17,7 +15,13 @@ const MAX_CHARACTERS = {
   FIRST_NAME: 35,
   LAST_NAME: 35,
   NAME: 35,
+  PASSWORD: 20,
   MAX_CHARACTERS: 999,
+};
+
+const MIN_CHARACTERS = {
+  PASSWORD: 5,
+  MIN_CHARACTERS: 0,
 };
 
 const textBoxValidationChecks = ({
@@ -26,6 +30,8 @@ const textBoxValidationChecks = ({
   isRequiredErrorMessage = "",
   characterExceededErrorMessage = "",
   maxCharacters = MAX_CHARACTERS?.MAX_CHARACTERS,
+  minLengthErrorMessage = "",
+  minCharacters = MIN_CHARACTERS?.MIN_CHARACTERS,
 }) => {
   if (isRequired && textboxInputValue?.trim()?.length === 0) {
     return {
@@ -38,6 +44,12 @@ const textBoxValidationChecks = ({
     return {
       isError: true,
       errorMessage: characterExceededErrorMessage,
+    };
+  }
+  if (textboxInputValue.trim().length < minCharacters) {
+    return {
+      isError: true,
+      errorMessage: minLengthErrorMessage,
     };
   }
   return {
@@ -84,4 +96,16 @@ export const isEmailValidCheck = (email = "") => {
     isError: isEmailValid,
     errorMessage: ERROR_MESSAGES?.emailInvalid,
   };
+};
+
+export const isPasswordValidCheck = (pwd = "") => {
+  return textBoxValidationChecks({
+    textboxInputValue: pwd,
+    isRequired: true,
+    isRequiredErrorMessage: ERROR_MESSAGES?.fieldIsRequired,
+    minLengthErrorMessage: ERROR_MESSAGES?.passwordMinimumCharacter,
+    minCharacters: MIN_CHARACTERS?.PASSWORD,
+    characterExceededErrorMessage: ERROR_MESSAGES?.passwordCharacterExceeded,
+    maxCharacters: MAX_CHARACTERS?.PASSWORD,
+  });
 };
