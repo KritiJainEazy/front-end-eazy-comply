@@ -4,7 +4,7 @@ export const formConstants = {
   title: {
     firstName: "First Name",
     lastName: "Last Name",
-    name: "name",
+    name: "Name",
     email: "Email",
     password: "Password",
     selectUserType: "Select User Type",

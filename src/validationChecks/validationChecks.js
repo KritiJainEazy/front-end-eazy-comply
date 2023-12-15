@@ -1,6 +1,7 @@
 export const ERROR_MESSAGE = {
   EMAIL_INVALID: "email invalid",
   FIELD_REQUIRED: "field required",
+  MIN_CHARACTER_REQUIRED: "field should be atleast $ characters long",
 };
 
 export const emailValidationCheck = (email) => {
@@ -22,6 +23,18 @@ export const fieldRequiredCheck = (text) => {
   } else {
     return {
       isError: false,
+    };
+  }
+};
+
+export const minCharacterCheck = (text, minCharacters) => {
+  if (text.trim().length < minCharacters) {
+    return {
+      isError: true,
+      errorMessage: ERROR_MESSAGE?.MIN_CHARACTER_REQUIRED?.replace(
+        "$",
+        minCharacters
+      ),
     };
   }
 };

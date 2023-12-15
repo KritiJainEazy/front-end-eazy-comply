@@ -11,7 +11,7 @@ const ERROR_MESSAGES = {
 
 export default ERROR_MESSAGES;
 
-const MAX_CHARACTERS = {
+export const MAX_CHARACTERS = {
   FIRST_NAME: 35,
   LAST_NAME: 35,
   NAME: 35,
@@ -19,12 +19,12 @@ const MAX_CHARACTERS = {
   MAX_CHARACTERS: 999,
 };
 
-const MIN_CHARACTERS = {
+export const MIN_CHARACTERS = {
   PASSWORD: 5,
   MIN_CHARACTERS: 0,
 };
 
-const textBoxValidationChecks = ({
+export const textBoxValidationChecks = ({
   textboxInputValue = "",
   isRequired = false,
   isRequiredErrorMessage = "",
