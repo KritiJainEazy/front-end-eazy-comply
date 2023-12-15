@@ -2,6 +2,16 @@
 
 
 
+{
+    "email": "satya@gmail.com",
+    "firstName": "Satya",
+    "lastName": "Suman",
+    "name": "Satyawrat",
+    "pwd": "Satya123",
+    "userType": "Admin"
+}
+
+
 WebSecurityConfigurerAdapter
 WebSecurityConfigurerAdapter
 The source of redirection lies within create-session="stateless". Just remove it from you http configuration element and you are able to login successful. create-session="stateless" prohibits the use of a server side session, which however is required for a form based login
