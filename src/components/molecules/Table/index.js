@@ -20,6 +20,7 @@ import { constantStrings } from "../../../constants/magicString";
 import { ActiveStatus } from "../ActiveStatus";
 import Dropdown from "../Dropdown";
 import { userTableAppendData } from "../../../mockData/mockdata";
+import { ToggleButton } from "../ToggleButton";
 
 export const Table = ({
   tableHeaderData = [],
@@ -31,6 +32,7 @@ export const Table = ({
   primaryKey = "",
   multiSelectCheckBox = true,
   getMultipleSelectedArray = () => void 0,
+  handleToggleClick = () => void 0,
   //getMoreData = () => void 0,
 }) => {
   //to change
@@ -397,13 +399,25 @@ export const Table = ({
                           key={`dataHeaderIndex_${dataHeaderIndex}`}
                           display="flex"
                         >
-                          <Box display="flex">
+                          {/* <Box display="flex">
                             <ActiveStatus
                               status={dataItem[headerData?.value]}
                               mr="10px"
                             />
                             {dataItem[headerData?.value]}
-                          </Box>
+                          </Box> */}
+                          <ToggleButton
+                            height="1rem"
+                            width="2rem"
+                            sliderRadius="0.5rem"
+                            initialState={
+                              dataItem[headerData?.value] == 1 ? true : false
+                            }
+                            onToggleClick={(e) => {
+                              console.log(e);
+                              handleToggleClick(e);
+                            }}
+                          />
                         </TableRowData>
                       );
                     case primaryKey:
