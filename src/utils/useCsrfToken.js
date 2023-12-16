@@ -60,17 +60,17 @@ export const useCsrfToken = () => {
             status: xhr.status,
             statusText: xhr.statusText,
             token: headersObj["authorization"],
-            message: "Yeah I waited",
+            message: "Invalid credentials!",
           });
         }
       };
     });
   };
-  const makeRequestWithCSRFToken = async (
-    api,
+  const makeRequestWithCSRFToken = async ({
+    api = "",
     requestType = "GET",
-    data = null
-  ) => {
+    data = null,
+  }) => {
     console.log(api, requestType, data, "isfdl");
     const requestBody = {
       // mode: "cors",
@@ -89,15 +89,17 @@ export const useCsrfToken = () => {
       const response = await fetch(`${BASE_END_POINT}${api}`, requestBody);
 
       if (!response.ok) {
+        console.error(response, "in if block");
         throw new Error(
           `Request to ${api} failed with status ${response.status}`
         );
       }
-
+      console.log(response, "yohohoooo");
       return await response.json();
     } catch (error) {
-      console.error(`Request to ${api} failed:`, error);
-      throw error;
+      console.error(`in catch block`, error);
+      // throw error;
+      return error;
     }
   };
 

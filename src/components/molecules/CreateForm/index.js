@@ -16,6 +16,9 @@ import {
 } from "./validationCheck";
 import { useCsrfToken } from "../../../utils/useCsrfToken";
 import { NAV_CONFIG, REQUEST_TYPES } from "../../../constants/navConfig";
+import { useNavigate } from "react-router-dom";
+import { ERROR_CODES } from "../../../constants/errorCodesMessages";
+import { ToggleButton } from "../ToggleButton";
 
 export const CreateForm = ({
   formFields = {},
@@ -24,7 +27,8 @@ export const CreateForm = ({
   fieldRequired = {},
   response = {},
 }) => {
-  const { makeRequestWithCSRFToken, testPostFuncion } = useCsrfToken();
+  const { makeRequestWithCSRFToken } = useCsrfToken();
+  const navigate = useNavigate();
 
   const initialFormResponse = {
     name: "",
@@ -101,13 +105,33 @@ export const CreateForm = ({
 
   const handleFormSubmitButton = () => {
     console.log(JSON.stringify(formResponseState));
-    // makeRequestWithCSRFToken(
-    //   `${NAV_CONFIG?.NAV_USER_PAGE}${NAV_CONFIG?.NAV_ADD_USER}`,
-    //   REQUEST_TYPES?.POST,
-    //   formResponseState
-    // );
 
-    testPostFuncion(formResponseState);
+    const userCreatedResponse = makeRequestWithCSRFToken({
+      api: "/register",
+      requestType: "POST",
+      data: formResponseState,
+    });
+
+    userCreatedResponse
+      ?.then((response) => {
+        console.log(response, "inside .then");
+        if (response?.status != ERROR_CODES?.CREATED) {
+          alert("couldn't create one");
+          console.log("inside .then if error block");
+        } else {
+          alert("successful creation");
+          console.log("inside .then if ok block");
+          makeRequestWithCSRFToken({
+            api: "/user",
+            requestType: "GET",
+          });
+          navigate(NAV_CONFIG?.NAV_USER_PAGE);
+        }
+      })
+      ?.catch((error) => {
+        alert(error);
+        console.log("inside .catch block createform", error);
+      });
   };
   const checkDisabled = () => {
     if (
@@ -221,6 +245,7 @@ export const CreateForm = ({
           iconHeight={"16px"}
           disabled={checkDisabled()}
         />
+        <ToggleButton />
       </Box>
     </FormContainer>
   );

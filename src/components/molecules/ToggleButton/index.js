@@ -19,7 +19,7 @@ export const ToggleButton = ({
     onToggleClick(!isToggleActive);
     setIsToggleActive(!isToggleActive);
   };
-  console.log((height - sliderRadius) / 2);
+
   return (
     <ToggleButtonContainer
       width={width}

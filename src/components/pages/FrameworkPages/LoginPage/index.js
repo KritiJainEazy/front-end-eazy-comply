@@ -1,7 +1,7 @@
 import React, { useState, useReducer, useEffect } from "react";
 import { Button } from "../../../molecules/Button";
 import { useNavigate } from "react-router-dom";
-import { NAV_CONFIG } from "../../../../constants/navConfig";
+import { NAV_CONFIG, REQUEST_TYPES } from "../../../../constants/navConfig";
 import LoginPageImage from "../../../../assets/landing-page-image.png";
 import BackgroundVector from "../../../../assets/background-vector.png";
 import EasyComplyLogo from "../../../../assets/easyComply.png";
@@ -40,18 +40,22 @@ import {
   REQUEST_PASSWORD_FORM_ACTIONS,
   initialRequestPasswordFormResponseValid,
 } from "./loginPageConstants";
-import { emailIdVaildation } from "./loginPageValidationCheck";
+import {
+  emailIdVaildation,
+  passwordValidation,
+} from "./loginPageValidationCheck";
 import { LoginTextBox } from "../../../molecules/LoginTextBox";
 import { LoginPageCard } from "../../../molecules/LoginPageCard";
 import { fieldRequiredCheck } from "../../../../validationChecks/validationChecks";
 import { useCsrfToken } from "../../../../utils/useCsrfToken";
-import { ERROR_CODES } from "../../../molecules/CreateForm/validationCheck";
+import { ERROR_CODES } from "../../../../constants/errorCodesMessages";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const [rememberMeActive, setRememberMeActive] = useState(false);
   const [requestError, setRequestError] = useState(null);
-  const { postLoginCredentialsXMLhttpRequest } = useCsrfToken();
+  const { postLoginCredentialsXMLhttpRequest, makeRequestWithCSRFToken } =
+    useCsrfToken();
 
   const [isForgotPasswordPanel, setIsForgotPasswordPanel] = useState(false);
 
@@ -128,16 +132,27 @@ export const LoginPage = () => {
 
     loginResponse
       ?.then((response) => {
-        console.log(response);
+        console.log(response, "inside .then");
         if (response?.status != ERROR_CODES?.OK) {
+          console.log("inside .then if error block");
+          alert("you don't have authority");
           setRequestError({ value: true, message: response?.message });
         } else {
+          alert("successful login");
+          console.log("inside .then if ok block");
           setRequestError(null);
-          
+          navigate(NAV_CONFIG?.NAV_USER_PAGE);
+
+          makeRequestWithCSRFToken({
+            api: "/user/",
+            requestType: REQUEST_TYPES?.GET,
+          });
         }
       })
       .catch((error) => {
         console.log(error);
+        console.log("inside .catch block");
+        alert(`your request failed ${error}`);
         setRequestError({ value: true, message: error?.message });
       });
   };
@@ -220,7 +235,13 @@ export const LoginPage = () => {
         margin="0 0 1.3rem 0"
         placeholder={LOGIN_CARD_VALUES?.LOGIN_BODY_MAIN_PASSWORD}
         isRequired={true}
-        validationCheck={fieldRequiredCheck}
+        handleIsRequired={(errorStatus) => {
+          setLoginFormResponseStateValid({
+            ...loginFormResponseStateValid,
+            isPasswordValid: !errorStatus,
+          });
+        }}
+        validationCheck={passwordValidation}
         onChange={(payload) => {
           loginFormResponseDispatch({
             type: LOGIN_FORM_ACTIONS?.UPDATE_PASSWORD,
