@@ -15,7 +15,6 @@ import { ProfileMenu } from "../ProfileMenu";
 
 export const Navbar = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  console.log("navbar state", showProfileMenu);
   const handleProfileClick = (e) => {
     e.stopPropagation();
     setShowProfileMenu(!showProfileMenu);

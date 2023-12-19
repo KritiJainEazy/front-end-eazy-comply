@@ -19,7 +19,5 @@ export const jsonToCSV = (fileTitle = "EazyComplyCSV", data = []) => {
     anchor.download = `${fileTitle}.csv`;
     anchor.click();
     anchor.remove();
-
-    console.log(csvData);
   }
 };

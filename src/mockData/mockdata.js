@@ -3,6 +3,7 @@ export const userData = {
   organisation: "johndoe@xyz.com",
 };
 
+// Kriti@2000
 export const userTypeDropDownMockData = [
   {
     title: "Admin",
@@ -23,38 +24,48 @@ export const userTypeDropDownMockData = [
 
 export const uesrTableHeader = [
   {
-    value: "userId",
+    value: "id",
     title: "User ID",
     width: "9%",
   },
   {
-    value: "userFirstName",
+    value: "firstName",
     title: "First Name",
     width: "12.5%",
   },
   {
-    value: "userLastName",
+    value: "lastName",
     title: "Last Name",
     width: "12.5%",
   },
   {
-    value: "userOrganisation",
+    value: "organisation",
     title: "Organisation",
-    width: "18%",
+    width: "9%",
   },
   {
-    value: "userRole",
-    title: "Role",
+    value: "tenant",
+    title: "Tenant",
+    width: "9%",
+  },
+  {
+    value: "userType",
+    title: "User Type",
+    width: "9%",
+  },
+  {
+    value: "name",
+    title: "Username",
     width: "11%",
   },
   {
-    value: "userStatus",
+    value: "recordStatus",
     title: "Status",
     width: "11%",
   },
   {
-    value: "userMobile",
-    title: "Mobile",
+    value: "email",
+    title: "Email",
     width: "13%",
   },
   {

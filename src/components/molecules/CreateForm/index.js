@@ -115,16 +115,17 @@ export const CreateForm = ({
     userCreatedResponse
       ?.then((response) => {
         console.log(response, "inside .then");
+        
         if (response?.status != ERROR_CODES?.CREATED) {
           alert("couldn't create one");
           console.log("inside .then if error block");
         } else {
           alert("successful creation");
           console.log("inside .then if ok block");
-          makeRequestWithCSRFToken({
-            api: "/user",
-            requestType: "GET",
-          });
+          // makeRequestWithCSRFToken({
+          //   api: "/user",
+          //   requestType: "GET",
+          // });
           navigate(NAV_CONFIG?.NAV_USER_PAGE);
         }
       })
@@ -245,7 +246,6 @@ export const CreateForm = ({
           iconHeight={"16px"}
           disabled={checkDisabled()}
         />
-        <ToggleButton />
       </Box>
     </FormContainer>
   );

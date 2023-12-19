@@ -4,6 +4,7 @@ import axios from "axios";
 
 export const useCsrfToken = () => {
   const [csrfToken, setCsrfToken] = useState("");
+  let preciousToken = "";
 
   useEffect(() => {
     console.log(csrfToken, "csrfToken");
@@ -30,18 +31,8 @@ export const useCsrfToken = () => {
       };
       xhr.onreadystatechange = () => {
         if (xhr.readyState === xhr.HEADERS_RECEIVED) {
-          console.log("entering onreadystatechange", xhr.readyState);
           const headers = xhr.getAllResponseHeaders();
           const headersArrayString = headers.trim().split(/[\r\n]+/);
-
-          console.log({
-            headers: headers,
-            headersArrayString: headersArrayString,
-            text: "yoohoo, finally",
-            responseText: xhr.responseText,
-            status: xhr.status,
-            statusText: xhr.statusText,
-          });
 
           headersArrayString?.map((headerString) => {
             const headerParts = headerString?.split(":");
@@ -50,12 +41,9 @@ export const useCsrfToken = () => {
             headersObj[key] = value;
           });
 
-          console.log(headersObj, "headeersObj");
-          // if (xhr.readyState == this.HEADERS_RECEIVED) {
-          //   const headers = xhr.getAllResponseHeaders();
-          //   console.log({ headers: headers, text: "yoohoo, finally" });
-          // }
-          setCsrfToken(headersObj["authorization"]);
+          const token = headersObj["authorization"];
+          sessionStorage.setItem("token", headersObj["authorization"]);
+
           resolve({
             status: xhr.status,
             statusText: xhr.statusText,
@@ -71,13 +59,13 @@ export const useCsrfToken = () => {
     requestType = "GET",
     data = null,
   }) => {
-    console.log(api, requestType, data, "isfdl");
+    const token = sessionStorage.getItem("token");
     const requestBody = {
       // mode: "cors",
       method: requestType,
       headers: {
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
-        "CSRF-Token": csrfToken,
       },
     };
 
@@ -87,15 +75,14 @@ export const useCsrfToken = () => {
 
     try {
       const response = await fetch(`${BASE_END_POINT}${api}`, requestBody);
-
+      console.log(response, "checking response in csrf");
       if (!response.ok) {
         console.error(response, "in if block");
         throw new Error(
           `Request to ${api} failed with status ${response.status}`
         );
       }
-      console.log(response, "yohohoooo");
-      return await response.json();
+      return await response;
     } catch (error) {
       console.error(`in catch block`, error);
       // throw error;
@@ -107,6 +94,7 @@ export const useCsrfToken = () => {
     postLoginCredentialsXMLhttpRequest,
     makeRequestWithCSRFToken,
     csrfToken,
+    setCsrfToken,
   };
 };
 

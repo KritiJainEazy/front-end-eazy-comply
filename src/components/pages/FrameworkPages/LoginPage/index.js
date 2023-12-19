@@ -54,8 +54,10 @@ export const LoginPage = () => {
   const navigate = useNavigate();
   const [rememberMeActive, setRememberMeActive] = useState(false);
   const [requestError, setRequestError] = useState(null);
-  const { postLoginCredentialsXMLhttpRequest, makeRequestWithCSRFToken } =
-    useCsrfToken();
+  const {
+    postLoginCredentialsXMLhttpRequest,
+    setCsrfToken,
+  } = useCsrfToken();
 
   const [isForgotPasswordPanel, setIsForgotPasswordPanel] = useState(false);
 
@@ -138,15 +140,12 @@ export const LoginPage = () => {
           alert("you don't have authority");
           setRequestError({ value: true, message: response?.message });
         } else {
-          alert("successful login");
+          console.log("calling setcsrftoken here");
+          setCsrfToken(response?.token);
+          console.log("successful login");
           console.log("inside .then if ok block");
           setRequestError(null);
           navigate(NAV_CONFIG?.NAV_USER_PAGE);
-
-          makeRequestWithCSRFToken({
-            api: "/user/",
-            requestType: REQUEST_TYPES?.GET,
-          });
         }
       })
       .catch((error) => {

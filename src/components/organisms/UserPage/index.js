@@ -4,7 +4,6 @@ import { Table } from "../../molecules/Table";
 import {
   uesrTableHeader,
   userTableAppendData,
-  userTableData,
 } from "../../../mockData/mockdata";
 import { ActionMenu } from "../../molecules/ActionMenu";
 import EditIcon from "../../../assets/edit-icon.png";
@@ -18,11 +17,38 @@ import {
   placeholderStrings,
 } from "../../../constants/magicString";
 import { jsonToCSV } from "../../../utils/jsonToCSV";
+import { useCsrfToken } from "../../../utils/useCsrfToken";
+import { REQUEST_TYPES } from "../../../constants/navConfig";
 
 export const UserPage = () => {
   const [dataSelected, setDataSelected] = useState([]);
+  const [userTableData, setUserTableData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { makeRequestWithCSRFToken } = useCsrfToken();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setIsLoading(true);
+    const response = makeRequestWithCSRFToken({
+      api: "/user/",
+      requestType: REQUEST_TYPES?.GET,
+    });
+    response
+      ?.then((response) => {
+        console.log(response, "making a call from navigated page");
+        setUserTableData(response?.content);
+        setIsLoading(false);
+      })
+      ?.catch((error) => {
+        console.error(error);
+        setIsLoading(false);
+      });
+  }, []);
+  useEffect(() => {
+    console.log(userTableData);
+  }, [userTableData]);
+
   const handleHeaderButton = () => {
     navigate(NAV_CONFIG?.NAV_ADD_USER);
   };
@@ -60,10 +86,10 @@ export const UserPage = () => {
       tableHeaderData={uesrTableHeader}
       tableData={userTableData}
       actionMenuHeaderTitle="userActionMenu"
-      activeStatusHeaderTitle="userStatus"
+      activeStatusHeaderTitle="recordStatus"
       actionMenuContent={userTableActionMenuContent}
       getMultipleSelectedArray={getSelectedData}
-      primaryKey="userId"
+      primaryKey="id"
     />
   );
 
@@ -88,6 +114,7 @@ export const UserPage = () => {
     },
     searchBoxPlaceholder: placeholderStrings?.SEARCH_BAR_USER_PAGE,
   };
-
-  return <MainPage {...userPageProps} />;
+  if (!isLoading) {
+    return <MainPage {...userPageProps} />;
+  }
 };

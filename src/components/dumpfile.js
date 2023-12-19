@@ -20,6 +20,8 @@ const obj2 = {
     "userType":"Admin"
 }
 
+Kittu123
+
 
 
 {
@@ -107,3 +109,57 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
+
+
+
+PER-19Dec2023070330145
+PER-18Dec2023070330145 - read
+PER-16Dec2023070330225
+PER-17Dec2023070330145
+
+
+
+
+ROL-11Dec2023070330145 - A
+ROL-19Dec2023070330145
+
+
+USE-19Dec2023173927830 - A
+USE-19Dec2023174305494
+
+
+
+
+export const useCsrfToken = () => {
+  const [csrfToken, setCsrfToken] = useState("");
+
+  const postLoginCredentialsFetch = async (loginCredentials) => {
+    try {
+      const response = await fetch("http://localhost:8080/base-api/v1/user-login", {
+        method: "GET",
+        headers: {
+          Authorization: `Basic ${btoa(loginCredentials?.username + ":" + loginCredentials?.password)}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status ${response.status}`);
+      }
+
+      const token = response.headers.get("authorization");
+      setCsrfToken(token || ""); // Update token in state
+
+      return {
+        status: response.status,
+        statusText: response.statusText,
+        token: token || "",
+        message: "Invalid credentials!",
+      };
+    } catch (error) {
+      console.error("Request failed:", error);
+      throw error;
+    }
+  };
+
+  // ... rest of the code
+};

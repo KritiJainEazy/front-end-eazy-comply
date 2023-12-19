@@ -11,7 +11,6 @@ export const SearchBox = ({
   placeholder = "Search",
 }) => {
   const [searchedText, setSearchedText] = useState();
-  console.log(searchedText, "SearchedText");
   const inputRef = useRef();
 
   const handleSearchAction = () => {

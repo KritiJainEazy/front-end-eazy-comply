@@ -35,6 +35,7 @@ export const Table = ({
   handleToggleClick = () => void 0,
   //getMoreData = () => void 0,
 }) => {
+  console.log(tableData, "this is what we got");
   //to change
   const entriesPerPageDropdownItems = [
     {
@@ -112,11 +113,9 @@ export const Table = ({
   };
   const getMoreData = () => {
     setForwardPalletButtonState(PALLETE_BUTTON_STATES?.LOADING);
-    console.log("entering append data getMoreData");
     if (tempDataAppend <= MAX_APPENDS - 1) {
       tableData.push(...userTableAppendData);
       setTempDataAppend(tempDataAppend + 1);
-      console.log("appending more data");
     }
 
     if (tempDataAppend > MAX_APPENDS - 1) {
@@ -127,17 +126,11 @@ export const Table = ({
   const getData = () => {
     const lastPage =
       currentPageNumbersPalette[currentPageNumbersPalette.length - 1];
-    console.log(lastPage, "lastPage");
 
     const numberOfEntriesDisplayedSoFar = lastPage * entriesPerPage;
-    console.log(numberOfEntriesDisplayedSoFar, "numberOfEntriesDisplayedSoFar");
 
     const numberOfEntriesLeftToBeDisplayed =
       tableData?.length - numberOfEntriesDisplayedSoFar;
-    console.log(
-      numberOfEntriesLeftToBeDisplayed,
-      "numberOfEntriesLeftToBeDisplayed"
-    );
 
     if (isMoreDataAvailable) {
       if (
@@ -165,8 +158,6 @@ export const Table = ({
     } else {
       setIsBackPalleteButtonDisabled(true);
     }
-
-    console.log(firstPage);
   };
 
   const handleForwardPalleteSelect = () => {
@@ -175,21 +166,8 @@ export const Table = ({
 
       const lastPage =
         currentPageNumbersPalette[currentPageNumbersPalette.length - 1];
-      console.log(lastPage, "lastPage");
 
       const numberOfEntriesDisplayedSoFar = lastPage * entriesPerPage;
-      console.log(
-        numberOfEntriesDisplayedSoFar,
-        "numberOfEntriesDisplayedSoFar"
-      );
-
-      // to remove
-      // let numberOfEntriesLeftToBeDisplayed =
-      //   tableData?.length - numberOfEntriesDisplayedSoFar;
-      // console.log(
-      //   numberOfEntriesLeftToBeDisplayed,
-      //   "numberOfEntriesLeftToBeDisplayed"
-      // );
 
       getData();
 
@@ -222,14 +200,8 @@ export const Table = ({
     if (tableDataToBeShown?.length) {
       const firstIndex = entriesPerPage * (currentPage - 1);
       const isAllSelected = tableDataToBeShown.every((dataItem, dataIndex) => {
-        console.log(
-          selectedIndexArray.includes(firstIndex + dataIndex),
-          "dataItem huahua"
-        );
         return selectedIndexArray.includes(firstIndex + dataIndex);
       });
-      console.log(isAllSelected, "huahua isAllSelected");
-      console.log(selectedIndexArray, tableDataToBeShown, "huahua  hi there");
 
       return isAllSelected;
     }
@@ -306,8 +278,6 @@ export const Table = ({
 
   //to be removed
   useEffect(() => {
-    console.log(selectedIndexArray, "kajfhsgdn");
-
     getMultipleSelectedArray(getDataFromSelectedIndex());
   }, [selectedIndexArray]);
 
@@ -444,7 +414,7 @@ export const Table = ({
           })}
         </TableBodyContainer>
       </TableContainer>
-      <PaginationContainer>
+      {/* <PaginationContainer>
         <PageButtonContainer>
           <PageNavigationButton
             buttonState={
@@ -484,7 +454,7 @@ export const Table = ({
           }
         />
         <btn onClick={handleMultiSelectAction}>click me</btn>
-      </PaginationContainer>
+      </PaginationContainer> */}
     </TableBoxContainer>
   );
 };
