@@ -17,7 +17,7 @@ export const ToggleButton = ({
 
   const toggleClickHandler = (e) => {
     onToggleClick(!isToggleActive);
-    setIsToggleActive(!isToggleActive);
+    // setIsToggleActive(!isToggleActive);
   };
 
   return (

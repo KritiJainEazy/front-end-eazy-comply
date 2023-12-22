@@ -14,6 +14,7 @@ export const SearchBox = ({
   const inputRef = useRef();
 
   const handleSearchAction = () => {
+    console.log("Firing after you click me");
     searchAction(searchedText);
   };
 

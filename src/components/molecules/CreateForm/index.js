@@ -106,33 +106,31 @@ export const CreateForm = ({
   const handleFormSubmitButton = () => {
     console.log(JSON.stringify(formResponseState));
 
-    const userCreatedResponse = makeRequestWithCSRFToken({
+    makeRequestWithCSRFToken({
       api: "/register",
       requestType: "POST",
       data: formResponseState,
-    });
-
-    userCreatedResponse
-      ?.then((response) => {
+      getResponseFlag: true,
+      getResponse: (response) => {
+   //     alert(response?.message);
+      },
+      successAction: (response) => {
         console.log(response, "inside .then");
-        
+
         if (response?.status != ERROR_CODES?.CREATED) {
-          alert("couldn't create one");
+     //     alert("couldn't create one, don't have authorities");
           console.log("inside .then if error block");
         } else {
-          alert("successful creation");
+       //   // alert("successful creation");
           console.log("inside .then if ok block");
-          // makeRequestWithCSRFToken({
-          //   api: "/user",
-          //   requestType: "GET",
-          // });
           navigate(NAV_CONFIG?.NAV_USER_PAGE);
         }
-      })
-      ?.catch((error) => {
-        alert(error);
+      },
+      failureAction: (error) => {
+     //   alert(error);
         console.log("inside .catch block createform", error);
-      });
+      },
+    });
   };
   const checkDisabled = () => {
     if (

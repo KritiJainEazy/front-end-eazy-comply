@@ -20,9 +20,12 @@ export const Textbox = ({
   isRequired = false,
   onPayloadChange = () => void 0,
   type = "text",
+  value = "",
+  readOnly = false,
 }) => {
   const [isValidationError, setIsValidationError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [inputValue, setInputValue] = useState(value);
 
   const handleRequiredInputField = (e) => {
     if (e?.target?.value?.trim()?.length == 0) {
@@ -32,6 +35,7 @@ export const Textbox = ({
   };
 
   const handleInputChange = (e) => {
+    setInputValue(e?.target?.value);
     const validationResponse = validationCheck(e?.target?.value);
     setIsValidationError(validationResponse?.isError);
     setErrorMessage(validationResponse?.errorMessage);
@@ -57,6 +61,8 @@ export const Textbox = ({
         focusBorder={focusBorder}
         onChange={handleInputChange}
         onBlur={isRequired ? handleRequiredInputField : () => void 0}
+        value={inputValue}
+        readOnly={readOnly}
       ></TextboxInputField>
       {isValidationError && (
         <TextBoxErrorMessage>{errorMessage}</TextBoxErrorMessage>

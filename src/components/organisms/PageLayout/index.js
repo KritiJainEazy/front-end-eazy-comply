@@ -5,10 +5,11 @@ import {
   PageLayoutContainer,
   MainBodyContainer,
   MainPageContainer,
-  NavBarPageLayoutContainer
+  NavBarPageLayoutContainer,
 } from "./styles.pagelayout";
 import { Navbar } from "../Navbar";
 import Box from "../../atoms/box.atom";
+import { ToastContainer } from "react-toastify";
 
 export const PageLayout = ({ children }) => {
   return (

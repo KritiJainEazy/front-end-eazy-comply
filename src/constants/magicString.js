@@ -2,12 +2,18 @@ export const userName = "";
 export const userEmail = "";
 
 export const constantStrings = {
-  TABLE_ACTION_MENU: "userActionMenu",
   ACTIVE_STATUS: "status",
-  USER_PAGE_HEADER_TITLE: "User",
-  USER_PAGE_HEADER_BUTTON_TITLE: "Add User",
+  DEFAULT_FAILURE_MESSAGE: "Request failed!",
+  DEFAULT_SUCCESS_MESSAGE: "Request successful!",
+  ERROR_TOAST_STATUS: "error",
   EXPORT: "Export",
-  USER_PAGE_EXPORT_FILENAME: "User Details"
+  NA: "NA",
+  PLEASE_WAIT: "Please wait...",
+  SUCCESS_TOAST_STATUS: "success",
+  TABLE_ACTION_MENU: "userActionMenu",
+  USER_PAGE_EXPORT_FILENAME: "User Details",
+  USER_PAGE_HEADER_BUTTON_TITLE: "Add User",
+  USER_PAGE_HEADER_TITLE: "User",
 };
 
 export const placeholderStrings = {

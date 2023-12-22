@@ -2,9 +2,10 @@ import React from "react";
 
 export const formConstants = {
   title: {
+    id: "User Id",
     firstName: "First Name",
     lastName: "Last Name",
-    name: "Name",
+    name: "Username",
     email: "Email",
     password: "Password",
     selectUserType: "Select User Type",
@@ -12,7 +13,7 @@ export const formConstants = {
   placeholder: {
     firstName: "Enter first name",
     lastName: "Enter last name",
-    name: "Enter name",
+    name: "Enter username",
     email: "Enter email",
     password: "Enter password",
   },

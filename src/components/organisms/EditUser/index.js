@@ -4,18 +4,19 @@ import { NAV_CONFIG } from "../../../constants/navConfig";
 import { Textbox } from "../../molecules/TextBox";
 import { CreateForm } from "../../molecules/CreateForm";
 import { ToastContainer } from "react-toastify";
+import { EditUserForm } from "../../molecules/EditUserForm";
 
-export const AddUser = () => {
-  const addUserPageMainComponent = <CreateForm />;
+export const EditUser = () => {
+  const editUserPageMainComponent = <EditUserForm />;
 
-  const addUserPageProps = {
-    headerTitle: "Add User",
-    mainPageContent: addUserPageMainComponent,
+  const editUserPageProps = {
+    headerTitle: "Edit User",
+    mainPageContent: editUserPageMainComponent,
   };
 
   return (
     <>
-      <MainPage {...addUserPageProps} />
+      <MainPage {...editUserPageProps} />
     </>
   );
 };

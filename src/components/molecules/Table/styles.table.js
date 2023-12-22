@@ -12,7 +12,7 @@ export const TableContainer = styled("table")`
   margin: 10px auto;
   border-collapse: collapse;
   border-radius: 5px;
-  overflow: hidden;
+  position: relative;
 `;
 
 export const TableBodyContainer = styled("tbody")`
@@ -63,11 +63,11 @@ export const ActionMenu = styled(Box)`
   justify-content: space-evenly;
 `;
 
-export const ActionMenuIcons = styled("img")`
-  height: 20px;
-  justify-content: space-evenly;
-  cursor: pointer;
-`;
+// export const ActionMenuIcons = styled("img")`
+//   height: 20px;
+//   justify-content: space-evenly;
+//   cursor: pointer;
+// `;
 
 // export const CheckBoxInput = styled.input.attrs({ type: "checkbox" })`
 //   width: ${(props) => props?.width || "15px"};
@@ -86,7 +86,7 @@ export const PaginationContainer = styled(Box)`
   height: max-content;
   margin-top: 2rem;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
@@ -105,7 +105,7 @@ export const PageNavigationButton = styled(Box)`
   color: rgb(107, 114, 128);
   padding: 0px 16px;
   border: 1px solid rgb(209, 213, 219);
-  cursor: ${props => props?.buttonState || "pointer"};
+  cursor: ${(props) => props?.buttonState || "pointer"};
 `;
 
 export const PageNumberContainer = styled(Box)`
@@ -114,14 +114,14 @@ export const PageNumberContainer = styled(Box)`
   align-items: center;
   color: ${(props) =>
     props?.isSelected ? "rgb(28,100,242)" : "rgb(107, 114, 128)"};
-    background-color: ${(props) =>
-      props?.isSelected ? "rgb(235,245,255)" : "rgb(255,255,255)"};
+  background-color: ${(props) =>
+    props?.isSelected ? "rgb(235,245,255)" : "rgb(255,255,255)"};
   padding: 0px 16px;
   border: ${(props) =>
     props?.isSelected
       ? "1px solid rgb(164, 202, 254)"
       : "1px solid rgb(209, 213, 219)"};
-      cursor: pointer;
+  cursor: pointer;
 `;
 
 export const PageButtonContainer = styled(Box)`
@@ -133,4 +133,18 @@ export const PageButtonContainer = styled(Box)`
   overflow: hidden;
   display: flex;
   align-items: center;
+`;
+
+export const ActionMenuContainer = styled(Box)`
+  width: 100%;
+  height: 50%;
+  padding: 3px;
+  display: flex;
+  justify-content: space-evenly;
+`;
+
+export const ActionMenuIcons = styled("img")`
+  height: 16px;
+  cursor: pointer;
+  margin-right: auto;
 `;

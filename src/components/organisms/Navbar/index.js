@@ -12,6 +12,7 @@ import ProfileIcon from "../../../assets/profile-user.png";
 import { companyName } from "../../../mockData/mockdata";
 import Box from "../../atoms/box.atom";
 import { ProfileMenu } from "../ProfileMenu";
+import { toast } from "react-toastify";
 
 export const Navbar = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -28,7 +29,22 @@ export const Navbar = () => {
         <LogoNameContainer>{companyName}</LogoNameContainer>
       </LeftContainer>
       <RightContainer>
-        <Box mr="30px" height="50%">
+        <Box
+          mr="30px"
+          height="50%"
+          onClick={() =>
+            toast.success("🦄 Wow so easy!", {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "colored",
+            })
+          }
+        >
           <img src={NotificationIcon} height="100%" margin="20px" />
         </Box>
         <Box mr="30px" height="50%">

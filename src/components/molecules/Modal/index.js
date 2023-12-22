@@ -7,6 +7,7 @@ import {
 import Box from "../../atoms/box.atom";
 
 export const Modal = ({
+  position = "absolute",
   width = "",
   height = "",
   showModalTitle = true,
@@ -34,7 +35,13 @@ export const Modal = ({
           onClick={handleClickOutsideModal}
           backgroundFade={backgroundFade ? "0.4" : "0"}
         >
-          <ModalContainer ref={modalContentRef} width={width} height={height}>
+          <ModalContainer
+            ref={modalContentRef}
+            width={width}
+            height={height}
+            backgroundColor="yellow"
+            position={position}
+          >
             {showModalTitle && (
               <ModalTitleContainer>
                 {modalTitle}

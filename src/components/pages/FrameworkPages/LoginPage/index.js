@@ -54,10 +54,11 @@ export const LoginPage = () => {
   const navigate = useNavigate();
   const [rememberMeActive, setRememberMeActive] = useState(false);
   const [requestError, setRequestError] = useState(null);
-  const {
-    postLoginCredentialsXMLhttpRequest,
-    setCsrfToken,
-  } = useCsrfToken();
+
+  useEffect(() => {
+    console.log(requestError);
+  }, [requestError]);
+  const { postLoginCredentialsRequest, setCsrfToken } = useCsrfToken();
 
   const [isForgotPasswordPanel, setIsForgotPasswordPanel] = useState(false);
 
@@ -128,32 +129,41 @@ export const LoginPage = () => {
 
   const handleLoginClick = () => {
     console.log(loginFormResponseState, "checking the flow 1");
-    const loginResponse = postLoginCredentialsXMLhttpRequest(
-      loginFormResponseState
-    );
+    postLoginCredentialsRequest({
+      loginCredentails: loginFormResponseState,
+      successfulLoginAction: (response) => {
+        console.log(response, "in successful login");
+        setRequestError(null);
+        navigate(NAV_CONFIG?.NAV_USER_PAGE);
+      },
+      failedLoginAction: (errorMessage) => {
+        console.error("failedAction", errorMessage);
+        setRequestError({ value: true, message: errorMessage });
+      },
+    });
 
-    loginResponse
-      ?.then((response) => {
-        console.log(response, "inside .then");
-        if (response?.status != ERROR_CODES?.OK) {
-          console.log("inside .then if error block");
-          alert("you don't have authority");
-          setRequestError({ value: true, message: response?.message });
-        } else {
-          console.log("calling setcsrftoken here");
-          setCsrfToken(response?.token);
-          console.log("successful login");
-          console.log("inside .then if ok block");
-          setRequestError(null);
-          navigate(NAV_CONFIG?.NAV_USER_PAGE);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        console.log("inside .catch block");
-        alert(`your request failed ${error}`);
-        setRequestError({ value: true, message: error?.message });
-      });
+    // loginResponse
+    //   ?.then((response) => {
+    //     console.log(response, "inside .then");
+    //     if (response?.status != ERROR_CODES?.OK) {
+    //       console.log("inside .then if error block");
+    //       //     alert("you don't have authority");
+    //       setRequestError({ value: true, message: response?.message });
+    //     } else {
+    //       console.log("calling setcsrftoken here");
+    //       setCsrfToken(response?.token);
+    //       console.log("successful login");
+    //       console.log("inside .then if ok block");
+    //       setRequestError(null);
+    //       navigate(NAV_CONFIG?.NAV_USER_PAGE);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //     console.log("inside .catch block");
+    //     //    alert(`your request failed ${error}`);
+    //     setRequestError({ value: true, message: error?.message });
+    //   });
   };
 
   const handleRequestPasswordClick = () => {

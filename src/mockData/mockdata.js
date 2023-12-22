@@ -31,12 +31,12 @@ export const uesrTableHeader = [
   {
     value: "firstName",
     title: "First Name",
-    width: "12.5%",
+    width: "11%",
   },
   {
     value: "lastName",
     title: "Last Name",
-    width: "12.5%",
+    width: "11%",
   },
   {
     value: "organisation",
@@ -51,7 +51,7 @@ export const uesrTableHeader = [
   {
     value: "userType",
     title: "User Type",
-    width: "9%",
+    width: "11%",
   },
   {
     value: "name",
@@ -61,12 +61,12 @@ export const uesrTableHeader = [
   {
     value: "recordStatus",
     title: "Status",
-    width: "11%",
+    width: "5%",
   },
   {
     value: "email",
     title: "Email",
-    width: "13%",
+    width: "12%",
   },
   {
     value: "userActionMenu",

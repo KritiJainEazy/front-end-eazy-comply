@@ -16,10 +16,14 @@ export const ModalScreenContainer = styled(Box)`
 export const ModalContainer = styled(Box)`
   width: ${(props) => props?.width || "100%"};
   height: ${(props) => props?.height || "100%"};
-  background-color: #fff;
+  background-color: ${(props) => props?.backgroundColor || "#fff"};
+
+  border: 1px solid rgb(229, 231, 235);
+  border-radius: 0.4rem;
   padding: 5px;
-  position: absolute;
-  right: 0;
+  position: ${(props) => props?.position || "#absolute"};
+  right: 56rem;
+  top: 5rem;
 `;
 
 export const ModalTitleContainer = styled(Box)`

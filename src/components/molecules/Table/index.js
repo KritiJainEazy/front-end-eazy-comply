@@ -6,21 +6,23 @@ import {
   TableHeaderData,
   TableRowData,
   TableContainer,
-  ActionMenu,
   TableBoxContainer,
   CheckBoxInput,
   PaginationContainer,
   PageNavigationButton,
   PageNumberContainer,
   PageButtonContainer,
+  ActionMenuContainer,
+  ActionMenuIcons,
 } from "./styles.table";
 import Box from "../../atoms/box.atom";
-
+import { Modal } from "../Modal";
 import { constantStrings } from "../../../constants/magicString";
 import { ActiveStatus } from "../ActiveStatus";
 import Dropdown from "../Dropdown";
-import { userTableAppendData } from "../../../mockData/mockdata";
 import { ToggleButton } from "../ToggleButton";
+import MenuIcon from "../../../assets/menu.png";
+import { PopupMenu } from "../PopupMenu";
 
 export const Table = ({
   tableHeaderData = [],
@@ -28,293 +30,334 @@ export const Table = ({
   //isMoreDataAvailable = false,
   actionMenuHeaderTitle = "",
   activeStatusHeaderTitle = "",
-  actionMenuContent = <ActionMenu actionMenuItems={[]} />,
+  actionMenuItems = [],
+  //actionMenuContent = <ActionMenu actionMenuItems={[]} />,
   primaryKey = "",
   multiSelectCheckBox = true,
   getMultipleSelectedArray = () => void 0,
   handleToggleClick = () => void 0,
+  handleUpdateTableData = () => void 0,
   //getMoreData = () => void 0,
 }) => {
-  console.log(tableData, "this is what we got");
-  //to change
-  const entriesPerPageDropdownItems = [
-    {
-      title: "10 per page",
-      value: "10",
-      action: "",
-    },
-    {
-      title: "20 per page",
-      value: "20",
-      action: "",
-    },
-    {
-      title: "50 per page",
-      value: "50",
-      action: "",
-    },
-    {
-      title: "59 per page",
-      value: "59",
-      action: "",
-    },
+  const [isBulkMenuOpen, setIsBulkMenuOpen] = useState(false);
+  //  const [tableData, setTableData] = useState(tableDataReceived);
+  //console.log(tableDataReceived, "this is what we got");
 
-    // {
-    //   title: "100 per page",
-    //   value: "100",
-    //   action: "",
-    // },
-  ];
-  const entriesPerPageDropdownTitle = "Select number of entries per page";
+  //to change
+  // const entriesPerPageDropdownItems = [
+  //   {
+  //     title: "10 per page",
+  //     value: "10",
+  //     action: "",
+  //   },
+  //   {
+  //     title: "20 per page",
+  //     value: "20",
+  //     action: "",
+  //   },
+  //   {
+  //     title: "50 per page",
+  //     value: "50",
+  //     action: "",
+  //   },
+  //   {
+  //     title: "59 per page",
+  //     value: "59",
+  //     action: "",
+  //   },
+
+  //   // {
+  //   //   title: "100 per page",
+  //   //   value: "100",
+  //   //   action: "",
+  //   // },
+  // ];
+  // const entriesPerPageDropdownTitle = "Select number of entries per page";
 
   const noDataString = "No data available";
 
   // temporary code to append data upto a certain point and a fake function for the time being
-  const [tempDataAppend, setTempDataAppend] = useState(0);
-  const MAX_APPENDS = 2;
+  // const [tempDataAppend, setTempDataAppend] = useState(0);
+  // const MAX_APPENDS = 2;
 
-  let changeButtonAnswer = true;
+  // const MAX_PAGES_PER_PALLETE = 3;
 
-  const MAX_PAGES_PER_PALLETE = 3;
-
-  const PALLETE_BUTTON_STATES = {
-    POINTER: "pointer",
-    LOADING: "progress",
-    DISABLED: "not-allowed",
-  };
-  const [isMoreDataAvailable, setIsMoreData] = useState(true);
+  // const PALLETE_BUTTON_STATES = {
+  //   POINTER: "pointer",
+  //   LOADING: "progress",
+  //   DISABLED: "not-allowed",
+  // // };
+  // const [isMoreDataAvailable, setIsMoreData] = useState(true);
 
   const [allSelected, setAllSelected] = useState(false);
 
   const [selectedIndexArray, setSelectedIndexArray] = useState([]);
 
-  const [entriesPerPage, setEntriesPerPage] = useState(10);
-  const [currentPageNumbersPalette, setCurrentPageNumbersPalette] = useState(
-    []
-  );
-  const [currentPage, setCurrrentPage] = useState(1);
-  const [tableDataToBeShown, setTableDataToBeShown] = useState([]);
-  const [forwardPalletButtonState, setForwardPalletButtonState] = useState(
-    PALLETE_BUTTON_STATES?.POINTER
-  );
+  // const [entriesPerPage, setEntriesPerPage] = useState(10);
+  // const [currentPageNumbersPalette, setCurrentPageNumbersPalette] = useState(
+  //   []
+  // );
+  // const [currentPage, setCurrrentPage] = useState(1);
+  // const [tableDataToBeShown, setTableDataToBeShown] = useState([]);
+  // const [forwardPalletButtonState, setForwardPalletButtonState] = useState(
+  //   PALLETE_BUTTON_STATES?.POINTER
+  // );
 
-  const [isBackPalleteButtonDisabled, setIsBackPalleteButtonDisabled] =
-    useState(true);
+  // const [isBackPalleteButtonDisabled, setIsBackPalleteButtonDisabled] =
+  //   useState(true);
 
-  const initializePagePallete = () => {
-    const newPageNumberPallete = [];
-    let tableDataLength = tableData?.length;
-    for (let i = 0; i < MAX_PAGES_PER_PALLETE && tableDataLength > 0; i++) {
-      tableDataLength = tableDataLength - entriesPerPage;
-      newPageNumberPallete.push(i + 1);
-    }
-    setCurrentPageNumbersPalette(newPageNumberPallete);
-    setCurrrentPage(1);
-  };
-  const getMoreData = () => {
-    setForwardPalletButtonState(PALLETE_BUTTON_STATES?.LOADING);
-    if (tempDataAppend <= MAX_APPENDS - 1) {
-      tableData.push(...userTableAppendData);
-      setTempDataAppend(tempDataAppend + 1);
-    }
+  // const initializePagePallete = () => {
+  //   const newPageNumberPallete = [];
+  //   let tableDataLength = tableData?.length;
+  //   for (let i = 0; i < MAX_PAGES_PER_PALLETE && tableDataLength > 0; i++) {
+  //     tableDataLength = tableDataLength - entriesPerPage;
+  //     newPageNumberPallete.push(i + 1);
+  //   }
+  //   setCurrentPageNumbersPalette(newPageNumberPallete);
+  //   setCurrrentPage(1);
+  // };
+  // const getMoreData = () => {
+  //   setForwardPalletButtonState(PALLETE_BUTTON_STATES?.LOADING);
+  //   if (tempDataAppend <= MAX_APPENDS - 1) {
+  //     tableData.push(...userTableAppendData);
+  //     setTempDataAppend(tempDataAppend + 1);
+  //   }
 
-    if (tempDataAppend > MAX_APPENDS - 1) {
-      setIsMoreData(false);
-    }
-    setForwardPalletButtonState(PALLETE_BUTTON_STATES?.POINTER);
-  };
-  const getData = () => {
-    const lastPage =
-      currentPageNumbersPalette[currentPageNumbersPalette.length - 1];
+  //   if (tempDataAppend > MAX_APPENDS - 1) {
+  //     setIsMoreData(false);
+  //   }
+  //   setForwardPalletButtonState(PALLETE_BUTTON_STATES?.POINTER);
+  // };
+  // const getData = () => {
+  //   const lastPage =
+  //     currentPageNumbersPalette[currentPageNumbersPalette.length - 1];
 
-    const numberOfEntriesDisplayedSoFar = lastPage * entriesPerPage;
+  //   const numberOfEntriesDisplayedSoFar = lastPage * entriesPerPage;
 
-    const numberOfEntriesLeftToBeDisplayed =
-      tableData?.length - numberOfEntriesDisplayedSoFar;
+  //   const numberOfEntriesLeftToBeDisplayed =
+  //     tableData?.length - numberOfEntriesDisplayedSoFar;
 
-    if (isMoreDataAvailable) {
-      if (
-        numberOfEntriesLeftToBeDisplayed <
-        entriesPerPage * MAX_PAGES_PER_PALLETE
-      ) {
-        getMoreData();
-      }
-    }
-  };
+  //   if (isMoreDataAvailable) {
+  //     if (
+  //       numberOfEntriesLeftToBeDisplayed <
+  //       entriesPerPage * MAX_PAGES_PER_PALLETE
+  //     ) {
+  //       getMoreData();
+  //     }
+  //   }
+  // };
 
-  const handleBackPalleteSelect = () => {
-    const firstPage = currentPageNumbersPalette[0];
-    if (firstPage != 1) {
-      setIsBackPalleteButtonDisabled(false);
-      const newPageNumberPallet = [];
-      for (let i = 0; i < MAX_PAGES_PER_PALLETE; i++) {
-        newPageNumberPallet.push(firstPage - MAX_PAGES_PER_PALLETE + i);
-      }
-      setCurrentPageNumbersPalette(newPageNumberPallet);
-      setCurrrentPage(newPageNumberPallet[0]);
-      if (newPageNumberPallet[0] == 1) {
-        setIsBackPalleteButtonDisabled(true);
-      }
-    } else {
-      setIsBackPalleteButtonDisabled(true);
-    }
-  };
+  // const handleBackPalleteSelect = () => {
+  //   const firstPage = currentPageNumbersPalette[0];
+  //   if (firstPage != 1) {
+  //     setIsBackPalleteButtonDisabled(false);
+  //     const newPageNumberPallet = [];
+  //     for (let i = 0; i < MAX_PAGES_PER_PALLETE; i++) {
+  //       newPageNumberPallet.push(firstPage - MAX_PAGES_PER_PALLETE + i);
+  //     }
+  //     setCurrentPageNumbersPalette(newPageNumberPallet);
+  //     setCurrrentPage(newPageNumberPallet[0]);
+  //     if (newPageNumberPallet[0] == 1) {
+  //       setIsBackPalleteButtonDisabled(true);
+  //     }
+  //   } else {
+  //     setIsBackPalleteButtonDisabled(true);
+  //   }
+  // };
 
-  const handleForwardPalleteSelect = () => {
-    if (forwardPalletButtonState != PALLETE_BUTTON_STATES?.DISABLED) {
-      setIsBackPalleteButtonDisabled(false);
+  // const handleForwardPalleteSelect = () => {
+  //   if (forwardPalletButtonState != PALLETE_BUTTON_STATES?.DISABLED) {
+  //     setIsBackPalleteButtonDisabled(false);
 
-      const lastPage =
-        currentPageNumbersPalette[currentPageNumbersPalette.length - 1];
+  //     const lastPage =
+  //       currentPageNumbersPalette[currentPageNumbersPalette.length - 1];
 
-      const numberOfEntriesDisplayedSoFar = lastPage * entriesPerPage;
+  //     const numberOfEntriesDisplayedSoFar = lastPage * entriesPerPage;
 
-      getData();
+  //     getData();
 
-      let numberOfEntriesLeftToBeDisplayed =
-        tableData?.length - numberOfEntriesDisplayedSoFar;
-      if (numberOfEntriesLeftToBeDisplayed > 0) {
-        const newPageNumberPallet = [];
+  //     let numberOfEntriesLeftToBeDisplayed =
+  //       tableData?.length - numberOfEntriesDisplayedSoFar;
+  //     if (numberOfEntriesLeftToBeDisplayed > 0) {
+  //       const newPageNumberPallet = [];
 
-        for (
-          let i = 0;
-          numberOfEntriesLeftToBeDisplayed > 0 && i < MAX_PAGES_PER_PALLETE;
-          i++
-        ) {
-          newPageNumberPallet.push(lastPage + 1 + i);
-          numberOfEntriesLeftToBeDisplayed =
-            numberOfEntriesLeftToBeDisplayed - entriesPerPage;
-        }
-        setCurrentPageNumbersPalette(newPageNumberPallet);
-        setCurrrentPage(lastPage + 1);
-      }
-    }
-  };
+  //       for (
+  //         let i = 0;
+  //         numberOfEntriesLeftToBeDisplayed > 0 && i < MAX_PAGES_PER_PALLETE;
+  //         i++
+  //       ) {
+  //         newPageNumberPallet.push(lastPage + 1 + i);
+  //         numberOfEntriesLeftToBeDisplayed =
+  //           numberOfEntriesLeftToBeDisplayed - entriesPerPage;
+  //       }
+  //       setCurrentPageNumbersPalette(newPageNumberPallet);
+  //       setCurrrentPage(lastPage + 1);
+  //     }
+  //   }
+  // };
 
-  const handlePageSelect = (pageNumber) => {
-    setCurrrentPage(pageNumber);
-  };
+  // const handlePageSelect = (pageNumber) => {
+  //   setCurrrentPage(pageNumber);
+  // };
 
   const checkAllSelected = () => {
     //      if(tableDataToBeShown?.length)     //not applicable on first render
-    if (tableDataToBeShown?.length) {
-      const firstIndex = entriesPerPage * (currentPage - 1);
-      const isAllSelected = tableDataToBeShown.every((dataItem, dataIndex) => {
-        return selectedIndexArray.includes(firstIndex + dataIndex);
+    if (tableData?.length) {
+      // const firstIndex = entriesPerPage * (currentPage - 1);
+      const isAllSelected = tableData.every((dataItem, dataIndex) => {
+        return selectedIndexArray.includes(dataIndex);
       });
 
       return isAllSelected;
     }
   };
 
-  const renderingPageData = () => {
-    const pageData = [];
-    const startingIndexForPage = (currentPage - 1) * entriesPerPage;
-    for (let i = 0; i < entriesPerPage; i++) {
-      if (!tableData[startingIndexForPage + i]) {
-        break;
-      }
-      pageData?.push(tableData[startingIndexForPage + i]);
-    }
-    setTableDataToBeShown(pageData);
-    setAllSelected(checkAllSelected());
-  };
+  // const renderingPageData = () => {
+  //   const pageData = [];
+  //   const startingIndexForPage = (currentPage - 1) * entriesPerPage;
+  //   for (let i = 0; i < entriesPerPage; i++) {
+  //     if (!tableData[startingIndexForPage + i]) {
+  //       break;
+  //     }
+  //     pageData?.push(tableData[startingIndexForPage + i]);
+  //   }
+  //   setTableDataToBeShown(pageData);
+  //   setAllSelected(checkAllSelected());
+  // };
 
   const handleMultiSelect = () => {
-    const firstIndex = entriesPerPage * (currentPage - 1);
+    //  const firstIndex = entriesPerPage * (currentPage - 1);
     if (allSelected) {
-      const currentIndices = [];
-      for (let entry = 0; entry < entriesPerPage; entry++) {
-        currentIndices?.push(firstIndex + entry);
-      }
+      // const currentIndices = [];
+      // for (let entry = 0; entry < entriesPerPage; entry++) {
+      //   currentIndices?.push(firstIndex + entry);
+      // }
 
-      setSelectedIndexArray(() => {
-        return selectedIndexArray?.filter((selectedIndex) => {
-          return !currentIndices?.includes(selectedIndex);
-        });
-      }, setAllSelected(false));
+      // setSelectedIndexArray(() => {
+      //   return selectedIndexArray?.filter((selectedIndex) => {
+      //     return !currentIndices?.includes(selectedIndex);
+      //   });
+      // }, setAllSelected(false));
+      setAllSelected(false);
+      setSelectedIndexArray([]);
     } else {
+      // const allSelectedNewArray = [];
+      // for (let entry = 0; entry < entriesPerPage; entry++) {
+      //   if (!selectedIndexArray?.includes(entry + firstIndex)) {
+      //     allSelectedNewArray?.push(entry + firstIndex);
+      //   }
+      // }
+      // setSelectedIndexArray(() => {
+      //   return [...selectedIndexArray, ...allSelectedNewArray];
+      // }, setAllSelected(true));
+      setAllSelected(true);
       const allSelectedNewArray = [];
-      for (let entry = 0; entry < entriesPerPage; entry++) {
-        if (!selectedIndexArray?.includes(entry + firstIndex)) {
-          allSelectedNewArray?.push(entry + firstIndex);
+      for (let entry = 0; entry < tableData?.length; entry++) {
+        if (!selectedIndexArray?.includes(entry)) {
+          allSelectedNewArray?.push(entry);
         }
       }
       setSelectedIndexArray(() => {
         return [...selectedIndexArray, ...allSelectedNewArray];
-      }, setAllSelected(true));
+      });
     }
   };
 
   const handleCheckboxSelect = (dataIndex) => {
-    const tableDataIndex = entriesPerPage * (currentPage - 1) + dataIndex; //index as in tableData
-    if (selectedIndexArray?.includes(tableDataIndex)) {
+    // const tableDataIndex = entriesPerPage * (currentPage - 1) + dataIndex; //index as in tableData
+    if (selectedIndexArray?.includes(dataIndex)) {
       setSelectedIndexArray(
         selectedIndexArray?.filter((selectedIndex) => {
-          return selectedIndex != tableDataIndex;
+          return selectedIndex != dataIndex;
         })
       );
     } else {
-      setSelectedIndexArray([...selectedIndexArray, tableDataIndex]);
+      setSelectedIndexArray([...selectedIndexArray, dataIndex]);
     }
   };
+
+  const handleBulkMenuAction = () => {
+    setIsBulkMenuOpen(!isBulkMenuOpen);
+    console.log("bulk menu");
+  };
+
+  // const handleUpdateTableData = (response) => {
+  //   if (response.ok) {
+  //     setSelectedIndexArray([]);
+  //     setTableData(
+  //       tableData.filter((tableItem, index) => {
+  //         return !response.ids.includes(tableItem[primaryKey]);
+  //       })
+  //     );
+  //   }
+  // };
 
   const getDataFromSelectedIndex = () => {
     const multiSelectArray = [];
     selectedIndexArray?.map((selectedItemIndex) => {
-      multiSelectArray?.push(tableData[selectedItemIndex]);
+      multiSelectArray?.push(tableData[selectedItemIndex][primaryKey]);
     });
-    return multiSelectArray;
+    return JSON.stringify(multiSelectArray);
   };
-  const handleMultiSelectAction = () => {
-    const multiSelectArray = getDataFromSelectedIndex();
-    console.log(multiSelectArray, selectedIndexArray);
-  };
+  // const handleMultiSelectAction = () => {
+  //   const multiSelectArray = getDataFromSelectedIndex();
+  //   console.log(multiSelectArray, selectedIndexArray);
+  // };
 
-  useEffect(() => {
-    initializePagePallete();
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   initializePagePallete();
+  //   getData();
+  // }, []);
 
   //to be removed
-  useEffect(() => {
-    getMultipleSelectedArray(getDataFromSelectedIndex());
-  }, [selectedIndexArray]);
+  // useEffect(() => {
+  //   getMultipleSelectedArray(getDataFromSelectedIndex());
+  // }, [selectedIndexArray]);
 
-  useEffect(() => {
-    if (!isMoreDataAvailable) {
-      const maxPageNumber = Math.ceil(tableData?.length / entriesPerPage);
+  // useEffect(() => {
+  //   if (!isMoreDataAvailable) {
+  //     const maxPageNumber = Math.ceil(tableData?.length / entriesPerPage);
 
-      if (
-        currentPageNumbersPalette[currentPageNumbersPalette?.length - 1] ==
-        maxPageNumber
-      ) {
-        setForwardPalletButtonState(PALLETE_BUTTON_STATES?.DISABLED);
-      } else {
-        setForwardPalletButtonState(PALLETE_BUTTON_STATES?.POINTER);
-      }
-    }
-  }, [currentPageNumbersPalette]);
+  //     if (
+  //       currentPageNumbersPalette[currentPageNumbersPalette?.length - 1] ==
+  //       maxPageNumber
+  //     ) {
+  //       setForwardPalletButtonState(PALLETE_BUTTON_STATES?.DISABLED);
+  //     } else {
+  //       setForwardPalletButtonState(PALLETE_BUTTON_STATES?.POINTER);
+  //     }
+  //   }
+  // }, [currentPageNumbersPalette]);
 
-  useEffect(() => {
-    renderingPageData();
-  }, [currentPage]);
+  // useEffect(() => {
+  //   renderingPageData();
+  // }, [currentPage]);
 
   useEffect(() => {
     setAllSelected(checkAllSelected());
   }, [selectedIndexArray]);
 
-  useEffect(() => {
-    initializePagePallete();
-    renderingPageData();
-  }, [entriesPerPage]);
+  // useEffect(() => {
+  //   initializePagePallete();
+  //   renderingPageData();
+  // }, [entriesPerPage]);
   return (
     <TableBoxContainer>
       <TableContainer>
+        <PopupMenu
+          display={isBulkMenuOpen ? "block" : "none"}
+          selectedData={getDataFromSelectedIndex()}
+          updateTableData={(response) => {
+            if (response.ok) {
+              setSelectedIndexArray([]);
+              handleUpdateTableData(response.ids);
+            }
+          }}
+        />
         <TableBodyContainer>
           <TableHeaderContainer>
             {multiSelectCheckBox && (
-              <TableHeaderData width="4%" key={`headerItemCheckBox`}>
+              <TableHeaderData width="2%" key={`headerItemCheckBox`}>
                 <CheckBoxInput
                   type={"checkbox"}
                   onChange={handleMultiSelect}
@@ -323,18 +366,44 @@ export const Table = ({
               </TableHeaderData>
             )}
             {tableHeaderData.map((headerItem, index) => {
-              return (
-                <TableHeaderData
-                  width={headerItem?.width}
-                  key={`headerItem_${index}`}
-                >
-                  {headerItem?.title}
-                </TableHeaderData>
-              );
+              switch (headerItem?.value) {
+                case actionMenuHeaderTitle:
+                  return (
+                    <>
+                      <TableHeaderData
+                        width={headerItem?.width}
+                        key={`headerItem_${index}`}
+                        onClick={handleBulkMenuAction}
+                        cursor="pointer"
+                        position="relative"
+                      >
+                        <img src={MenuIcon} height="15rem" cursor="pointer" />
+                        {/* <Modal
+                          position="absolute"
+                          width="5rem"
+                          height="5rem"
+                          showModalTitle={false}
+                          modalContent={<Box backgroundColor="red">hi</Box>}
+                          showCloseButton={false}
+                          backgroundFade={false}
+                        /> */}
+                      </TableHeaderData>
+                    </>
+                  );
+                default:
+                  return (
+                    <TableHeaderData
+                      width={headerItem?.width}
+                      key={`headerItem_${index}`}
+                    >
+                      {headerItem?.title}
+                    </TableHeaderData>
+                  );
+              }
             })}
           </TableHeaderContainer>
 
-          {tableDataToBeShown.map((dataItem, dataIndex) => {
+          {tableData.map((dataItem, dataIndex) => {
             return (
               <TableRowContainer key={`dataItemRowCheckBox_${dataIndex}`}>
                 {multiSelectCheckBox && (
@@ -343,11 +412,7 @@ export const Table = ({
                       type={"checkbox"}
                       onChange={() => handleCheckboxSelect(dataIndex)}
                       checked={
-                        selectedIndexArray?.includes(
-                          dataIndex + entriesPerPage * (currentPage - 1)
-                        )
-                          ? true
-                          : false
+                        selectedIndexArray?.includes(dataIndex) ? true : false
                       }
                     />
                   </TableRowData>
@@ -357,11 +422,25 @@ export const Table = ({
                   switch (headerData?.value) {
                     case actionMenuHeaderTitle:
                       return (
-                        <TableRowData
-                          key={`dataHeaderIndex_${dataHeaderIndex}`}
-                        >
-                          {actionMenuContent}
-                        </TableRowData>
+                        <>
+                          <TableRowData
+                            key={`dataHeaderIndex_${dataHeaderIndex}`}
+                          >
+                            <ActionMenuContainer>
+                              {actionMenuItems.map((actionMenuItem, index) => {
+                                return (
+                                  <ActionMenuIcons
+                                    key={`action-menu-index-${index}`}
+                                    src={actionMenuItem?.src}
+                                    onClick={() =>
+                                      actionMenuItem?.handler(dataItem)
+                                    }
+                                  />
+                                );
+                              })}
+                            </ActionMenuContainer>
+                          </TableRowData>
+                        </>
                       );
                     case activeStatusHeaderTitle:
                       return (
@@ -369,13 +448,6 @@ export const Table = ({
                           key={`dataHeaderIndex_${dataHeaderIndex}`}
                           display="flex"
                         >
-                          {/* <Box display="flex">
-                            <ActiveStatus
-                              status={dataItem[headerData?.value]}
-                              mr="10px"
-                            />
-                            {dataItem[headerData?.value]}
-                          </Box> */}
                           <ToggleButton
                             height="1rem"
                             width="2rem"
@@ -384,8 +456,7 @@ export const Table = ({
                               dataItem[headerData?.value] == 1 ? true : false
                             }
                             onToggleClick={(e) => {
-                              console.log(e);
-                              handleToggleClick(e);
+                              handleToggleClick(dataItem);
                             }}
                           />
                         </TableRowData>
@@ -404,7 +475,7 @@ export const Table = ({
                         <TableRowData
                           key={`dataHeaderIndex_${dataHeaderIndex}`}
                         >
-                          {dataItem[headerData?.value]}
+                          {dataItem[headerData?.value] || constantStrings?.NA}
                         </TableRowData>
                       );
                   }

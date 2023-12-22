@@ -14,35 +14,53 @@ import { UserPage } from "./components/organisms/UserPage";
 import { AddUser } from "./components/organisms/AddUser";
 import { UsersIndexPage } from "./components/pages/FrameworkPages/UsersIndexPage";
 import { LoginPage } from "./components/pages/FrameworkPages/LoginPage";
+import { ToastContainer } from "react-toastify";
+import { EditUser } from "./components/organisms/EditUser";
 // UsersIndexPage";
 
 export const App = () => {
   return (
-    // basename="/eazy-compliance-and-audits"
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={<Navigate replace to={NAV_CONFIG?.NAV_LOGIN_LANDING_PAGE} />}
-        ></Route>
+    <>
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Navigate replace to={NAV_CONFIG?.NAV_LOGIN_LANDING_PAGE} />
+            }
+          ></Route>
 
-        <Route
-          path={NAV_CONFIG?.NAV_LOGIN_LANDING_PAGE}
-          element={<LoginPage />}
-        />
-        <Route
-          path={NAV_CONFIG?.NAV_USER_PAGE}
-          element={
-            <PageLayout>
-              <UsersIndexPage />
-            </PageLayout>
-          }
-        >
-          <Route index element={<UserPage />} />
-          <Route path={NAV_CONFIG?.NAV_ADD_USER} element={<AddUser />} />
-        </Route>
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </Router>
+          <Route
+            path={NAV_CONFIG?.NAV_LOGIN_LANDING_PAGE}
+            element={<LoginPage />}
+          />
+          <Route
+            path={NAV_CONFIG?.NAV_USER_PAGE}
+            element={
+              <PageLayout>
+                <UsersIndexPage />
+              </PageLayout>
+            }
+          >
+            <Route index element={<UserPage />} />
+            <Route path={NAV_CONFIG?.NAV_ADD_USER} element={<AddUser />} />
+            <Route path={NAV_CONFIG?.NAV_EDIT_USER} element={<EditUser />} />
+          </Route>
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Router>
+      {/* <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      /> */}
+    </>
   );
 };
