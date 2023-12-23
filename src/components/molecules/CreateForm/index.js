@@ -17,7 +17,10 @@ import {
 import { useCsrfToken } from "../../../utils/useCsrfToken";
 import { NAV_CONFIG, REQUEST_TYPES } from "../../../constants/navConfig";
 import { useNavigate } from "react-router-dom";
-import { ERROR_CODES } from "../../../constants/errorCodesMessages";
+import {
+  AUTHORITIES,
+  ERROR_CODES,
+} from "../../../constants/errorCodesMessages";
 import { ToggleButton } from "../ToggleButton";
 
 export const CreateForm = ({
@@ -110,24 +113,27 @@ export const CreateForm = ({
       api: "/register",
       requestType: "POST",
       data: formResponseState,
-      getResponseFlag: true,
+      getResponseFlag: sessionStorage
+        ?.getItem("authorities")
+        ?.includes(AUTHORITIES?.CREATEUSER),
+      authority: AUTHORITIES?.CREATEUSER,
       getResponse: (response) => {
-   //     alert(response?.message);
+        alert(response?.message);
       },
       successAction: (response) => {
         console.log(response, "inside .then");
 
         if (response?.status != ERROR_CODES?.CREATED) {
-     //     alert("couldn't create one, don't have authorities");
+          //     alert("couldn't create one, don't have authorities");
           console.log("inside .then if error block");
         } else {
-       //   // alert("successful creation");
+          //   // alert("successful creation");
           console.log("inside .then if ok block");
           navigate(NAV_CONFIG?.NAV_USER_PAGE);
         }
       },
       failureAction: (error) => {
-     //   alert(error);
+        //   alert(error);
         console.log("inside .catch block createform", error);
       },
     });

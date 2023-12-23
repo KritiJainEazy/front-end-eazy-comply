@@ -8,6 +8,7 @@ export const constantStrings = {
   ERROR_TOAST_STATUS: "error",
   EXPORT: "Export",
   NA: "NA",
+  OOPS_NO_DATA: "Oops! You don't have any data",
   PLEASE_WAIT: "Please wait...",
   SUCCESS_TOAST_STATUS: "success",
   TABLE_ACTION_MENU: "userActionMenu",

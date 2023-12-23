@@ -343,42 +343,43 @@ export const Table = ({
   // }, [entriesPerPage]);
   return (
     <TableBoxContainer>
-      <TableContainer>
-        <PopupMenu
-          display={isBulkMenuOpen ? "block" : "none"}
-          selectedData={getDataFromSelectedIndex()}
-          updateTableData={(response) => {
-            if (response.ok) {
-              setSelectedIndexArray([]);
-              handleUpdateTableData(response.ids);
-            }
-          }}
-        />
-        <TableBodyContainer>
-          <TableHeaderContainer>
-            {multiSelectCheckBox && (
-              <TableHeaderData width="2%" key={`headerItemCheckBox`}>
-                <CheckBoxInput
-                  type={"checkbox"}
-                  onChange={handleMultiSelect}
-                  checked={allSelected}
-                />
-              </TableHeaderData>
-            )}
-            {tableHeaderData.map((headerItem, index) => {
-              switch (headerItem?.value) {
-                case actionMenuHeaderTitle:
-                  return (
-                    <>
-                      <TableHeaderData
-                        width={headerItem?.width}
-                        key={`headerItem_${index}`}
-                        onClick={handleBulkMenuAction}
-                        cursor="pointer"
-                        position="relative"
-                      >
-                        <img src={MenuIcon} height="15rem" cursor="pointer" />
-                        {/* <Modal
+      {tableData?.length ? (
+        <TableContainer>
+          <PopupMenu
+            display={isBulkMenuOpen ? "block" : "none"}
+            selectedData={getDataFromSelectedIndex()}
+            updateTableData={(response) => {
+              if (response.ok) {
+                setSelectedIndexArray([]);
+                handleUpdateTableData(response.ids);
+              }
+            }}
+          />
+          <TableBodyContainer>
+            <TableHeaderContainer>
+              {multiSelectCheckBox && (
+                <TableHeaderData width="2%" key={`headerItemCheckBox`}>
+                  <CheckBoxInput
+                    type={"checkbox"}
+                    onChange={handleMultiSelect}
+                    checked={allSelected}
+                  />
+                </TableHeaderData>
+              )}
+              {tableHeaderData.map((headerItem, index) => {
+                switch (headerItem?.value) {
+                  case actionMenuHeaderTitle:
+                    return (
+                      <>
+                        <TableHeaderData
+                          width={headerItem?.width}
+                          key={`headerItem_${index}`}
+                          onClick={handleBulkMenuAction}
+                          cursor="pointer"
+                          position="relative"
+                        >
+                          <img src={MenuIcon} height="15rem" cursor="pointer" />
+                          {/* <Modal
                           position="absolute"
                           width="5rem"
                           height="5rem"
@@ -387,104 +388,112 @@ export const Table = ({
                           showCloseButton={false}
                           backgroundFade={false}
                         /> */}
+                        </TableHeaderData>
+                      </>
+                    );
+                  default:
+                    return (
+                      <TableHeaderData
+                        width={headerItem?.width}
+                        key={`headerItem_${index}`}
+                      >
+                        {headerItem?.title}
                       </TableHeaderData>
-                    </>
-                  );
-                default:
-                  return (
-                    <TableHeaderData
-                      width={headerItem?.width}
-                      key={`headerItem_${index}`}
-                    >
-                      {headerItem?.title}
-                    </TableHeaderData>
-                  );
-              }
-            })}
-          </TableHeaderContainer>
+                    );
+                }
+              })}
+            </TableHeaderContainer>
 
-          {tableData.map((dataItem, dataIndex) => {
-            return (
-              <TableRowContainer key={`dataItemRowCheckBox_${dataIndex}`}>
-                {multiSelectCheckBox && (
-                  <TableRowData key={`rowItemCheckBox${dataIndex}`}>
-                    <CheckBoxInput
-                      type={"checkbox"}
-                      onChange={() => handleCheckboxSelect(dataIndex)}
-                      checked={
-                        selectedIndexArray?.includes(dataIndex) ? true : false
-                      }
-                    />
-                  </TableRowData>
-                )}
+            {tableData.map((dataItem, dataIndex) => {
+              return (
+                <TableRowContainer key={`dataItemRowCheckBox_${dataIndex}`}>
+                  {multiSelectCheckBox && (
+                    <TableRowData key={`rowItemCheckBox${dataIndex}`}>
+                      <CheckBoxInput
+                        type={"checkbox"}
+                        onChange={() => handleCheckboxSelect(dataIndex)}
+                        checked={
+                          selectedIndexArray?.includes(dataIndex) ? true : false
+                        }
+                      />
+                    </TableRowData>
+                  )}
 
-                {tableHeaderData.map((headerData, dataHeaderIndex) => {
-                  switch (headerData?.value) {
-                    case actionMenuHeaderTitle:
-                      return (
-                        <>
+                  {tableHeaderData.map((headerData, dataHeaderIndex) => {
+                    switch (headerData?.value) {
+                      case actionMenuHeaderTitle:
+                        return (
+                          <>
+                            <TableRowData
+                              key={`dataHeaderIndex_${dataHeaderIndex}`}
+                            >
+                              <ActionMenuContainer>
+                                {actionMenuItems.map(
+                                  (actionMenuItem, index) => {
+                                    if (actionMenuItem?.isVisible) {
+                                      return (
+                                        <ActionMenuIcons
+                                          key={`action-menu-index-${index}`}
+                                          src={actionMenuItem?.src}
+                                          onClick={() =>
+                                            actionMenuItem?.handler(dataItem)
+                                          }
+                                        />
+                                      );
+                                    }
+                                  }
+                                )}
+                              </ActionMenuContainer>
+                            </TableRowData>
+                          </>
+                        );
+                      case activeStatusHeaderTitle:
+                        return (
+                          <TableRowData
+                            key={`dataHeaderIndex_${dataHeaderIndex}`}
+                            display="flex"
+                          >
+                            <ToggleButton
+                              height="1rem"
+                              width="2rem"
+                              sliderRadius="0.5rem"
+                              initialState={
+                                dataItem[headerData?.value] == 1 ? true : false
+                              }
+                              onToggleClick={(e) => {
+                                handleToggleClick(dataItem);
+                              }}
+                            />
+                          </TableRowData>
+                        );
+                      case primaryKey:
+                        return (
+                          <TableRowData
+                            key={`dataHeaderIndex_${dataHeaderIndex}`}
+                            color={"0.6"}
+                          >
+                            {dataItem[headerData?.value]}
+                          </TableRowData>
+                        );
+                      default:
+                        return (
                           <TableRowData
                             key={`dataHeaderIndex_${dataHeaderIndex}`}
                           >
-                            <ActionMenuContainer>
-                              {actionMenuItems.map((actionMenuItem, index) => {
-                                return (
-                                  <ActionMenuIcons
-                                    key={`action-menu-index-${index}`}
-                                    src={actionMenuItem?.src}
-                                    onClick={() =>
-                                      actionMenuItem?.handler(dataItem)
-                                    }
-                                  />
-                                );
-                              })}
-                            </ActionMenuContainer>
+                            {dataItem[headerData?.value] || constantStrings?.NA}
                           </TableRowData>
-                        </>
-                      );
-                    case activeStatusHeaderTitle:
-                      return (
-                        <TableRowData
-                          key={`dataHeaderIndex_${dataHeaderIndex}`}
-                          display="flex"
-                        >
-                          <ToggleButton
-                            height="1rem"
-                            width="2rem"
-                            sliderRadius="0.5rem"
-                            initialState={
-                              dataItem[headerData?.value] == 1 ? true : false
-                            }
-                            onToggleClick={(e) => {
-                              handleToggleClick(dataItem);
-                            }}
-                          />
-                        </TableRowData>
-                      );
-                    case primaryKey:
-                      return (
-                        <TableRowData
-                          key={`dataHeaderIndex_${dataHeaderIndex}`}
-                          color={"0.6"}
-                        >
-                          {dataItem[headerData?.value]}
-                        </TableRowData>
-                      );
-                    default:
-                      return (
-                        <TableRowData
-                          key={`dataHeaderIndex_${dataHeaderIndex}`}
-                        >
-                          {dataItem[headerData?.value] || constantStrings?.NA}
-                        </TableRowData>
-                      );
-                  }
-                })}
-              </TableRowContainer>
-            );
-          })}
-        </TableBodyContainer>
-      </TableContainer>
+                        );
+                    }
+                  })}
+                </TableRowContainer>
+              );
+            })}
+          </TableBodyContainer>
+        </TableContainer>
+      ) : (
+        <Box> {constantStrings?.OOPS_NO_DATA}</Box>
+      )}
+
       {/* <PaginationContainer>
         <PageButtonContainer>
           <PageNavigationButton

@@ -135,6 +135,9 @@ export const LoginPage = () => {
         console.log(response, "in successful login");
         setRequestError(null);
         navigate(NAV_CONFIG?.NAV_USER_PAGE);
+        // setTimeout(() => {
+        //   navigate(NAV_CONFIG?.NAV_USER_PAGE);
+        // }, 3000);
       },
       failedLoginAction: (errorMessage) => {
         console.error("failedAction", errorMessage);

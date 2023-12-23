@@ -118,14 +118,14 @@ export const EditUserForm = ({
         alert(response?.message);
       },
       successAction: (response) => {
-        console.log(response, "inside .then");
+        console.log(response, "inside .then edit user form");
 
         if (response?.status != ERROR_CODES?.OK) {
           alert("couldn't create one, don't have authorities");
-          console.log("inside .then if error block");
+          console.log("inside .then if error block edit user form");
         } else {
-          // alert("successful creation");
-          console.log("inside .then if ok block");
+          alert("successfully edited");
+          console.log("inside .then if ok block edit user form");
           navigate(NAV_CONFIG?.NAV_USER_PAGE);
         }
       },

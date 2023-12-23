@@ -37,6 +37,7 @@ export const UserPage = () => {
       requestType: REQUEST_TYPES?.GET,
       successAction: (response) => {
         console.log(response);
+        setIsLoading(false);
       },
       getResponseFlag: sessionStorage
         ?.getItem("authorities")
@@ -89,13 +90,13 @@ export const UserPage = () => {
               return userData?.id != user?.id;
             })
           );
-          //      alert(`Successfully disabled user id - ${userData?.id}`);
+          alert(`Successfully disabled user id - ${userData?.id}`);
         }
       },
       getResponseFlag: false,
       failureAction: (error) => {
         console.error(error);
-        //    alert(`Couldn't disable user id = ${userData?.id}`);
+        alert(`Couldn't disable user id = ${userData?.id}`);
       },
     });
   };
@@ -131,13 +132,14 @@ export const UserPage = () => {
               return userData?.id != user?.id;
             })
           );
-          //    alert(`Successfully deleted user id - ${userData?.id}`);
+          alert(`Successfully deleted user id - ${userData?.id}`);
         }
       },
       getResponseFlag: false,
+      authority: AUTHORITIES?.DELETEUSER,
       failureAction: (error) => {
         console.error(error);
-        //   alert(`Couldn't delete user id = ${userData?.id}`);
+        alert(`Couldn't delete user id = ${userData?.id}`);
       },
     });
   };
@@ -152,10 +154,16 @@ export const UserPage = () => {
     {
       src: EditIcon,
       handler: (data) => handleEditClick(data),
+      isVisible: sessionStorage
+        ?.getItem("authorities")
+        ?.includes(AUTHORITIES?.UPDATEUSER),
     },
     {
       src: DeleteIcon,
       handler: (data) => handleDeleteClick(data),
+      isVisible: sessionStorage
+        ?.getItem("authorities")
+        ?.includes(AUTHORITIES?.DELETEUSER),
     },
   ];
   const userPageMainComponent = (
@@ -175,12 +183,14 @@ export const UserPage = () => {
   const userPageProps = {
     headerTitle: constantStrings?.USER_PAGE_HEADER_TITLE,
     handleHeaderButton: handleHeaderButton,
-    showHeaderButton: true,
+    showHeaderButton: sessionStorage
+      ?.getItem("authorities")
+      ?.includes(AUTHORITIES?.CREATEUSER),
     headerButtonTitle: constantStrings?.USER_PAGE_HEADER_BUTTON_TITLE,
     headerButtonIcon: AddIcon,
     headerButtonIconHeight: "16px",
     handleExportButton: handleExportButton,
-    showExportButton: true,
+    showExportButton: userTableData?.length ? true : false,
     exportButtonTitle: constantStrings?.EXPORT,
     exportButtonIcon: ExportIcon,
     exportButtonIconHeight: "16px",
@@ -194,7 +204,10 @@ export const UserPage = () => {
         successAction: (response) => {
           console.log(response);
         },
-        getResponseFlag: true,
+        getResponseFlag: sessionStorage
+          ?.getItem("authorities")
+          ?.includes(AUTHORITIES?.READUSER),
+        authority: AUTHORITIES?.READUSER,
         getResponse: (response) => {
           console.log(response);
           setUserTableData(response?.content);

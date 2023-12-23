@@ -128,9 +128,10 @@ export const useCsrfToken = () => {
           response?.json()?.then((result) => {
             getResponse(result);
           });
-        } else {
-          alert(`Doesn't have ${authority} authority`);
         }
+        // else {
+        //   alert(`Doesn't have ${authority} authority`);
+        // }
       })
       ?.catch((error) => {
         toast.error(failureMessage);

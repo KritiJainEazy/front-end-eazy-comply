@@ -11,15 +11,49 @@ import {
   ProfileMenuActionTileLogo,
   ProfileMenuActionTileTitle,
 } from "./styles.profileMenu";
-import { profileActionMenu, userEmail, userName } from "./profileData";
+import { userEmail, userName } from "./profileData";
+import ProfileIcon from "../../../assets/profile-icon-profile-menu.png";
+import SettingsIcon from "../../../assets/setting-icon-profile-menu.png";
+import SignOutIcon from "../../../assets/sign-out-icon-profile-menu.png";
+import { useNavigate } from "react-router-dom";
+import { NAV_CONFIG } from "../../../constants/navConfig";
 
 export const ProfileMenu = ({
   showProfileMenu = false,
   setShowProfileMenu = () => void 0,
 }) => {
+  const navigate = useNavigate();
   console.log("profile modal state", showProfileMenu);
   const profileMenuRef = useRef();
   console.log(profileMenuRef);
+  const profileActionMenu = [
+    {
+      logo: ProfileIcon,
+      title: "Profile",
+      profileMenuAction: () => {
+        console.log("Profile");
+      },
+    },
+    {
+      logo: SettingsIcon,
+      title: "Settings",
+      profileMenuAction: () => {
+        console.log("Settings");
+      },
+    },
+    {
+      logo: SignOutIcon,
+      title: "Sign Out",
+      profileMenuAction: () => {
+        sessionStorage?.clear();
+        setTimeout(() => {
+          navigate(NAV_CONFIG?.NAV_LOGIN_LANDING_PAGE);
+        }, 3000);
+
+        console.log("Sign Out");
+      },
+    },
+  ];
 
   const handleCloseModal = () => {
     setShowProfileMenu(false);
