@@ -49,15 +49,16 @@ import { LoginPageCard } from "../../../molecules/LoginPageCard";
 import { fieldRequiredCheck } from "../../../../validationChecks/validationChecks";
 import { useCsrfToken } from "../../../../utils/useCsrfToken";
 import { ERROR_CODES } from "../../../../constants/errorCodesMessages";
+import { constantStrings } from "../../../../constants/magicString";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
   const [rememberMeActive, setRememberMeActive] = useState(false);
   const [requestError, setRequestError] = useState(null);
 
-  useEffect(() => {
-    console.log(requestError);
-  }, [requestError]);
+  // useEffect(() => {
+  //   console.log(requestError);
+  // }, [requestError]);
   const { postLoginCredentialsRequest, setCsrfToken } = useCsrfToken();
 
   const [isForgotPasswordPanel, setIsForgotPasswordPanel] = useState(false);
@@ -134,39 +135,16 @@ export const LoginPage = () => {
       successfulLoginAction: (response) => {
         console.log(response, "in successful login");
         setRequestError(null);
-        navigate(NAV_CONFIG?.NAV_USER_PAGE);
-        // setTimeout(() => {
-        //   navigate(NAV_CONFIG?.NAV_USER_PAGE);
-        // }, 3000);
+      //  navigate(NAV_CONFIG?.NAV_USER_PAGE);
+        setTimeout(() => {
+          navigate(NAV_CONFIG?.NAV_USER_PAGE);
+        }, 3000);
       },
       failedLoginAction: (errorMessage) => {
         console.error("failedAction", errorMessage);
         setRequestError({ value: true, message: errorMessage });
       },
     });
-
-    // loginResponse
-    //   ?.then((response) => {
-    //     console.log(response, "inside .then");
-    //     if (response?.status != ERROR_CODES?.OK) {
-    //       console.log("inside .then if error block");
-    //       //     alert("you don't have authority");
-    //       setRequestError({ value: true, message: response?.message });
-    //     } else {
-    //       console.log("calling setcsrftoken here");
-    //       setCsrfToken(response?.token);
-    //       console.log("successful login");
-    //       console.log("inside .then if ok block");
-    //       setRequestError(null);
-    //       navigate(NAV_CONFIG?.NAV_USER_PAGE);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     console.log("inside .catch block");
-    //     //    alert(`your request failed ${error}`);
-    //     setRequestError({ value: true, message: error?.message });
-    //   });
   };
 
   const handleRequestPasswordClick = () => {
@@ -296,6 +274,12 @@ export const LoginPage = () => {
   );
 
   useEffect(() => {
+    if (
+      sessionStorage?.getItem(constantStrings?.TOKEN) &&
+      sessionStorage?.getItem(constantStrings?.TOKEN) != null
+    ) {
+      navigate(NAV_CONFIG?.NAV_USER_PAGE);
+    }
     setLoginCardValues({ ...loginCardValues, ...MAIN_LOGIN_PAGE_VALUES });
   }, []);
 

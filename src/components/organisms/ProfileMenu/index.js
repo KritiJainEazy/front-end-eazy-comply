@@ -49,6 +49,7 @@ export const ProfileMenu = ({
         setTimeout(() => {
           navigate(NAV_CONFIG?.NAV_LOGIN_LANDING_PAGE);
         }, 3000);
+        // navigate(NAV_CONFIG?.NAV_LOGIN_LANDING_PAGE);
 
         console.log("Sign Out");
       },

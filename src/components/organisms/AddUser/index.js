@@ -3,7 +3,6 @@ import { MainPage } from "../MainPage";
 import { NAV_CONFIG } from "../../../constants/navConfig";
 import { Textbox } from "../../molecules/TextBox";
 import { CreateForm } from "../../molecules/CreateForm";
-import { ToastContainer } from "react-toastify";
 
 export const AddUser = () => {
   const addUserPageMainComponent = <CreateForm />;

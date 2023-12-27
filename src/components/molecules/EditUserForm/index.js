@@ -17,23 +17,17 @@ import {
 import { useCsrfToken } from "../../../utils/useCsrfToken";
 import { NAV_CONFIG, REQUEST_TYPES } from "../../../constants/navConfig";
 import { useNavigate } from "react-router-dom";
-import { ERROR_CODES } from "../../../constants/errorCodesMessages";
+import {
+  ERROR_CODES,
+  REQUEST_MESSAGES,
+} from "../../../constants/errorCodesMessages";
+import { toast } from "react-toastify";
+import { constantStrings } from "../../../constants/magicString";
 
 export const EditUserForm = ({
   formSubmitButtonTitle = "Edit User",
   userData = JSON.parse(localStorage.getItem("editableData")),
 }) => {
-  const initialFormResponse = {
-    id: "USE-22Dec2023053133898",
-    name: "random",
-    firstName: "random",
-    lastName: "fields",
-    email: "random@gmail.com",
-    userType: "User",
-    recordStatus: 1,
-    tenant: null,
-    organization: null,
-  };
   // const initialFormResponse = {
   //   name: "",
   //   firstName: "",
@@ -114,23 +108,26 @@ export const EditUserForm = ({
       id: id,
       data: formResponseState,
       getResponseFlag: false,
-      getResponse: (response) => {
-        alert(response?.message);
-      },
       successAction: (response) => {
         console.log(response, "inside .then edit user form");
 
         if (response?.status != ERROR_CODES?.OK) {
-          alert("couldn't create one, don't have authorities");
+          toast.error(REQUEST_MESSAGES?.SOMETHING_WENT_WRONG);
           console.log("inside .then if error block edit user form");
         } else {
-          alert("successfully edited");
+          toast.success(
+            REQUEST_MESSAGES?.SUCCESSFULLY_EDITED?.replace(
+              "$",
+              constantStrings?.USERS + `\u0020${id}`
+            )
+          );
           console.log("inside .then if ok block edit user form");
           navigate(NAV_CONFIG?.NAV_USER_PAGE);
         }
       },
       failureAction: (error) => {
-        alert(error);
+        toast.error(error?.message);
+    
         console.log("inside .catch block createform", error);
       },
     });

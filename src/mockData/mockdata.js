@@ -1,3 +1,5 @@
+import { constantStrings } from "../constants/magicString";
+
 export const userData = {
   userName: "John Doe",
   organisation: "johndoe@xyz.com",
@@ -25,53 +27,73 @@ export const userTypeDropDownMockData = [
 export const uesrTableHeader = [
   {
     value: "id",
+    isSortable: true,
+    sortType: constantStrings?.ASCENDING_SORT_FLAG,
     title: "User ID",
     width: "9%",
   },
   {
     value: "firstName",
+    isSortable: true,
+    sortType: constantStrings?.ASCENDING_SORT_FLAG,
     title: "First Name",
     width: "11%",
   },
   {
     value: "lastName",
+    isSortable: true,
+    sortType: constantStrings?.ASCENDING_SORT_FLAG,
     title: "Last Name",
     width: "11%",
   },
   {
-    value: "organisation",
+    value: "orgName",
+    isSortable: false,
+    sortType: constantStrings?.ASCENDING_SORT_FLAG,
     title: "Organisation",
     width: "9%",
   },
   {
-    value: "tenant",
+    value: "tenantName",
+    isSortable: false,
+    sortType: constantStrings?.ASCENDING_SORT_FLAG,
     title: "Tenant",
     width: "9%",
   },
   {
     value: "userType",
+    isSortable: false,
+    sortType: constantStrings?.ASCENDING_SORT_FLAG,
     title: "User Type",
     width: "11%",
   },
   {
     value: "name",
+    isSortable: true,
+    sortType: constantStrings?.ASCENDING_SORT_FLAG,
     title: "Username",
     width: "11%",
   },
   {
     value: "recordStatus",
+    isSortable: false,
+    sortType: constantStrings?.ASCENDING_SORT_FLAG,
     title: "Status",
     width: "5%",
   },
   {
     value: "email",
+    isSortable: false,
+    sortType: constantStrings?.ASCENDING_SORT_FLAG,
     title: "Email",
-    width: "12%",
+    width: "11%",
   },
   {
     value: "userActionMenu",
+    isSortable: false,
+    sortType: constantStrings?.ASCENDING_SORT_FLAG,
     title: "...",
-    width: "10%",
+    width: "12%",
   },
 ];
 

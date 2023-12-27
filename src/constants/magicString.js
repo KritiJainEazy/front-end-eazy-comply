@@ -5,16 +5,16 @@ export const constantStrings = {
   ACTIVE_STATUS: "status",
   DEFAULT_FAILURE_MESSAGE: "Request failed!",
   DEFAULT_SUCCESS_MESSAGE: "Request successful!",
-  ERROR_TOAST_STATUS: "error",
   EXPORT: "Export",
   NA: "NA",
-  OOPS_NO_DATA: "Oops! You don't have any data",
-  PLEASE_WAIT: "Please wait...",
-  SUCCESS_TOAST_STATUS: "success",
   TABLE_ACTION_MENU: "userActionMenu",
   USER_PAGE_EXPORT_FILENAME: "User Details",
   USER_PAGE_HEADER_BUTTON_TITLE: "Add User",
   USER_PAGE_HEADER_TITLE: "User",
+  ASCENDING_SORT_FLAG: "asc",
+  DESCENDING_SORT_FLAG: "desc",
+  TOKEN: "token",
+  USERS: "users",
 };
 
 export const placeholderStrings = {

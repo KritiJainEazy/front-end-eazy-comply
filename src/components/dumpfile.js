@@ -86,7 +86,7 @@ USE-19Dec2023174305494
 
 stuff to do - 
 
-1. checkbox, pagination, export
+1. checkbox, pagination
 2. sign out
 3. remember me
 4. to add enter keypress onClick functions
@@ -95,7 +95,8 @@ stuff to do -
 7. not allow to go back to login page
 8. not allow to go to main page
 9. To extract tenant/organization name from object
-10. 
+10. to not send a call if no data is selected for bulk delete/disable/edit
+11. to compare previous response and new response, and send if anything is changed
 
 
 1. sorting
@@ -109,9 +110,33 @@ Done -
 test cases - 
 1. Will I be able to create a user with same email if I have deleted that user previously
 
-to discuss - 
-1. to show disabled users or not
 
 
-Reason it is happening on second attempt refresh - Because it does not have authorities so receiving 401
 
+Here is what I did but had to unfortunately remove because they broke down at the last moment and my focus was to complete API integration first - 
+pagination 
+Sign out 
+Not letting user go back to sign in page if already logged in
+Not letting the user go to the main page if not logged in
+remember me
+
+
+Here is what I have to do based on fresh feedback and during the test cases that I ran through - 
+to add enter keypress onClick functions
+to get all the details once we remove the text from the search bar
+to not send a call if no data is selected for bulk delete/disable
+to compare previous responses and new responses, and send if anything is changed in edit field
+sorting
+ filtering
+ code cleanup
+avoiding magic strings
+
+
+. 
+to do - 
+1. add checkbox only when delete permission given 
+
+
+done - 
+1. To change back to active inactive status
+2. 

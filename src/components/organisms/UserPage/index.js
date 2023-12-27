@@ -7,6 +7,7 @@ import {
 } from "../../../mockData/mockdata";
 import EditIcon from "../../../assets/edit-icon.png";
 import DeleteIcon from "../../../assets/delete-icon.png";
+import DisableIcon from "../../../assets/disable-icon.png";
 import AddIcon from "../../../assets/addIcon.png";
 import ExportIcon from "../../../assets/export.png";
 import { NAV_CONFIG } from "../../../constants/navConfig";
@@ -21,9 +22,21 @@ import { REQUEST_TYPES } from "../../../constants/navConfig";
 import {
   AUTHORITIES,
   ERROR_CODES,
+  REQUEST_MESSAGES,
 } from "../../../constants/errorCodesMessages";
+import { toast } from "react-toastify";
 export const UserPage = () => {
+  const initialSearchSortParam = {
+    term: "",
+    sort: {},
+  };
+  for (let header in uesrTableHeader) {
+    if (header?.isSortable) {
+      initialSearchSortParam.sort.header = constantStrings?.ASCENDING_SORT_FLAG;
+    }
+  }
   const [dataSelected, setDataSelected] = useState([]);
+  const [requestParams, setRequestParams] = useState(initialSearchSortParam);
   const [userTableData, setUserTableData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { makeRequestWithCSRFToken } = useCsrfToken();
@@ -31,11 +44,28 @@ export const UserPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(requestParams, "requestParam");
+  }, [requestParams]);
+  useEffect(() => {
     setIsLoading(true);
-    const response = makeRequestWithCSRFToken({
+    makeRequestWithCSRFToken({
       api: "/user/",
       requestType: REQUEST_TYPES?.GET,
+      expectedResponseCode: ERROR_CODES?.OK,
+      successMessage: REQUEST_MESSAGES?.SUCCESSFUL_FETCH?.replace(
+        "$",
+        constantStrings?.USERS
+      ),
+      failureMessage: REQUEST_MESSAGES?.SOMETHING_WENT_WRONG,
       successAction: (response) => {
+        if (response?.status == ERROR_CODES?.OK) {
+          toast.success(
+            REQUEST_MESSAGES?.SUCCESSFUL_FETCH?.replace(
+              "$",
+              constantStrings?.USERS
+            )
+          );
+        }
         console.log(response);
         setIsLoading(false);
       },
@@ -45,27 +75,25 @@ export const UserPage = () => {
       authority: AUTHORITIES?.READUSER,
       getResponse: (response) => {
         console.log(response);
-        setUserTableData(response?.content);
+        setUserTableData(response?.result?.content);
         setIsLoading(false);
       },
       failureAction: (error) => {
         console.error(error);
+
+        toast.error(error?.message);
+
         setIsLoading(false);
       },
     });
   }, []);
-  // useEffect(() => {
-  //   console.log(userTableData);
-  // }, [userTableData]);
 
   const handleHeaderButton = () => {
     navigate(NAV_CONFIG?.NAV_ADD_USER);
   };
-
   const getSelectedData = (data = []) => {
     setDataSelected(data);
   };
-
   const handleExportButton = () => {
     console.log(dataSelected, "dataSelectedfs");
     jsonToCSV(constantStrings?.USER_PAGE_EXPORT_FILENAME, userTableData);
@@ -83,14 +111,31 @@ export const UserPage = () => {
           },
           "successAction"
         );
+        const prevRecordStatus = userData?.recordStatus;
+        const updatedRecordStatus = prevRecordStatus == 1 ? 2 : 1;
         if (response?.status == ERROR_CODES?.OK) {
+          const updatedUserData = {
+            ...userData,
+            recordStatus: updatedRecordStatus,
+          };
           console.log("in if success");
           setUserTableData(
-            userTableData?.filter((user) => {
-              return userData?.id != user?.id;
+            userTableData?.map((user) => {
+              if (userData?.id == user?.id) {
+                return updatedUserData;
+              } else {
+                return user;
+              }
             })
           );
+          //    setUserTableData(
+          //   userTableData?.filter((user) => {
+          //     return userData?.id != user?.id;
+          //   })
+          // );
           alert(`Successfully disabled user id - ${userData?.id}`);
+        } else {
+          alert(`Couldn't disable user id = ${userData?.id}`);
         }
       },
       getResponseFlag: false,
@@ -100,7 +145,6 @@ export const UserPage = () => {
       },
     });
   };
-
   const handleEditClick = (userData) => {
     localStorage.setItem("editableData", JSON.stringify(userData));
     navigate(NAV_CONFIG?.NAV_EDIT_USER);
@@ -150,7 +194,71 @@ export const UserPage = () => {
       })
     );
   };
+  const handleSearchSortRequest = (updatedRequestParam) => {
+    let api = "/user/";
+    const requestParamArray = [];
+    if (updatedRequestParam?.term) {
+      api = api + "search";
+      requestParamArray?.push({ term: updatedRequestParam?.term });
+    }
+
+    for (const sortParam in updatedRequestParam?.sort) {
+      requestParamArray?.push({
+        sort: `${sortParam},${updatedRequestParam?.sort[sortParam]}`,
+      });
+    }
+
+    console.log(requestParamArray, "requestParamArray");
+
+    makeRequestWithCSRFToken({
+      api: api,
+      requestType: REQUEST_TYPES?.GET,
+      params: requestParamArray,
+      successAction: (response) => {
+        console.log(response);
+      },
+      getResponseFlag: sessionStorage
+        ?.getItem("authorities")
+        ?.includes(AUTHORITIES?.READUSER),
+      authority: AUTHORITIES?.READUSER,
+      getResponse: (response) => {
+        console.log(response);
+        setUserTableData(response?.result?.content);
+        setIsLoading(false);
+      },
+      failureAction: (error) => {
+        console.error(error);
+        setIsLoading(false);
+      },
+    });
+  };
+  const handleSearchBarAction = (text) => {
+    setRequestParams({ ...requestParams, term: text });
+    handleSearchSortRequest({ ...requestParams, term: text });
+  };
+  const handleSortHeader = ({ headerName: headerName }) => {
+    const updatedSortFlag =
+      requestParams?.sort[headerName] == constantStrings?.ASCENDING_SORT_FLAG
+        ? constantStrings?.DESCENDING_SORT_FLAG
+        : constantStrings?.ASCENDING_SORT_FLAG;
+    setRequestParams({
+      ...requestParams,
+      sort: { ...requestParams?.sort, [headerName]: updatedSortFlag },
+    });
+
+    handleSearchSortRequest({
+      ...requestParams,
+      sort: { ...requestParams?.sort, [headerName]: updatedSortFlag },
+    });
+  };
   const userTableActionMenu = [
+    // {
+    //   src: DisableIcon,
+    //   handler: (data) => handleDisableClick(data),
+    //   isVisible: sessionStorage
+    //     ?.getItem("authorities")
+    //     ?.includes(AUTHORITIES?.DELETEUSER),
+    // },
     {
       src: EditIcon,
       handler: (data) => handleEditClick(data),
@@ -177,6 +285,7 @@ export const UserPage = () => {
       primaryKey="id"
       handleToggleClick={handleDisableClick}
       handleUpdateTableData={handleUpdateTableData}
+      handleSort={handleSortHeader}
     />
   );
 
@@ -196,32 +305,12 @@ export const UserPage = () => {
     exportButtonIconHeight: "16px",
     mainPageContent: userPageMainComponent,
     showSearchBar: true,
-    SearchbarAcion: (text) => {
-      makeRequestWithCSRFToken({
-        api: "/user/search",
-        requestType: REQUEST_TYPES?.GET,
-        params: [{ term: text }],
-        successAction: (response) => {
-          console.log(response);
-        },
-        getResponseFlag: sessionStorage
-          ?.getItem("authorities")
-          ?.includes(AUTHORITIES?.READUSER),
-        authority: AUTHORITIES?.READUSER,
-        getResponse: (response) => {
-          console.log(response);
-          setUserTableData(response?.content);
-          setIsLoading(false);
-        },
-        failureAction: (error) => {
-          console.error(error);
-          setIsLoading(false);
-        },
-      });
-    },
+    SearchbarAcion: (text) => handleSearchBarAction(text),
     searchBoxPlaceholder: placeholderStrings?.SEARCH_BAR_USER_PAGE,
   };
   if (!isLoading) {
     return <MainPage {...userPageProps} />;
   }
 };
+
+//localhost:8080/base-api/v1/user/search?term=Kriti&sort=name,asc&sort=userType,desc

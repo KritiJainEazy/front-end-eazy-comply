@@ -1,14 +1,16 @@
 export const activeStatus = {
   ACTIVE: {
-    value: "Active",
-    color: "rgb(43, 228, 12)",
+    value: 1,
+    title: "Active",
+    color: "#2BE40C",
   },
   INACTIVE: {
-    value: "Inactive",
-    color: "rgb(255, 128, 0)",
+    value: 2,
+    title: "Inactive",
+    color: "#FFC700",
   },
-  PENDING: {
-    value: "Pending",
-    color: "rgb(255, 234, 0)",
+  DEFAULT: {
+    title: "Unknown",
+    color: "#FFC700",
   },
 };

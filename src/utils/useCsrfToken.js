@@ -2,20 +2,23 @@ import React, { useEffect, useRef, useState } from "react";
 import { BASE_END_POINT, REQUEST_TYPES } from "../constants/navConfig";
 import axios from "axios";
 import { ERROR_CODES } from "../constants/errorCodesMessages";
-import { toast } from "react-toastify";
 import { constantStrings } from "../constants/magicString";
+import { UserDetailsContext } from "../App";
+import { toast } from "react-toastify";
+import { TOAST_TYPE } from "../constants/errorCodesMessages";
+import { REQUEST_MESSAGES } from "../constants/errorCodesMessages";
 
 export const useCsrfToken = () => {
   const [csrfToken, setCsrfToken] = useState("");
   const [userEmailId, setUserEmailId] = useState("");
   const [authorities, setAuthorities] = useState([]);
-  // const toastId = useRef(null);
 
   const postLoginCredentialsRequest = async ({
     loginCredentails = {},
     successfulLoginAction = () => void 0,
     failedLoginAction = () => void 0,
   }) => {
+    // const toastId = toast.loading(constantStrings?.PLEASE_WAIT);
     try {
       const url = "http://localhost:8080/base-api/v1/user-login";
       const requestBody = {
@@ -44,21 +47,30 @@ export const useCsrfToken = () => {
       const token = headersObj["authorization"];
       console.log(token, "for fetch testing");
       sessionStorage.setItem("token", token);
-      setCsrfToken(token);
-
       await fetchResponse?.json()?.then((result) => {
         sessionStorage?.setItem("authorities", result?.authorities);
         sessionStorage?.setItem("userEmailId", result?.userName);
-        // setAuthorities(result?.authorities);
-        // setUserEmailId(result?.userName);
-        alert(result?.userName + " " + result?.message);
+        //  alert(result?.userName + " " + result?.message);
+        // toast.update(toastId, {
+        //   render: result?.userName + " " + result?.message,
+        //   type: TOAST_TYPE?.SUCCESS_TOAST_STATUS,
+        //   isLoading: false,
+        // });
+
+        toast.success(result?.userName + " " + result?.message);
         console.log(result, "for fetch testing");
         successfulLoginAction(fetchResponse);
       });
     } catch (error) {
       console.log(error);
       failedLoginAction(error?.message);
-      alert(error);
+      //  alert(error);
+      // toast.update(toastId, {
+      //   render: error,
+      //   type: TOAST_TYPE?.ERROR_TOAST_STATUS,
+      //   isLoading: false,
+      // });
+      toast.error(error);
     }
   };
 
@@ -70,17 +82,15 @@ export const useCsrfToken = () => {
     params = [],
     id = "",
     getResponseFlag = false,
-    authority = "",
+    expectedResponseCode = "",
     getResponse = () => void 0,
     successAction = () => void 0,
     failureAction = () => void 0,
     successMessage = constantStrings?.DEFAULT_SUCCESS_MESSAGE,
     failureMessage = constantStrings?.DEFAULT_FAILURE_MESSAGE,
   }) => {
-    // const toastId = toast.loading(constantStrings?.PLEASE_WAIT);
-
+    console.log(params);
     const token = sessionStorage.getItem("token");
-    // const toastId = toast.loading(constantStrings?.PLEASE_WAIT);
     const requestBody = {
       method: requestType,
       headers: {
@@ -98,18 +108,17 @@ export const useCsrfToken = () => {
 
     let url = `${BASE_END_POINT}${api}`;
     if (params?.length) {
-      for (let i in params) {
-        url = url + "?";
-        console.log(
-          params[i],
-          params[i].key,
-          params[i].value,
-          Object.keys(params[i]),
-          Object.values(params[i])
-        );
-        url = url + Object.keys(params[i]) + "=" + Object.values(params[i]);
-      }
-      console.log(url, requestBody);
+      params?.map((param, index) => {
+        console.log("consoling param", {
+          param: param,
+          key: Object.keys(param),
+          value: Object.values(param),
+        });
+        const urlSuffix = index == 0 ? "?" : "&";
+        url = url + urlSuffix;
+        url = url + Object.keys(param) + "=" + Object.values(param);
+      });
+      console.log(url, requestBody, "ohh please for love of god");
     }
     if (id) {
       url = url + `/${id}`;
@@ -117,38 +126,32 @@ export const useCsrfToken = () => {
 
     fetch(url, requestBody)
       ?.then((response) => {
+        console.log("csrf checker, in then", response);
         successAction(response);
-        toast.success(successMessage);
-        // toast.update(toastId, {
-        //   render: successMessage,
-        //   type: constantStrings?.SUCCESS_TOAST_STATUS,
-        //   isLoading: false,
-        // });
+        if (!getResponseFlag) {
+          console.log("csrf checker, in !getresponseflag");
+          // if (response?.status == expectedResponseCode) {
+          //   console.log("csrf checker, in !getresponseflag if block");
+          //   // toast.success(successMessage);
+          // } else {
+          //   console.log("csrf checker, in !getresponseflag else block");
+          //   //  toast.error(response?.message || failureMessage);
+          // }
+        }
         if (getResponseFlag) {
           response?.json()?.then((result) => {
-            getResponse(result);
+            console.log(result, "csrf checker, in result");
+            getResponse({ result: result, status: response?.status });
           });
         }
-        // else {
-        //   alert(`Doesn't have ${authority} authority`);
-        // }
       })
       ?.catch((error) => {
-        toast.error(failureMessage);
-        // toast.update(toastId, {
-        //   render: failureMessage,
-        //   type: constantStrings?.ERROR_TOAST_STATUS,
-        //   isLoading: false,
-        // });
+        console.log("csrf checker, in catch", error);
+        //    toast.error(error);
+
         failureAction(error);
         return error;
       });
-
-    // toast.promise(fetchRequest, {
-    //   loading: constantStrings?.PLEASE_WAIT,
-    //   success: successMessage,
-    //   error: failureMessage,
-    // });
   };
 
   return {
@@ -158,3 +161,17 @@ export const useCsrfToken = () => {
     setCsrfToken,
   };
 };
+
+// if (response?.status == expectedResponseCode) {
+//   toast.update(toastId?.current, {
+//     render: successMessage,
+//     type: TOAST_TYPE?.SUCCESS_TOAST_STATUS,
+//     isLoading: false,
+//   });
+// } else {
+//   toast.update(toastId?.current, {
+//     render: result?.message,
+//     type: TOAST_TYPE?.ERROR_TOAST_STATUS,
+//     isLoading: false,
+//   });
+// }

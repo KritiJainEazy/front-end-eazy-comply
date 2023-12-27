@@ -21,6 +21,8 @@ import { constantStrings } from "../../../constants/magicString";
 import { ActiveStatus } from "../ActiveStatus";
 import Dropdown from "../Dropdown";
 import { ToggleButton } from "../ToggleButton";
+import SortAscendingIcon from "../../../assets/sort-asc-icon.png";
+import SortDescendingIcon from "../../../assets/sort-desc-icon.png";
 import MenuIcon from "../../../assets/menu.png";
 import { PopupMenu } from "../PopupMenu";
 
@@ -37,6 +39,7 @@ export const Table = ({
   getMultipleSelectedArray = () => void 0,
   handleToggleClick = () => void 0,
   handleUpdateTableData = () => void 0,
+  handleSort = () => void 0,
   //getMoreData = () => void 0,
 }) => {
   const [isBulkMenuOpen, setIsBulkMenuOpen] = useState(false);
@@ -276,6 +279,8 @@ export const Table = ({
     }
   };
 
+  const handleSortSelect = (dataHeader) => {};
+
   const handleBulkMenuAction = () => {
     setIsBulkMenuOpen(!isBulkMenuOpen);
     console.log("bulk menu");
@@ -397,7 +402,26 @@ export const Table = ({
                         width={headerItem?.width}
                         key={`headerItem_${index}`}
                       >
-                        {headerItem?.title}
+                        <Box
+                          display="flex"
+                          alignItems="center"
+                          onClick={() =>
+                            handleSort({ headerName: headerItem?.value })
+                          }
+                        >
+                          <Box mr="0.5rem"> {headerItem?.title}</Box>
+                          {headerItem?.isSortable && (
+                            <img
+                              height="100%"
+                              src={
+                                headerItem?.sortType ==
+                                constantStrings?.ASCENDING_SORT_FLAG
+                                  ? SortAscendingIcon
+                                  : SortDescendingIcon
+                              }
+                            />
+                          )}
+                        </Box>
                       </TableHeaderData>
                     );
                 }
@@ -453,7 +477,11 @@ export const Table = ({
                             key={`dataHeaderIndex_${dataHeaderIndex}`}
                             display="flex"
                           >
-                            <ToggleButton
+                            <ActiveStatus
+                              status={dataItem[headerData?.value]}
+                              mr="0.5rem"
+                            />
+                            {/* <ToggleButton
                               height="1rem"
                               width="2rem"
                               sliderRadius="0.5rem"
@@ -463,7 +491,7 @@ export const Table = ({
                               onToggleClick={(e) => {
                                 handleToggleClick(dataItem);
                               }}
-                            />
+                            /> */}
                           </TableRowData>
                         );
                       case primaryKey:

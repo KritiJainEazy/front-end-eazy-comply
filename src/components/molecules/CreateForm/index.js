@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer, useRef, useState } from "react";
 import { FormContainer } from "./styles.create-form";
 import { Textbox } from "../TextBox";
 import { Button } from "../Button";
@@ -20,8 +20,12 @@ import { useNavigate } from "react-router-dom";
 import {
   AUTHORITIES,
   ERROR_CODES,
+  TOAST_TYPE,
 } from "../../../constants/errorCodesMessages";
 import { ToggleButton } from "../ToggleButton";
+import { constantStrings } from "../../../constants/magicString";
+import { REQUEST_MESSAGES } from "../../../constants/errorCodesMessages";
+import { toast } from "react-toastify";
 
 export const CreateForm = ({
   formFields = {},
@@ -30,8 +34,10 @@ export const CreateForm = ({
   fieldRequired = {},
   response = {},
 }) => {
+  const [isRequestInProgress, setIsRequestInProgress] = useState(false);
   const { makeRequestWithCSRFToken } = useCsrfToken();
   const navigate = useNavigate();
+  const toastId = useRef(null);
 
   const initialFormResponse = {
     name: "",
@@ -107,33 +113,40 @@ export const CreateForm = ({
   );
 
   const handleFormSubmitButton = () => {
+    setIsRequestInProgress(false);
     console.log(JSON.stringify(formResponseState));
-
     makeRequestWithCSRFToken({
       api: "/register",
-      requestType: "POST",
+      requestType: REQUEST_TYPES?.POST,
       data: formResponseState,
-      getResponseFlag: sessionStorage
-        ?.getItem("authorities")
-        ?.includes(AUTHORITIES?.CREATEUSER),
+      getResponseFlag: true,
       authority: AUTHORITIES?.CREATEUSER,
+      expectedResponseCode: ERROR_CODES?.CREATED,
+      successMessage: REQUEST_MESSAGES?.SUCCESSFULLY_CREATED,
+      failureMessage: REQUEST_MESSAGES?.SOMETHING_WENT_WRONG,
       getResponse: (response) => {
-        alert(response?.message);
+        console.log(response);
+        if (response?.status == ERROR_CODES?.CREATED) {
+          toast.success(response?.result?.message);
+        } else {
+          toast.error(response?.result?.message);
+        }
       },
       successAction: (response) => {
         console.log(response, "inside .then");
 
         if (response?.status != ERROR_CODES?.CREATED) {
-          //     alert("couldn't create one, don't have authorities");
           console.log("inside .then if error block");
         } else {
           //   // alert("successful creation");
+          //  toast.success(REQUEST_MESSAGES?.SUCCESSFULLY_CREATED);
           console.log("inside .then if ok block");
           navigate(NAV_CONFIG?.NAV_USER_PAGE);
         }
       },
       failureAction: (error) => {
         //   alert(error);
+        toast.error(error?.message);
         console.log("inside .catch block createform", error);
       },
     });

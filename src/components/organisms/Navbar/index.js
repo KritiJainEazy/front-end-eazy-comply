@@ -32,18 +32,7 @@ export const Navbar = () => {
         <Box
           mr="30px"
           height="50%"
-          onClick={() =>
-            toast.success("🦄 Wow so easy!", {
-              position: "top-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            })
-          }
+          onClick={() => toast.success("Notif center")}
         >
           <img src={NotificationIcon} height="100%" margin="20px" />
         </Box>
