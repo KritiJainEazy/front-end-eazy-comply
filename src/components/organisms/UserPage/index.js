@@ -23,6 +23,7 @@ import {
   AUTHORITIES,
   ERROR_CODES,
   REQUEST_MESSAGES,
+  STATUS,
 } from "../../../constants/errorCodesMessages";
 import { toast } from "react-toastify";
 export const UserPage = () => {
@@ -100,7 +101,7 @@ export const UserPage = () => {
   };
   const handleDisableClick = (userData) => {
     makeRequestWithCSRFToken({
-      api: "/user/disable",
+      api: "/user/alter-status",
       requestType: REQUEST_TYPES?.DELETE,
       id: userData?.id,
       successAction: (response) => {
@@ -112,7 +113,10 @@ export const UserPage = () => {
           "successAction"
         );
         const prevRecordStatus = userData?.recordStatus;
-        const updatedRecordStatus = prevRecordStatus == 1 ? 2 : 1;
+        const updatedRecordStatus =
+          prevRecordStatus == STATUS?.ACTIVE
+            ? STATUS?.INACTIVE
+            : STATUS?.ACTIVE;
         if (response?.status == ERROR_CODES?.OK) {
           const updatedUserData = {
             ...userData,
@@ -128,20 +132,29 @@ export const UserPage = () => {
               }
             })
           );
-          //    setUserTableData(
-          //   userTableData?.filter((user) => {
-          //     return userData?.id != user?.id;
-          //   })
-          // );
-          alert(`Successfully disabled user id - ${userData?.id}`);
+          if (updatedRecordStatus == STATUS?.ACTIVE) {
+            toast.success(
+              REQUEST_MESSAGES?.SUCCESSFULLY_ENABLED?.replace(
+                "$",
+                constantStrings?.USERS + `\u0020${userData?.id}`
+              )
+            );
+          } else if (updatedRecordStatus == STATUS?.INACTIVE) {
+            toast.success(
+              REQUEST_MESSAGES?.SUCCESSFULLY_DISABLED?.replace(
+                "$",
+                constantStrings?.USERS + `\u0020${userData?.id}`
+              )
+            );
+          }
         } else {
-          alert(`Couldn't disable user id = ${userData?.id}`);
+          toast.error(REQUEST_MESSAGES?.SOMETHING_WENT_WRONG);
         }
       },
       getResponseFlag: false,
       failureAction: (error) => {
         console.error(error);
-        alert(`Couldn't disable user id = ${userData?.id}`);
+        toast.error(error?.message);
       },
     });
   };
@@ -176,14 +189,21 @@ export const UserPage = () => {
               return userData?.id != user?.id;
             })
           );
-          alert(`Successfully deleted user id - ${userData?.id}`);
+          toast.success(
+            REQUEST_MESSAGES?.SUCCESSFULLY_DELETED?.replace(
+              "$",
+              constantStrings?.USERS + `\u0020${userData?.id}`
+            )
+          );
+        } else {
+          toast.error(REQUEST_MESSAGES?.SOMETHING_WENT_WRONG);
         }
       },
       getResponseFlag: false,
       authority: AUTHORITIES?.DELETEUSER,
       failureAction: (error) => {
+        toast.error(error?.message);
         console.error(error);
-        alert(`Couldn't delete user id = ${userData?.id}`);
       },
     });
   };
@@ -252,13 +272,13 @@ export const UserPage = () => {
     });
   };
   const userTableActionMenu = [
-    // {
-    //   src: DisableIcon,
-    //   handler: (data) => handleDisableClick(data),
-    //   isVisible: sessionStorage
-    //     ?.getItem("authorities")
-    //     ?.includes(AUTHORITIES?.DELETEUSER),
-    // },
+    {
+      src: DisableIcon,
+      handler: (data) => handleDisableClick(data),
+      isVisible: sessionStorage
+        ?.getItem("authorities")
+        ?.includes(AUTHORITIES?.DELETEUSER),
+    },
     {
       src: EditIcon,
       handler: (data) => handleEditClick(data),

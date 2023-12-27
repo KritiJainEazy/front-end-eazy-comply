@@ -138,14 +138,11 @@ export const CreateForm = ({
         if (response?.status != ERROR_CODES?.CREATED) {
           console.log("inside .then if error block");
         } else {
-          //   // alert("successful creation");
-          //  toast.success(REQUEST_MESSAGES?.SUCCESSFULLY_CREATED);
           console.log("inside .then if ok block");
           navigate(NAV_CONFIG?.NAV_USER_PAGE);
         }
       },
       failureAction: (error) => {
-        //   alert(error);
         toast.error(error?.message);
         console.log("inside .catch block createform", error);
       },

@@ -19,8 +19,17 @@ export const TOAST_TYPE = {
   LOADING_TOAST_STATUS: "loading",
 };
 
+export const STATUS = {
+  ACTIVE: 1,
+  INACTIVE: 2,
+  DELETED: 0,
+};
+
 export const REQUEST_MESSAGES = {
   SUCCESSFULLY_CREATED: "Successfully created!",
+  SUCCESSFULLY_DISABLED: "Successfully disabled $",
+  SUCCESSFULLY_DELETED: "Successfully deleted $",
+  SUCCESSFULLY_ENABLED: "Successfully enabled $",
   SUCCESSFULLY_EDITED: "Successfully edited $!",
   NOT_AUTHORIZED: "Doesn't have $ authority",
   PLEASE_WAIT: "Please wait...",

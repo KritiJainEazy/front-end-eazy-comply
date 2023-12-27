@@ -50,12 +50,6 @@ export const useCsrfToken = () => {
       await fetchResponse?.json()?.then((result) => {
         sessionStorage?.setItem("authorities", result?.authorities);
         sessionStorage?.setItem("userEmailId", result?.userName);
-        //  alert(result?.userName + " " + result?.message);
-        // toast.update(toastId, {
-        //   render: result?.userName + " " + result?.message,
-        //   type: TOAST_TYPE?.SUCCESS_TOAST_STATUS,
-        //   isLoading: false,
-        // });
 
         toast.success(result?.userName + " " + result?.message);
         console.log(result, "for fetch testing");
@@ -64,12 +58,6 @@ export const useCsrfToken = () => {
     } catch (error) {
       console.log(error);
       failedLoginAction(error?.message);
-      //  alert(error);
-      // toast.update(toastId, {
-      //   render: error,
-      //   type: TOAST_TYPE?.ERROR_TOAST_STATUS,
-      //   isLoading: false,
-      // });
       toast.error(error);
     }
   };
