@@ -25,7 +25,7 @@ import { toast } from "react-toastify";
 import { constantStrings } from "../../../constants/magicString";
 
 export const EditUserForm = ({
-  formSubmitButtonTitle = "Edit User",
+  formSubmitButtonTitle = "Save",
   userData = JSON.parse(localStorage.getItem("editableData")),
 }) => {
   // const initialFormResponse = {
@@ -241,8 +241,6 @@ export const EditUserForm = ({
           buttonTitle={formSubmitButtonTitle}
           handleButtonClick={handleFormSubmitButton}
           padding={"0.5rem 1.5rem"}
-          buttonIcon={AddIcon}
-          iconHeight={"16px"}
           disabled={checkDisabled()}
         />
       </Box>

@@ -2,7 +2,7 @@ import ProfileIcon from "../../../assets/profile-icon-profile-menu.png";
 import SettingsIcon from "../../../assets/setting-icon-profile-menu.png";
 import SignOutIcon from "../../../assets/sign-out-icon-profile-menu.png";
 export const userName = "John Doe";
-export const userEmail = "johndoe@xyz.com";
+export const userEmail = sessionStorage?.getItem("userEmailId");
 
 export const profileActionMenu = [
   {

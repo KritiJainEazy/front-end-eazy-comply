@@ -29,53 +29,50 @@ import { PopupMenu } from "../PopupMenu";
 export const Table = ({
   tableHeaderData = [],
   tableData = [],
-  //isMoreDataAvailable = false,
+  isActionMenuVisible = false,
   actionMenuHeaderTitle = "",
   activeStatusHeaderTitle = "",
   actionMenuItems = [],
-  //actionMenuContent = <ActionMenu actionMenuItems={[]} />,
   primaryKey = "",
   multiSelectCheckBox = true,
   getMultipleSelectedArray = () => void 0,
   handleToggleClick = () => void 0,
   handleUpdateTableData = () => void 0,
   handleSort = () => void 0,
-  //getMoreData = () => void 0,
+  ascendingHeaders = [],
+  changeHeaderSort = () => void 0,
 }) => {
   const [isBulkMenuOpen, setIsBulkMenuOpen] = useState(false);
+  // const [descendingDataHeaders, setDescendingDataHeaders] =
+  //   useState(descendingHeaders);
+
   //  const [tableData, setTableData] = useState(tableDataReceived);
   //console.log(tableDataReceived, "this is what we got");
 
   //to change
-  // const entriesPerPageDropdownItems = [
-  //   {
-  //     title: "10 per page",
-  //     value: "10",
-  //     action: "",
-  //   },
-  //   {
-  //     title: "20 per page",
-  //     value: "20",
-  //     action: "",
-  //   },
-  //   {
-  //     title: "50 per page",
-  //     value: "50",
-  //     action: "",
-  //   },
-  //   {
-  //     title: "59 per page",
-  //     value: "59",
-  //     action: "",
-  //   },
-
-  //   // {
-  //   //   title: "100 per page",
-  //   //   value: "100",
-  //   //   action: "",
-  //   // },
-  // ];
-  // const entriesPerPageDropdownTitle = "Select number of entries per page";
+  const entriesPerPageDropdownItems = [
+    {
+      title: "10 per page",
+      value: "10",
+      action: "",
+    },
+    {
+      title: "20 per page",
+      value: "20",
+      action: "",
+    },
+    {
+      title: "50 per page",
+      value: "50",
+      action: "",
+    },
+    // {
+    //   title: "100 per page",
+    //   value: "100",
+    //   action: "",
+    // },
+  ];
+  const entriesPerPageDropdownTitle = "Select number of entries per page";
 
   const noDataString = "No data available";
 
@@ -279,8 +276,6 @@ export const Table = ({
     }
   };
 
-  const handleSortSelect = (dataHeader) => {};
-
   const handleBulkMenuAction = () => {
     setIsBulkMenuOpen(!isBulkMenuOpen);
     console.log("bulk menu");
@@ -374,28 +369,28 @@ export const Table = ({
               {tableHeaderData.map((headerItem, index) => {
                 switch (headerItem?.value) {
                   case actionMenuHeaderTitle:
-                    return (
-                      <>
-                        <TableHeaderData
-                          width={headerItem?.width}
-                          key={`headerItem_${index}`}
-                          onClick={handleBulkMenuAction}
-                          cursor="pointer"
-                          position="relative"
-                        >
-                          <img src={MenuIcon} height="15rem" cursor="pointer" />
-                          {/* <Modal
-                          position="absolute"
-                          width="5rem"
-                          height="5rem"
-                          showModalTitle={false}
-                          modalContent={<Box backgroundColor="red">hi</Box>}
-                          showCloseButton={false}
-                          backgroundFade={false}
-                        /> */}
-                        </TableHeaderData>
-                      </>
-                    );
+                    if (isActionMenuVisible) {
+                      return (
+                        <>
+                          <TableHeaderData
+                            width={headerItem?.width}
+                            key={`headerItem_${index}`}
+                            onClick={handleBulkMenuAction}
+                            cursor="pointer"
+                            position="relative"
+                          >
+                            <img
+                              src={MenuIcon}
+                              height="15rem"
+                              cursor="pointer"
+                            />
+                          </TableHeaderData>
+                        </>
+                      );
+                    } else {
+                      return;
+                    }
+
                   default:
                     return (
                       <TableHeaderData
@@ -414,8 +409,7 @@ export const Table = ({
                             <img
                               height="100%"
                               src={
-                                headerItem?.sortType ==
-                                constantStrings?.ASCENDING_SORT_FLAG
+                                ascendingHeaders?.includes(headerItem?.value)
                                   ? SortAscendingIcon
                                   : SortDescendingIcon
                               }
@@ -446,31 +440,35 @@ export const Table = ({
                   {tableHeaderData.map((headerData, dataHeaderIndex) => {
                     switch (headerData?.value) {
                       case actionMenuHeaderTitle:
-                        return (
-                          <>
-                            <TableRowData
-                              key={`dataHeaderIndex_${dataHeaderIndex}`}
-                            >
-                              <ActionMenuContainer>
-                                {actionMenuItems.map(
-                                  (actionMenuItem, index) => {
-                                    if (actionMenuItem?.isVisible) {
-                                      return (
-                                        <ActionMenuIcons
-                                          key={`action-menu-index-${index}`}
-                                          src={actionMenuItem?.src}
-                                          onClick={() =>
-                                            actionMenuItem?.handler(dataItem)
-                                          }
-                                        />
-                                      );
+                        if (isActionMenuVisible) {
+                          return (
+                            <>
+                              <TableRowData
+                                key={`dataHeaderIndex_${dataHeaderIndex}`}
+                              >
+                                <ActionMenuContainer>
+                                  {actionMenuItems.map(
+                                    (actionMenuItem, index) => {
+                                      if (actionMenuItem?.isVisible) {
+                                        return (
+                                          <ActionMenuIcons
+                                            key={`action-menu-index-${index}`}
+                                            src={actionMenuItem?.src}
+                                            onClick={() =>
+                                              actionMenuItem?.handler(dataItem)
+                                            }
+                                          />
+                                        );
+                                      }
                                     }
-                                  }
-                                )}
-                              </ActionMenuContainer>
-                            </TableRowData>
-                          </>
-                        );
+                                  )}
+                                </ActionMenuContainer>
+                              </TableRowData>
+                            </>
+                          );
+                        } else {
+                          return;
+                        }
                       case activeStatusHeaderTitle:
                         return (
                           <TableRowData
@@ -481,17 +479,6 @@ export const Table = ({
                               status={dataItem[headerData?.value]}
                               mr="0.5rem"
                             />
-                            {/* <ToggleButton
-                              height="1rem"
-                              width="2rem"
-                              sliderRadius="0.5rem"
-                              initialState={
-                                dataItem[headerData?.value] == 1 ? true : false
-                              }
-                              onToggleClick={(e) => {
-                                handleToggleClick(dataItem);
-                              }}
-                            /> */}
                           </TableRowData>
                         );
                       case primaryKey:
@@ -522,20 +509,20 @@ export const Table = ({
         <Box> {constantStrings?.OOPS_NO_DATA}</Box>
       )}
 
-      {/* <PaginationContainer>
+      <PaginationContainer>
         <PageButtonContainer>
           <PageNavigationButton
-            buttonState={
-              isBackPalleteButtonDisabled
-                ? PALLETE_BUTTON_STATES?.DISABLED
-                : PALLETE_BUTTON_STATES?.POINTER
-            }
-            onClick={handleBackPalleteSelect}
+          // buttonState={
+          //   isBackPalleteButtonDisabled
+          //     ? PALLETE_BUTTON_STATES?.DISABLED
+          //     : PALLETE_BUTTON_STATES?.POINTER
+          // }
+          // onClick={handleBackPalleteSelect}
           >
             {"<<"}
           </PageNavigationButton>
 
-          {currentPageNumbersPalette?.map((currentPageNumber, index) => {
+          {/* {currentPageNumbersPalette?.map((currentPageNumber, index) => {
             return (
               <PageNumberContainer
                 isSelected={currentPage == currentPageNumber}
@@ -545,24 +532,55 @@ export const Table = ({
                 {currentPageNumber}
               </PageNumberContainer>
             );
-          })}
+          })} */}
+
+          <PageNumberContainer
+            isSelected={true}
+            //  key={`${currentPageNumber}+${index}`}
+            // onClick={() => handlePageSelect(currentPageNumber)}
+          >
+            {1}
+          </PageNumberContainer>
+
+          <PageNumberContainer
+            isSelected={false}
+            //  key={`${currentPageNumber}+${index}`}
+            // onClick={() => handlePageSelect(currentPageNumber)}
+          >
+            {2}
+          </PageNumberContainer>
+
+          <PageNumberContainer
+            isSelected={false}
+            //  key={`${currentPageNumber}+${index}`}
+            // onClick={() => handlePageSelect(currentPageNumber)}
+          >
+            {3}
+          </PageNumberContainer>
           <PageNavigationButton
-            buttonState={forwardPalletButtonState}
-            onClick={handleForwardPalleteSelect}
+          //buttonState={forwardPalletButtonState}
+          // onClick={handleForwardPalleteSelect}
           >
             {">>"}
           </PageNavigationButton>
         </PageButtonContainer>
-        <Dropdown
+        {/* <Dropdown
           dropdownItems={entriesPerPageDropdownItems}
           title={entriesPerPageDropdownTitle}
           dropdownFieldBoxHeader={entriesPerPage + "\u0020 per page"}
           onItemSelect={(selectedItem) =>
             setEntriesPerPage(selectedItem?.value)
           }
+        /> */}
+        <Dropdown
+          dropdownItems={entriesPerPageDropdownItems}
+          title={entriesPerPageDropdownTitle}
+          dropdownFieldBoxHeader={"10" + "\u0020 per page"}
+          // onItemSelect={(selectedItem) =>
+          //   setEntriesPerPage(selectedItem?.value)
+          // }
         />
-        <btn onClick={handleMultiSelectAction}>click me</btn>
-      </PaginationContainer> */}
+      </PaginationContainer>
     </TableBoxContainer>
   );
 };

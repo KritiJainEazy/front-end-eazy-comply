@@ -4,14 +4,15 @@ import styled from "styled-components";
 export const TableBoxContainer = styled(Box)`
   width: 100%;
   padding: 32px 40px;
+  border-radius: 35px;
   overflow-y: auto;
 `;
 export const TableContainer = styled("table")`
   width: 100%;
   height: 100%;
   margin: 10px auto;
-  border-collapse: collapse;
-  border-radius: 5px;
+  border-spacing: 0;
+  border-radius: 35px;
   position: relative;
 `;
 
@@ -31,7 +32,8 @@ export const TableHeaderContainer = styled("tr")`
   line-height: 1.5rem;
   font-size: 1em;
   padding: 0px 0.5rem;
-  border-radius: inherit;
+  border-radius: 35px;
+  overflow: none;
 `;
 
 export const TableHeaderData = styled("th")`

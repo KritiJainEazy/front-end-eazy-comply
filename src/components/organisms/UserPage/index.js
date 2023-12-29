@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { MainPage } from "../MainPage";
 import { Table } from "../../molecules/Table";
 import {
-  uesrTableHeader,
+  userTableHeader,
   userTableAppendData,
 } from "../../../mockData/mockdata";
 import EditIcon from "../../../assets/edit-icon.png";
@@ -26,16 +26,41 @@ import {
   STATUS,
 } from "../../../constants/errorCodesMessages";
 import { toast } from "react-toastify";
+
 export const UserPage = () => {
+  // const entriesPerPage = 3;
+  // const [pageNumber, setPageNumber] = useState(1);
+
   const initialSearchSortParam = {
     term: "",
     sort: {},
   };
-  for (let header in uesrTableHeader) {
-    if (header?.isSortable) {
-      initialSearchSortParam.sort.header = constantStrings?.ASCENDING_SORT_FLAG;
+  const initialAscendingHeaders = [];
+  for (let header in userTableHeader) {
+    if (userTableHeader[header]?.isSortable) {
+      initialSearchSortParam.sort[userTableHeader[header]] =
+        userTableHeader[header]?.sortType;
+      if (
+        userTableHeader[header]?.sortType ==
+        constantStrings?.ASCENDING_SORT_FLAG
+      ) {
+        initialAscendingHeaders?.push(userTableHeader[header]?.value);
+      }
     }
   }
+
+  const [ascendingDataHeaders, setAscendingDataHeaders] = useState(
+    initialAscendingHeaders
+  );
+
+  useEffect(() => {
+    console.log(
+      ascendingDataHeaders,
+
+      "ascendingDataHeaders only   let's check the issue with this"
+    );
+  }, [ascendingDataHeaders]);
+
   const [dataSelected, setDataSelected] = useState([]);
   const [requestParams, setRequestParams] = useState(initialSearchSortParam);
   const [userTableData, setUserTableData] = useState([]);
@@ -45,48 +70,58 @@ export const UserPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(requestParams, "requestParam");
-  }, [requestParams]);
-  useEffect(() => {
+    let requestParamArray = { sort: {} };
+    const ascendignDataUserHeaders = [];
+    for (let header in userTableHeader) {
+      if (userTableHeader[header]?.isSortable) {
+        const headerName = userTableHeader[header]?.value;
+        const headerSortType = userTableHeader[header]?.sortType;
+        requestParamArray = {
+          ...requestParamArray,
+          sort: { ...requestParamArray?.sort, [headerName]: headerSortType },
+        };
+        setRequestParams(requestParamArray);
+        ascendignDataUserHeaders?.push(userTableHeader[header]?.value);
+      }
+    }
+    console.log(ascendignDataUserHeaders, "ascendingDataHeaders chal ja");
+
     setIsLoading(true);
-    makeRequestWithCSRFToken({
-      api: "/user/",
-      requestType: REQUEST_TYPES?.GET,
-      expectedResponseCode: ERROR_CODES?.OK,
-      successMessage: REQUEST_MESSAGES?.SUCCESSFUL_FETCH?.replace(
-        "$",
-        constantStrings?.USERS
-      ),
-      failureMessage: REQUEST_MESSAGES?.SOMETHING_WENT_WRONG,
-      successAction: (response) => {
-        if (response?.status == ERROR_CODES?.OK) {
-          toast.success(
-            REQUEST_MESSAGES?.SUCCESSFUL_FETCH?.replace(
-              "$",
-              constantStrings?.USERS
-            )
-          );
-        }
-        console.log(response);
-        setIsLoading(false);
-      },
-      getResponseFlag: sessionStorage
-        ?.getItem("authorities")
-        ?.includes(AUTHORITIES?.READUSER),
-      authority: AUTHORITIES?.READUSER,
-      getResponse: (response) => {
-        console.log(response);
-        setUserTableData(response?.result?.content);
-        setIsLoading(false);
-      },
-      failureAction: (error) => {
-        console.error(error);
+    handleSearchSortRequest(requestParamArray);
+    // makeRequestWithCSRFToken({
+    //   api: "/user/",
+    //   requestType: REQUEST_TYPES?.GET,
+    //   expectedResponseCode: ERROR_CODES?.OK,
+    //   successAction: (response) => {
+    //     if (response?.status == ERROR_CODES?.OK) {
+    //       toast.success(
+    //         REQUEST_MESSAGES?.SUCCESSFUL_FETCH?.replace(
+    //           "$",
+    //           constantStrings?.USERS
+    //         )
+    //       );
+    //     }
+    //     console.log(response);
+    //     setIsLoading(false);
+    //   },
+    //   getResponseFlag: sessionStorage
+    //     ?.getItem("authorities")
+    //     ?.includes(AUTHORITIES?.READUSER),
+    //   authority: AUTHORITIES?.READUSER,
+    //   getResponse: (response) => {
+    //     console.log(response);
+    //     setUserTableData(response?.result?.content);
+    //     setAscendingDataHeaders(ascendingDataHeaders);
+    //     setIsLoading(false);
+    //   },
+    //   failureAction: (error) => {
+    //     console.error(error);
 
-        toast.error(error?.message);
+    //     toast.error(error?.message);
 
-        setIsLoading(false);
-      },
-    });
+    //     setIsLoading(false);
+    //   },
+    // });
   }, []);
 
   const handleHeaderButton = () => {
@@ -228,12 +263,17 @@ export const UserPage = () => {
       });
     }
 
-    console.log(requestParamArray, "requestParamArray");
+    console.log(
+      requestParamArray,
+      "requestParamArray let's check the issue with this"
+    );
 
     makeRequestWithCSRFToken({
       api: api,
       requestType: REQUEST_TYPES?.GET,
       params: requestParamArray,
+      // pageNumber: pageNumber,
+      // offset: entriesPerPage,
       successAction: (response) => {
         console.log(response);
       },
@@ -256,19 +296,60 @@ export const UserPage = () => {
     setRequestParams({ ...requestParams, term: text });
     handleSearchSortRequest({ ...requestParams, term: text });
   };
-  const handleSortHeader = ({ headerName: headerName }) => {
+  const handleSortHeader = ({ headerName = "" }) => {
     const updatedSortFlag =
       requestParams?.sort[headerName] == constantStrings?.ASCENDING_SORT_FLAG
         ? constantStrings?.DESCENDING_SORT_FLAG
         : constantStrings?.ASCENDING_SORT_FLAG;
+
+    console.log(
+      {
+        headerName: headerName,
+        updatedSortFlag: updatedSortFlag,
+        prevSortFlag: requestParams?.sort[headerName],
+      },
+      "let's check the issue with this"
+    );
+    if (ascendingDataHeaders?.includes(headerName)) {
+      console.log("entered if let's check the issue with this");
+      setAscendingDataHeaders(
+        ascendingDataHeaders?.filter((header) => {
+          return header != headerName;
+        })
+      );
+    } else {
+      console.log("entered else let's check the issue with this");
+      setAscendingDataHeaders([...ascendingDataHeaders, headerName]);
+    }
+
+    // handleSearchSortRequest({
+    //   ...requestParams,
+    //   sort: { ...requestParams?.sort, [headerName]: updatedSortFlag },
+    //   //   sort: { [headerName]: updatedSortFlag },
+    // });
+    const sortHeadersOrderObject = Object.assign(
+      { [headerName]: "" },
+      { ...requestParams?.sort, [headerName]: updatedSortFlag }
+    );
+
     setRequestParams({
       ...requestParams,
-      sort: { ...requestParams?.sort, [headerName]: updatedSortFlag },
+      sort: sortHeadersOrderObject,
     });
+    console.log(
+      {
+        sortHeadersOrderObject: sortHeadersOrderObject,
+        requestSentParam: {
+          ...requestParams,
+          sort: sortHeadersOrderObject,
+        },
+      },
+      "let's check the issue with this"
+    );
 
     handleSearchSortRequest({
       ...requestParams,
-      sort: { ...requestParams?.sort, [headerName]: updatedSortFlag },
+      sort: sortHeadersOrderObject,
     });
   };
   const userTableActionMenu = [
@@ -294,15 +375,23 @@ export const UserPage = () => {
         ?.includes(AUTHORITIES?.DELETEUSER),
     },
   ];
+  const isActionMenuVisible = userTableActionMenu.some((actionItem) => {
+    return actionItem?.isVisible === true;
+  });
   const userPageMainComponent = (
     <Table
-      tableHeaderData={uesrTableHeader}
+      isActionMenuVisible={isActionMenuVisible}
+      multiSelectCheckBox={sessionStorage
+        ?.getItem("authorities")
+        ?.includes(AUTHORITIES?.DELETEUSER)}
+      tableHeaderData={userTableHeader}
       tableData={userTableData}
       actionMenuHeaderTitle="userActionMenu"
       activeStatusHeaderTitle="recordStatus"
       actionMenuItems={userTableActionMenu}
       getMultipleSelectedArray={getSelectedData}
       primaryKey="id"
+      ascendingHeaders={ascendingDataHeaders}
       handleToggleClick={handleDisableClick}
       handleUpdateTableData={handleUpdateTableData}
       handleSort={handleSortHeader}

@@ -1,24 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { BASE_END_POINT, REQUEST_TYPES } from "../constants/navConfig";
-import axios from "axios";
-import { ERROR_CODES } from "../constants/errorCodesMessages";
-import { constantStrings } from "../constants/magicString";
-import { UserDetailsContext } from "../App";
 import { toast } from "react-toastify";
-import { TOAST_TYPE } from "../constants/errorCodesMessages";
-import { REQUEST_MESSAGES } from "../constants/errorCodesMessages";
 
 export const useCsrfToken = () => {
   const [csrfToken, setCsrfToken] = useState("");
-  const [userEmailId, setUserEmailId] = useState("");
-  const [authorities, setAuthorities] = useState([]);
 
   const postLoginCredentialsRequest = async ({
     loginCredentails = {},
     successfulLoginAction = () => void 0,
     failedLoginAction = () => void 0,
   }) => {
-    // const toastId = toast.loading(constantStrings?.PLEASE_WAIT);
     try {
       const url = "http://localhost:8080/base-api/v1/user-login";
       const requestBody = {
@@ -51,31 +42,33 @@ export const useCsrfToken = () => {
         sessionStorage?.setItem("authorities", result?.authorities);
         sessionStorage?.setItem("userEmailId", result?.userName);
 
-        toast.success(result?.userName + " " + result?.message);
+        //  toast.success(result?.userName + " " + result?.message);
         console.log(result, "for fetch testing");
         successfulLoginAction(fetchResponse);
       });
     } catch (error) {
       console.log(error);
       failedLoginAction(error?.message);
-      toast.error(error);
+      //  toast.error(error);
     }
   };
 
   const makeRequestWithCSRFToken = async ({
     api = "",
+    pageNumber = "",
+    offset = "",
     requestType = "GET",
     data = null,
     stringifiedData = null,
     params = [],
     id = "",
     getResponseFlag = false,
-    expectedResponseCode = "",
+    //   expectedResponseCode = "",
     getResponse = () => void 0,
     successAction = () => void 0,
     failureAction = () => void 0,
-    successMessage = constantStrings?.DEFAULT_SUCCESS_MESSAGE,
-    failureMessage = constantStrings?.DEFAULT_FAILURE_MESSAGE,
+    // successMessage = constantStrings?.DEFAULT_SUCCESS_MESSAGE,
+    // failureMessage = constantStrings?.DEFAULT_FAILURE_MESSAGE,
   }) => {
     console.log(params);
     const token = sessionStorage.getItem("token");
@@ -108,8 +101,17 @@ export const useCsrfToken = () => {
       });
       console.log(url, requestBody, "ohh please for love of god");
     }
+
     if (id) {
       url = url + `/${id}`;
+    }
+
+    if (pageNumber) {
+      url = url + `&page=${pageNumber}`;
+    }
+
+    if (offset) {
+      url = url + `&size=${offset}`;
     }
 
     fetch(url, requestBody)
@@ -118,13 +120,6 @@ export const useCsrfToken = () => {
         successAction(response);
         if (!getResponseFlag) {
           console.log("csrf checker, in !getresponseflag");
-          // if (response?.status == expectedResponseCode) {
-          //   console.log("csrf checker, in !getresponseflag if block");
-          //   // toast.success(successMessage);
-          // } else {
-          //   console.log("csrf checker, in !getresponseflag else block");
-          //   //  toast.error(response?.message || failureMessage);
-          // }
         }
         if (getResponseFlag) {
           response?.json()?.then((result) => {
@@ -135,8 +130,6 @@ export const useCsrfToken = () => {
       })
       ?.catch((error) => {
         console.log("csrf checker, in catch", error);
-        //    toast.error(error);
-
         failureAction(error);
         return error;
       });

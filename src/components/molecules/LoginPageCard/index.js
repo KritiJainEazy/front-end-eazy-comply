@@ -62,7 +62,7 @@ export const LoginPageCard = ({
         {showBottomContainer && (
           <BottomContainer>
             <Box display="flex" alignItems="center">
-              <CheckBoxInput
+              {/* <CheckBoxInput
                 type="checkbox"
                 width="1.2rem"
                 height="1.2rem"
@@ -71,7 +71,7 @@ export const LoginPageCard = ({
               />
               <BottomContainerText color="rgba(0,0,0,0.75)" ml="8px">
                 {rememberMeText}
-              </BottomContainerText>
+              </BottomContainerText> */}
             </Box>
             <BottomContainerText
               onClick={handleForgotPasswordClick}

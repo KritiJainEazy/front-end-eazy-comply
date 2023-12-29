@@ -54,6 +54,7 @@ export const UserName = styled(Box)`
 `;
 
 export const UserEmail = styled(Box)`
+flex-wrap: wrap;
   width: 100%;
   line-height: 24px;
   color: #767676;

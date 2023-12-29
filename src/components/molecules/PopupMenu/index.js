@@ -4,6 +4,7 @@ import { MenuContainer, MenuItems } from "./styles.popup";
 import { REQUEST_TYPES } from "../../../constants/navConfig";
 import { useCsrfToken } from "../../../utils/useCsrfToken";
 import {
+  AUTHORITIES,
   ERROR_CODES,
   REQUEST_MESSAGES,
 } from "../../../constants/errorCodesMessages";
@@ -16,6 +17,9 @@ export const PopupMenu = ({
   updateTableData = () => {},
 }) => {
   const { makeRequestWithCSRFToken } = useCsrfToken();
+  const popupMenuVisible = sessionStorage
+    ?.getItem("authorities")
+    ?.includes(AUTHORITIES?.DELETEUSER);
   const popupMenuItems = [
     {
       title: "Delete",
@@ -79,18 +83,20 @@ export const PopupMenu = ({
     //   },
     // },
   ];
-  return (
-    <MenuContainer display={display}>
-      {popupMenuItems?.map((menuItem) => {
-        return (
-          <MenuItems
-            key={`popupItem${menuItem?.title}`}
-            onClick={menuItem?.action}
-          >
-            {menuItem?.title}
-          </MenuItems>
-        );
-      })}
-    </MenuContainer>
-  );
+  if (popupMenuVisible) {
+    return (
+      <MenuContainer display={display}>
+        {popupMenuItems?.map((menuItem) => {
+          return (
+            <MenuItems
+              key={`popupItem${menuItem?.title}`}
+              onClick={menuItem?.action}
+            >
+              {menuItem?.title}
+            </MenuItems>
+          );
+        })}
+      </MenuContainer>
+    );
+  }
 };

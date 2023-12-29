@@ -316,7 +316,7 @@ export const LoginPage = () => {
             loginCardBodyContainer={loginBodyMainPageContainer}
             header={MAIN_LOGIN_PAGE_VALUES?.HEADER}
             subHeader={MAIN_LOGIN_PAGE_VALUES?.SUBHEADER}
-            rememberMeText={LOGIN_CARD_VALUES?.REMEMBER_ME}
+         //   rememberMeText={LOGIN_CARD_VALUES?.REMEMBER_ME}
             forgotPasswordText={LOGIN_CARD_VALUES?.FORGOT_PASSWORD}
             buttonText={MAIN_LOGIN_PAGE_VALUES?.BUTTON}
             margin="2.25rem 0 0 0"

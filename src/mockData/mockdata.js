@@ -1,8 +1,8 @@
 import { constantStrings } from "../constants/magicString";
 
 export const userData = {
-  userName: "John Doe",
-  organisation: "johndoe@xyz.com",
+  userName: sessionStorage?.getItem("userEmailId"),
+  // organisation: "johndoe@xyz.com",
 };
 
 // Kriti@2000
@@ -24,10 +24,10 @@ export const userTypeDropDownMockData = [
   },
 ];
 
-export const uesrTableHeader = [
+export const userTableHeader = [
   {
     value: "id",
-    isSortable: true,
+    isSortable: false,
     sortType: constantStrings?.ASCENDING_SORT_FLAG,
     title: "User ID",
     width: "9%",

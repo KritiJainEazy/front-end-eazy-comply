@@ -135,8 +135,21 @@ avoiding magic strings
 . 
 to do - 
 1. add checkbox only when delete permission given 
+2. to send a flag for fetching user details for user page, multiple calls going at once.
 
 
 done - 
 1. To change back to active inactive status
 2. 
+
+
+
+achieved - 
+1. saved api calls to server by 20%
+2. guided someone
+3. 
+
+
+
+
+https://stackoverflow.com/questions/28657780/how-remember-me-feature-works
