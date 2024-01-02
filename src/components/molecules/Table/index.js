@@ -43,7 +43,6 @@ export const Table = ({
   getMoreData = () => void 0,
   updateTableData = () => void 0,
 }) => {
-  console.log("this is what we received", tableDataReceived);
   const PALLETE_BUTTON_STATES = {
     POINTER: "pointer",
     LOADING: "progress",
@@ -115,16 +114,6 @@ export const Table = ({
       currentTableData?.push(tableData[i]);
     }
 
-    console.log("keeping track of change in state", {
-      currPage: currPage,
-      entriesPerPage: entriesPerPage,
-      firstIndexOfPage: firstIndexOfPage,
-      totalRecords: totalRecords,
-      recordsDisplayedSoFar: recordsDisplayedSoFar,
-      lastIndexOfPage: lastIndexOfPage,
-      currentTableData: currentTableData,
-    });
-
     setTableDataToBeShown(currentTableData);
   };
 
@@ -143,51 +132,9 @@ export const Table = ({
       newPageNumberPallete.push(i + firstPageInPalette);
     }
     setCurrentPageNumbersPalette(newPageNumberPallete);
-    setIsBackPalleteButtonDisabled(true);
-    setIsMoveToFirstPageButtonDisabled(true);
-
-    if (newPageNumberPallete[newPageNumberPallete?.length - 1] == totalPages) {
-      setForwardPalletButtonState(PALLETE_BUTTON_STATES?.DISABLED);
-      setIsMoveToLastPageButtonState(PALLETE_BUTTON_STATES?.DISABLED);
-    } else {
-      setForwardPalletButtonState(PALLETE_BUTTON_STATES?.POINTER);
-      setIsMoveToLastPageButtonState(PALLETE_BUTTON_STATES?.POINTER);
-    }
-
     setCurrrentPage(newPageNumberPallete[0]);
     setTableDataToShow(newPageNumberPallete[0]);
   };
-
-  const setPagePaletteForTableUpdate = () => {
-    const firstPageInPalette = FIRST_PAGE;
-
-    const pagesLeftToBeDisplayed = totalPages;
-
-    const paletteSize =
-      pagesLeftToBeDisplayed < MAX_PAGES_PER_PALLETE
-        ? pagesLeftToBeDisplayed
-        : MAX_PAGES_PER_PALLETE;
-
-    const newPageNumberPallete = [];
-    for (let i = 0; i < paletteSize; i++) {
-      newPageNumberPallete.push(i + firstPageInPalette);
-    }
-    setCurrentPageNumbersPalette(newPageNumberPallete);
-    setIsBackPalleteButtonDisabled(true);
-    setIsMoveToFirstPageButtonDisabled(true);
-
-    if (newPageNumberPallete[newPageNumberPallete?.length - 1] == totalPages) {
-      setForwardPalletButtonState(PALLETE_BUTTON_STATES?.DISABLED);
-      setIsMoveToLastPageButtonState(PALLETE_BUTTON_STATES?.DISABLED);
-    } else {
-      setForwardPalletButtonState(PALLETE_BUTTON_STATES?.POINTER);
-      setIsMoveToLastPageButtonState(PALLETE_BUTTON_STATES?.POINTER);
-    }
-
-    setCurrrentPage(newPageNumberPallete[0]);
-    setTableDataToShow(newPageNumberPallete[0]);
-  };
-
   const checkForwardButtonDisabled = () => {};
 
   const getData = () => {
@@ -213,26 +160,14 @@ export const Table = ({
     if (!isBackPalleteButtonDisabled) {
       const firstPage = currentPageNumbersPalette[0];
 
-      const newPageNumberPallete = currentPageNumbersPalette;
-      for (
-        let i = 1;
-        i <= MAX_PAGES_PER_PALLETE && newPageNumberPallete[0] != FIRST_PAGE;
-        i++
-      ) {
-        newPageNumberPallete?.unshift(firstPage - i);
-        newPageNumberPallete?.pop();
-      }
-      console.log(newPageNumberPallete, "newPageNumberPallete");
-
-      setCurrentPageNumbersPalette(newPageNumberPallete);
-      setCurrrentPage(newPageNumberPallete[0]);
-      setForwardPalletButtonState(PALLETE_BUTTON_STATES?.POINTER);
-      if (newPageNumberPallete[0] != FIRST_PAGE) {
-        setIsBackPalleteButtonDisabled(false);
-        setIsMoveToFirstPageButtonDisabled(false);
+      if (currentPageNumbersPalette?.includes(currentPage - 1)) {
+        setCurrrentPage(currentPage - 1);
       } else {
-        setIsBackPalleteButtonDisabled(true);
-        setIsMoveToFirstPageButtonDisabled(true);
+        const newPageNumberPallete = currentPageNumbersPalette;
+        newPageNumberPallete?.unshift(firstPage - 1);
+        newPageNumberPallete?.pop();
+        setCurrentPageNumbersPalette(newPageNumberPallete);
+        setCurrrentPage(currentPage - 1);
       }
     }
   };
@@ -242,61 +177,38 @@ export const Table = ({
       const lastPage =
         currentPageNumbersPalette[currentPageNumbersPalette?.length - 1];
 
-      const newPageNumberPallete = currentPageNumbersPalette;
-      for (
-        let i = 1;
-        i <= MAX_PAGES_PER_PALLETE &&
-        newPageNumberPallete[MAX_PAGES_PER_PALLETE - 1] != totalPages;
-        i++
-      ) {
-        newPageNumberPallete?.push(lastPage + i);
-        newPageNumberPallete?.shift();
-      }
-      console.log(newPageNumberPallete, "newPageNumberPallete");
-
-      setCurrentPageNumbersPalette(newPageNumberPallete);
-      setCurrrentPage(newPageNumberPallete[0]);
-      setIsBackPalleteButtonDisabled(false);
-      setIsMoveToFirstPageButtonDisabled(false);
-      if (
-        newPageNumberPallete[newPageNumberPallete?.length - 1] == totalPages
-      ) {
-        setForwardPalletButtonState(PALLETE_BUTTON_STATES?.DISABLED);
-        setIsMoveToLastPageButtonState(PALLETE_BUTTON_STATES?.DISABLED);
+      if (currentPageNumbersPalette?.includes(currentPage + 1)) {
+        setCurrrentPage(currentPage + 1);
       } else {
-        setForwardPalletButtonState(PALLETE_BUTTON_STATES?.POINTER);
-        setIsMoveToLastPageButtonState(PALLETE_BUTTON_STATES?.POINTER);
+        const newPageNumberPallete = currentPageNumbersPalette;
+        newPageNumberPallete?.push(lastPage + 1);
+        newPageNumberPallete?.shift();
+
+        setCurrentPageNumbersPalette(newPageNumberPallete);
+        setCurrrentPage(currentPage + 1);
       }
     }
   };
 
   const handleMoveToFirstPage = () => {
-    setPagePalette();
+    if (!isMoveToFirstPageButtonDisabled) {
+      setPagePalette();
+    }
   };
 
   const handleMoveToLastPage = () => {
-    const newPageNumberPallete = [];
-    const newCurrentPage = totalPages;
-    newPageNumberPallete?.push(totalPages);
+    if (isMoveToLastPageButtonState == PALLETE_BUTTON_STATES?.POINTER) {
+      const newPageNumberPallete = [];
+      const newCurrentPage = totalPages;
+      newPageNumberPallete?.push(totalPages);
 
-    for (let i = 1; i < MAX_PAGES_PER_PALLETE && totalPages - i > 1; i++) {
-      newPageNumberPallete?.unshift(totalPages - i);
+      for (let i = 1; i < MAX_PAGES_PER_PALLETE && totalPages - i > 0; i++) {
+        newPageNumberPallete?.unshift(totalPages - i);
+      }
+
+      setCurrentPageNumbersPalette(newPageNumberPallete);
+      setCurrrentPage(newPageNumberPallete[newPageNumberPallete?.length - 1]);
     }
-
-    setCurrentPageNumbersPalette(newPageNumberPallete);
-    setCurrrentPage(newPageNumberPallete[newPageNumberPallete?.length - 1]);
-    setForwardPalletButtonState(PALLETE_BUTTON_STATES?.DISABLED);
-    setIsMoveToLastPageButtonState(PALLETE_BUTTON_STATES?.DISABLED);
-
-    if (newPageNumberPallete[0] != FIRST_PAGE) {
-      setIsBackPalleteButtonDisabled(false);
-      setIsMoveToFirstPageButtonDisabled(false);
-    }
-    console.log(
-      newPageNumberPallete,
-      newCurrentPage,
-      "keeping track of change in state"
-    );
   };
 
   const handlePageSelect = (pageNumber) => {
@@ -367,7 +279,6 @@ export const Table = ({
 
   const handleBulkMenuAction = () => {
     setIsBulkMenuOpen(!isBulkMenuOpen);
-    console.log("bulk menu");
   };
 
   const getDataFromSelectedIndex = () => {
@@ -380,7 +291,20 @@ export const Table = ({
 
   useEffect(() => {
     setTableDataToShow(currentPage);
-    console.log("keeping track of change in state currentPage ", currentPage);
+    if (currentPage == totalPages) {
+      setIsMoveToLastPageButtonState(PALLETE_BUTTON_STATES?.DISABLED);
+      setForwardPalletButtonState(PALLETE_BUTTON_STATES?.DISABLED);
+    } else {
+      setIsMoveToLastPageButtonState(PALLETE_BUTTON_STATES?.POINTER);
+      setForwardPalletButtonState(PALLETE_BUTTON_STATES?.POINTER);
+    }
+    if (currentPage == FIRST_PAGE) {
+      setIsBackPalleteButtonDisabled(true);
+      setIsMoveToFirstPageButtonDisabled(true);
+    } else {
+      setIsBackPalleteButtonDisabled(false);
+      setIsMoveToFirstPageButtonDisabled(false);
+    }
   }, [currentPage]);
 
   useEffect(() => {
@@ -389,8 +313,6 @@ export const Table = ({
 
   useEffect(() => {
     setPagePalette();
-    //setTableDataToShow();
-    console.log("keeping track of change in state totalPages ", totalPages);
   }, [totalPages]);
 
   useEffect(() => {
@@ -400,7 +322,6 @@ export const Table = ({
     } else {
       setTotalPages(Math.ceil(tableData?.length / entriesPerPage));
     }
-    console.log("this is what we received", tableData, tableDataReceived);
   }, [tableData]);
   useEffect(() => {
     setTableData(tableDataReceived);
@@ -408,16 +329,10 @@ export const Table = ({
 
   useEffect(() => {
     setPagePalette();
-    console.log("this is what we received to check");
-    //  setTableDataToShow();
   }, []);
 
   useEffect(() => {
     setTotalPages(Math.ceil(totalRecords / entriesPerPage));
-    console.log(
-      "keeping track of change in state entriesPerPage ",
-      entriesPerPage
-    );
   }, [entriesPerPage]);
   return (
     <TableBoxContainer>
@@ -641,7 +556,6 @@ export const Table = ({
           title={entriesPerPageDropdownTitle}
           dropdownFieldBoxHeader={entriesPerPage + "\u0020 per page"}
           onItemSelect={(selectedItem) => {
-            console.log(selectedItem, "seelctedItem value");
             setEntriesPerPage(selectedItem?.value);
           }}
         />
