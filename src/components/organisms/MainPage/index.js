@@ -26,7 +26,7 @@ export const MainPage = ({
   exportButtonIconHeight = "",
   mainPageContent = <></>,
   showSearchBar = false,
-  showAdvancedSearch = true,
+  showAdvancedSearch = false,
   SearchbarAcion = () => void 0,
   searchBoxPlaceholder = "",
 }) => {

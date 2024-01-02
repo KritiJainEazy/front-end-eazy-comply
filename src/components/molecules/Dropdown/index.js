@@ -24,6 +24,7 @@ const Dropdown = ({
   isRequired = false,
   onItemSelect = () => void 0,
   isRequiredErrorMessage,
+  border = "none",
 }) => {
   const dropdownRef = useRef(null);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -71,7 +72,7 @@ const Dropdown = ({
   return (
     <DropdownBoxContainer width={width} height={height} ref={dropdownRef}>
       {title && <DropdownTitle>{title}</DropdownTitle>}
-      <DropdownContainer>
+      <DropdownContainer border={border}>
         <DropdownFieldBox onClick={handleDropdownClick}>
           {selectedValue}
           <DropdownArrow src={DownArrow} />

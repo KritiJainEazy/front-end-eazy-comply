@@ -7,6 +7,6 @@ export const FormContainer = styled(Box)`
   margin: 32px auto;
   box-sizing: border-box;
   padding: 32px;
-  border: 1px solid rgb(243, 244, 246);
-  border-radius: 5px;
+  border: 1px solid #bdbdbd;
+  border-radius: 1.25rem;
 `;

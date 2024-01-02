@@ -29,7 +29,7 @@ import { toast } from "react-toastify";
 
 export const CreateForm = ({
   formFields = {},
-  formSubmitButtonTitle = "Add User",
+  formSubmitButtonTitle = "Create",
   //  handleFormSubmitButton = () => void 0,
   fieldRequired = {},
   response = {},

@@ -424,6 +424,7 @@ export const UserPage = () => {
     showSearchBar: true,
     SearchbarAcion: (text) => handleSearchBarAction(text),
     searchBoxPlaceholder: placeholderStrings?.SEARCH_BAR_USER_PAGE,
+    showAdvancedSearch: true,
   };
   if (!isLoading) {
     return <MainPage {...userPageProps} />;

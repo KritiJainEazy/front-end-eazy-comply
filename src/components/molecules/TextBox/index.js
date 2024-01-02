@@ -13,7 +13,7 @@ export const Textbox = ({
   display = "block",
   textBoxTitle = "",
   placeholder = "",
-  border = "",
+  border = "none",
   padding = "",
   focusBorder = "",
   validationCheck = () => void 0,
