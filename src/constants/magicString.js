@@ -9,7 +9,7 @@ export const constantStrings = {
   NA: "NA",
   TABLE_ACTION_MENU: "userActionMenu",
   USER_PAGE_EXPORT_FILENAME: "User Details",
-  USER_PAGE_HEADER_BUTTON_TITLE: "Add User",
+  USER_PAGE_HEADER_BUTTON_TITLE: "Create",
   USER_PAGE_HEADER_TITLE: "User",
   ASCENDING_SORT_FLAG: "asc",
   DESCENDING_SORT_FLAG: "desc",
