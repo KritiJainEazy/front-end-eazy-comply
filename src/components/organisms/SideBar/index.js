@@ -31,7 +31,7 @@ export const SideBar = () => {
   const [selectedMenuItemIndex, setSelectedMenuItemIndex] = useState("-1");
   const [selectedSubMenuItemIndex, setSelectedSubMenuItemIndex] =
     useState("-1");
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleSidebarMenuItemClick = (menuIndex) => {
     if (menuIndex == selectedMenuItemIndex) {

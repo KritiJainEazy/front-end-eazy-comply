@@ -31,6 +31,7 @@ export const UserPage = () => {
   // const entriesPerPage = 3;
   // const [pageNumber, setPageNumber] = useState(1);
 
+  const OFFSET_SIZE_FOR_REQUEST = 150;
   const initialSearchSortParam = {
     term: "",
     sort: {},
@@ -64,6 +65,7 @@ export const UserPage = () => {
   const [dataSelected, setDataSelected] = useState([]);
   const [requestParams, setRequestParams] = useState(initialSearchSortParam);
   const [userTableData, setUserTableData] = useState([]);
+  const [totalElements, setTotalElements] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const { makeRequestWithCSRFToken } = useCsrfToken();
 
@@ -224,6 +226,7 @@ export const UserPage = () => {
               return userData?.id != user?.id;
             })
           );
+          setTotalElements(totalElements - 1);
           toast.success(
             REQUEST_MESSAGES?.SUCCESSFULLY_DELETED?.replace(
               "$",
@@ -248,6 +251,7 @@ export const UserPage = () => {
         return !response.includes(tableItem["id"]);
       })
     );
+    setTotalElements(totalElements - response?.length);
   };
   const handleSearchSortRequest = (updatedRequestParam) => {
     let api = "/user/";
@@ -262,6 +266,8 @@ export const UserPage = () => {
         sort: `${sortParam},${updatedRequestParam?.sort[sortParam]}`,
       });
     }
+
+    requestParamArray?.push({size: OFFSET_SIZE_FOR_REQUEST})
 
     console.log(
       requestParamArray,
@@ -284,6 +290,7 @@ export const UserPage = () => {
       getResponse: (response) => {
         console.log(response);
         setUserTableData(response?.result?.content);
+        setTotalElements(response?.result?.totalElements);
         setIsLoading(false);
       },
       failureAction: (error) => {
@@ -381,7 +388,7 @@ export const UserPage = () => {
   const userPageMainComponent = (
     <Table
       isActionMenuVisible={isActionMenuVisible}
-      multiSelectCheckBox={sessionStorage
+      isMultiSelectCheckBoxVisible={sessionStorage
         ?.getItem("authorities")
         ?.includes(AUTHORITIES?.DELETEUSER)}
       tableHeaderData={userTableHeader}
@@ -392,9 +399,9 @@ export const UserPage = () => {
       getMultipleSelectedArray={getSelectedData}
       primaryKey="id"
       ascendingHeaders={ascendingDataHeaders}
-      handleToggleClick={handleDisableClick}
       handleUpdateTableData={handleUpdateTableData}
       handleSort={handleSortHeader}
+      totalRecords={totalElements}
     />
   );
 
