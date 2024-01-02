@@ -267,7 +267,7 @@ export const UserPage = () => {
       });
     }
 
-    requestParamArray?.push({size: OFFSET_SIZE_FOR_REQUEST})
+    requestParamArray?.push({ size: OFFSET_SIZE_FOR_REQUEST });
 
     console.log(
       requestParamArray,
@@ -392,7 +392,7 @@ export const UserPage = () => {
         ?.getItem("authorities")
         ?.includes(AUTHORITIES?.DELETEUSER)}
       tableHeaderData={userTableHeader}
-      tableData={userTableData}
+      tableDataReceived={userTableData}
       actionMenuHeaderTitle="userActionMenu"
       activeStatusHeaderTitle="recordStatus"
       actionMenuItems={userTableActionMenu}
@@ -402,6 +402,7 @@ export const UserPage = () => {
       handleUpdateTableData={handleUpdateTableData}
       handleSort={handleSortHeader}
       totalRecords={totalElements}
+      updateTableData={() => void 0}
     />
   );
 

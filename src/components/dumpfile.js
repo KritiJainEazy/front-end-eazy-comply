@@ -1,3 +1,4 @@
+import { useState } from "react"
 
 
 
@@ -153,3 +154,21 @@ achieved -
 
 
 https://stackoverflow.com/questions/28657780/how-remember-me-feature-works
+
+
+
+import React from 'react'
+
+export const Parent = () => {
+    const [parentState, setParentState] = useState()
+  return (
+    <div>Parent</div>
+  )
+}
+
+export const Child = () => {
+    const [parentState, setParentState] = useState()
+  return (
+    <div>Parent</div>
+  )
+}

@@ -29,7 +29,7 @@ import { PopupMenu } from "../PopupMenu";
 export const Table = ({
   tableHeaderData = [],
   totalRecords = "",
-  tableData = [],
+  tableDataReceived = [],
   isActionMenuVisible = false,
   actionMenuHeaderTitle = "",
   activeStatusHeaderTitle = "",
@@ -41,7 +41,9 @@ export const Table = ({
   handleSort = () => void 0,
   ascendingHeaders = [],
   getMoreData = () => void 0,
+  updateTableData = () => void 0,
 }) => {
+  console.log("this is what we received", tableDataReceived);
   const PALLETE_BUTTON_STATES = {
     POINTER: "pointer",
     LOADING: "progress",
@@ -79,8 +81,9 @@ export const Table = ({
   const entriesPerPageDropdownTitle = "Select number of entries per page";
 
   const [isBulkMenuOpen, setIsBulkMenuOpen] = useState(false);
+  const [tableData, setTableData] = useState(tableDataReceived);
   const [tableDataToBeShown, setTableDataToBeShown] = useState([]);
-  const [entriesPerPage, setEntriesPerPage] = useState(8);
+  const [entriesPerPage, setEntriesPerPage] = useState(2);
   const [currentPage, setCurrrentPage] = useState(FIRST_PAGE);
   const [totalPages, setTotalPages] = useState(
     Math.ceil(totalRecords / entriesPerPage)
@@ -126,6 +129,36 @@ export const Table = ({
   };
 
   const setPagePalette = () => {
+    const firstPageInPalette = FIRST_PAGE;
+
+    const pagesLeftToBeDisplayed = totalPages;
+
+    const paletteSize =
+      pagesLeftToBeDisplayed < MAX_PAGES_PER_PALLETE
+        ? pagesLeftToBeDisplayed
+        : MAX_PAGES_PER_PALLETE;
+
+    const newPageNumberPallete = [];
+    for (let i = 0; i < paletteSize; i++) {
+      newPageNumberPallete.push(i + firstPageInPalette);
+    }
+    setCurrentPageNumbersPalette(newPageNumberPallete);
+    setIsBackPalleteButtonDisabled(true);
+    setIsMoveToFirstPageButtonDisabled(true);
+
+    if (newPageNumberPallete[newPageNumberPallete?.length - 1] == totalPages) {
+      setForwardPalletButtonState(PALLETE_BUTTON_STATES?.DISABLED);
+      setIsMoveToLastPageButtonState(PALLETE_BUTTON_STATES?.DISABLED);
+    } else {
+      setForwardPalletButtonState(PALLETE_BUTTON_STATES?.POINTER);
+      setIsMoveToLastPageButtonState(PALLETE_BUTTON_STATES?.POINTER);
+    }
+
+    setCurrrentPage(newPageNumberPallete[0]);
+    setTableDataToShow(newPageNumberPallete[0]);
+  };
+
+  const setPagePaletteForTableUpdate = () => {
     const firstPageInPalette = FIRST_PAGE;
 
     const pagesLeftToBeDisplayed = totalPages;
@@ -251,6 +284,14 @@ export const Table = ({
     }
 
     setCurrentPageNumbersPalette(newPageNumberPallete);
+    setCurrrentPage(newPageNumberPallete[newPageNumberPallete?.length - 1]);
+    setForwardPalletButtonState(PALLETE_BUTTON_STATES?.DISABLED);
+    setIsMoveToLastPageButtonState(PALLETE_BUTTON_STATES?.DISABLED);
+
+    if (newPageNumberPallete[0] != FIRST_PAGE) {
+      setIsBackPalleteButtonDisabled(false);
+      setIsMoveToFirstPageButtonDisabled(false);
+    }
     console.log(
       newPageNumberPallete,
       newCurrentPage,
@@ -353,7 +394,21 @@ export const Table = ({
   }, [totalPages]);
 
   useEffect(() => {
+    const newTotalPages = Math.ceil(tableData?.length / entriesPerPage);
+    if (newTotalPages == totalPages) {
+      setTableDataToShow();
+    } else {
+      setTotalPages(Math.ceil(tableData?.length / entriesPerPage));
+    }
+    console.log("this is what we received", tableData, tableDataReceived);
+  }, [tableData]);
+  useEffect(() => {
+    setTableData(tableDataReceived);
+  }, [tableDataReceived]);
+
+  useEffect(() => {
     setPagePalette();
+    console.log("this is what we received to check");
     //  setTableDataToShow();
   }, []);
 
