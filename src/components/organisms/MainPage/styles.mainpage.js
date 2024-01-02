@@ -17,7 +17,7 @@ export const MainBodyContainer = styled(Box)`
 
 export const HeaderContainer = styled(Box)`
   width: 100%;
-  height: 3.75rem;
+  height: 3.5rem;
   padding: 0rem 2.5rem;
   margin-top: 2rem;
 `;

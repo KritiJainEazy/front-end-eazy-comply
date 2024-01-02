@@ -10,6 +10,7 @@ import {
 import { Button } from "../../molecules/Button";
 import Box from "../../atoms/box.atom";
 import { SearchBox } from "../../molecules/SearchBox";
+import AdvancedSearchBoxIcon from "../../../assets/advance filter.png";
 
 export const MainPage = ({
   headerTitle = "",
@@ -25,6 +26,7 @@ export const MainPage = ({
   exportButtonIconHeight = "",
   mainPageContent = <></>,
   showSearchBar = false,
+  showAdvancedSearch = true,
   SearchbarAcion = () => void 0,
   searchBoxPlaceholder = "",
 }) => {
@@ -40,17 +42,21 @@ export const MainPage = ({
             {showSearchBar && (
               <SearchBox
                 width="28em"
-                height="3.75em"
+                height="3.5em"
                 searchAction={(searchedText) => SearchbarAcion(searchedText)}
                 placeholder={searchBoxPlaceholder}
               />
             )}
+            {showAdvancedSearch && (
+              <Box ml="1.25rem" height = "3.5rem">
+                <img height="100%" src={AdvancedSearchBoxIcon} />
+              </Box>
+            )}
             {showHeaderButton && (
               <Button
                 margin="0 0 0 2.5em"
-                height="3.75rem"
+                height="3.5rem"
                 width="9rem"
-                
                 buttonTitle={headerButtonTitle}
                 handleButtonClick={handleHeaderButton}
                 padding={"0.5rem 1.5rem"}
@@ -61,7 +67,7 @@ export const MainPage = ({
             {showExportButton && (
               <Button
                 margin="0 0 0 2.5em"
-                height="3.75rem"
+                height="3.5rem"
                 width="9rem"
                 buttonTitle={exportButtonTitle}
                 handleButtonClick={handleExportButton}
