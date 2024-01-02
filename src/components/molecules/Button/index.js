@@ -1,6 +1,7 @@
 import React from "react";
 import Box from "../../atoms/box.atom";
 import { ButtonContainer, ButtonIconContainer } from "./styles.button";
+import { fontSize } from "styled-system";
 
 export const Button = ({
   buttonTitle = "",
@@ -16,6 +17,7 @@ export const Button = ({
   margin = "",
   buttonIcon = "",
   iconHeight = "",
+  fontSize = "",
   handleButtonClick = () => void 0,
 }) => {
   return (
@@ -30,7 +32,8 @@ export const Button = ({
       padding={padding}
       margin={margin}
       onClick={handleButtonClick}
-      justifyContent={buttonIcon ? "space-between" : "center"}
+      justifyContent={buttonIcon ? "space-around" : "center"}
+      fontSize={fontSize}
     >
       {buttonIcon && (
         <ButtonIconContainer src={buttonIcon} height={iconHeight} />

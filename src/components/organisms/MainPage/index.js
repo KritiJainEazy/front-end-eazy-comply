@@ -40,7 +40,7 @@ export const MainPage = ({
             {showSearchBar && (
               <SearchBox
                 width="28em"
-                height="2.75em"
+                height="3.75em"
                 searchAction={(searchedText) => SearchbarAcion(searchedText)}
                 placeholder={searchBoxPlaceholder}
               />
@@ -48,8 +48,9 @@ export const MainPage = ({
             {showHeaderButton && (
               <Button
                 margin="0 0 0 2.5em"
-                height="2.75rem"
+                height="3.75rem"
                 width="9rem"
+                
                 buttonTitle={headerButtonTitle}
                 handleButtonClick={handleHeaderButton}
                 padding={"0.5rem 1.5rem"}
@@ -60,7 +61,7 @@ export const MainPage = ({
             {showExportButton && (
               <Button
                 margin="0 0 0 2.5em"
-                height="2.75rem"
+                height="3.75rem"
                 width="9rem"
                 buttonTitle={exportButtonTitle}
                 handleButtonClick={handleExportButton}

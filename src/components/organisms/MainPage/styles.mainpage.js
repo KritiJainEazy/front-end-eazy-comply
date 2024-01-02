@@ -9,7 +9,6 @@ export const MainPageBodyContainer = styled(Box)`
 
 export const MainBodyContainer = styled(Box)`
   width: 100%;
-  height: 79%;
   overflow-y: auto;
   ::-webkit-scrollbar {
     display: none;
@@ -18,7 +17,9 @@ export const MainBodyContainer = styled(Box)`
 
 export const HeaderContainer = styled(Box)`
   width: 100%;
-  height: 21%;
+  height: 3.75rem;
+  padding: 0rem 2.5rem;
+  margin-top: 2rem;
 `;
 
 export const Header = styled(Box)`
@@ -27,8 +28,6 @@ export const Header = styled(Box)`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 32px 40px;
-  border-bottom: 1px solid #e5e7eb;
 `;
 
 export const HeaderTitle = styled(Box)`

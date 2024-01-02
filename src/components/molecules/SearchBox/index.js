@@ -27,11 +27,18 @@ export const SearchBox = ({
   };
 
   const handleSearchBoxInput = (e) => {
-
     setSearchedText(e.target.value);
   };
   return (
-    <SearchBoxContainer width={width} height={height}>
+    <SearchBoxContainer
+      width={width}
+      height={height}
+    >
+      <SearchBarIconContainer
+        src={SearchbarIcon}
+        onClick={handleSearchAction}
+        height={searchBarIconHeight}
+      />
       <TextboxInputField
         placeholder={placeholder}
         border="none"
@@ -39,12 +46,8 @@ export const SearchBox = ({
         onChange={handleSearchBoxInput}
         onFocus={handleOnFocusSearchBoxInput}
         ref={inputRef}
+        backgroundColor={"#fff"}
       ></TextboxInputField>
-      <SearchBarIconContainer
-        src={SearchbarIcon}
-        onClick={handleSearchAction}
-        height={searchBarIconHeight}
-      />
     </SearchBoxContainer>
   );
 };
