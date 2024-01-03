@@ -2,7 +2,6 @@ import styled from "styled-components";
 import Box from "../../atoms/box.atom";
 
 export const MenuContainer = styled(Box)`
-  z-index: 100;
   width: 10rem;
   height: max-content;
   overflow: hidden;

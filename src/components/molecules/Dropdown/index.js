@@ -15,7 +15,6 @@ import DownArrow from "../../../assets/down-arrow-solid.png";
 const Dropdown = ({
   width = "",
   height = "",
-  //handleSelect = () => {},
   dropdownItems = [],
   title = "",
   multiSelect = false,

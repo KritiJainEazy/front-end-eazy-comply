@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { MainPage } from "../MainPage";
 import { Table } from "../../molecules/Table";
 import {
@@ -13,6 +13,9 @@ import ExportIcon from "../../../assets/export.png";
 import { NAV_CONFIG } from "../../../constants/navConfig";
 import { useNavigate } from "react-router-dom";
 import {
+  ADVANCED_SEARCH_MENU_OPTIONS,
+  STATUS_DROPDOWN,
+  USER_TYPE_DROPWDOWN,
   constantStrings,
   placeholderStrings,
 } from "../../../constants/magicString";
@@ -26,10 +29,69 @@ import {
   STATUS,
 } from "../../../constants/errorCodesMessages";
 import { toast } from "react-toastify";
+import { AdvancedSearchModal } from "../../molecules/AdvancedSearchModal";
 
 export const UserPage = () => {
   // const entriesPerPage = 3;
   // const [pageNumber, setPageNumber] = useState(1);
+  const [isClearButtonDisabled, setIsClearButtonDisabled] = useState(true);
+  const [isApplyFilterDisabled, setIsApplyFilterDisabled] = useState(true);
+
+  const initialAdvancedSearchResponse = {
+    firstName: "",
+    lastName: "",
+    name: "",
+    email: "",
+    userType: "",
+    recordStatus: "",
+  };
+
+  const ACTIONS = {
+    UPDATE_FIRST_NAME: "updateFirstName",
+    UPDATE_LAST_NAME: "updateLastName",
+    UPDATE_NAME: "updateName",
+    UPDATE_EMAIL: "updateEmail",
+    UPDATE_USER_TYPE: "updateUserType",
+    UPDATE_RECORD_STATUS: "updateRecordStatus",
+    RESEST_STATE: "reset",
+  };
+
+  const advancedSearchFormReducer = (state, action) => {
+    switch (action?.type) {
+      case ACTIONS?.UPDATE_FIRST_NAME:
+        return { ...state, firstName: action?.payload?.value?.trim() };
+      case ACTIONS?.UPDATE_LAST_NAME:
+        return { ...state, lastName: action?.payload?.value?.trim() };
+      case ACTIONS?.UPDATE_NAME:
+        return { ...state, name: action?.payload?.value?.trim() };
+      case ACTIONS?.UPDATE_EMAIL:
+        return { ...state, email: action?.payload?.value?.trim() };
+      case ACTIONS?.UPDATE_USER_TYPE:
+        return { ...state, userType: action?.payload?.value };
+      case ACTIONS?.UPDATE_RECORD_STATUS:
+        return { ...state, recordStatus: action?.payload?.value };
+      case ACTIONS?.RESEST_STATE:
+        return initialAdvancedSearchResponse;
+    }
+  };
+  const [advancedFormResponseState, advancedFormResponseDispatch] = useReducer(
+    advancedSearchFormReducer,
+    initialAdvancedSearchResponse
+  );
+
+  useEffect(() => {
+    console.log(advancedFormResponseState, "advancedFormResponseState");
+    if (
+      JSON.stringify(advancedFormResponseState) ==
+      JSON.stringify(initialAdvancedSearchResponse)
+    ) {
+      setIsApplyFilterDisabled(true);
+      setIsClearButtonDisabled(true);
+    } else {
+      setIsApplyFilterDisabled(false);
+      setIsClearButtonDisabled(false);
+    }
+  }, [advancedFormResponseState]);
 
   const OFFSET_SIZE_FOR_REQUEST = 150;
   const initialSearchSortParam = {
@@ -406,6 +468,118 @@ export const UserPage = () => {
     />
   );
 
+  const advancedSearchMenuItems = [
+    {
+      type: ADVANCED_SEARCH_MENU_OPTIONS?.TEXT,
+      header: "First Name",
+      value: "firstName",
+      textboxProps: {
+        validationCheck: () => void 0,
+        onPayloadChange: (firstNamePayload) => {
+          advancedFormResponseDispatch({
+            type: ACTIONS?.UPDATE_FIRST_NAME,
+            payload: firstNamePayload,
+          });
+        },
+      },
+      onChangeFunction: "",
+    },
+    {
+      type: ADVANCED_SEARCH_MENU_OPTIONS?.TEXT,
+      header: "Last Name",
+      value: "lastName",
+      textboxProps: {
+        validationCheck: () => void 0,
+        onPayloadChange: (lastNamePayload) => {
+          advancedFormResponseDispatch({
+            type: ACTIONS?.UPDATE_LAST_NAME,
+            payload: lastNamePayload,
+          });
+        },
+      },
+      onChangeFunction: "",
+    },
+    {
+      type: ADVANCED_SEARCH_MENU_OPTIONS?.TEXT,
+      header: "User Name",
+      value: "name",
+      textboxProps: {
+        validationCheck: () => void 0,
+        onPayloadChange: (namePayload) => {
+          advancedFormResponseDispatch({
+            type: ACTIONS?.UPDATE_NAME,
+            payload: namePayload,
+          });
+        },
+      },
+      onChangeFunction: "",
+    },
+    {
+      type: ADVANCED_SEARCH_MENU_OPTIONS?.TEXT,
+      header: "Email",
+      value: "email",
+      textboxProps: {
+        validationCheck: () => void 0,
+        onPayloadChange: (emailPayload) => {
+          advancedFormResponseDispatch({
+            type: ACTIONS?.UPDATE_EMAIL,
+            payload: emailPayload,
+          });
+        },
+      },
+      onChangeFunction: "",
+    },
+    {
+      type: ADVANCED_SEARCH_MENU_OPTIONS?.DROPDOWN,
+      header: "Status",
+      value: "recordStatus",
+      dropdownProps: {
+        width: "100%",
+        onItemSelect: (statusPayload) => {
+          advancedFormResponseDispatch({
+            type: ACTIONS?.UPDATE_RECORD_STATUS,
+            payload: statusPayload,
+          });
+        },
+        dropdownItems: STATUS_DROPDOWN,
+      },
+      onChangeFunction: "",
+    },
+    {
+      type: ADVANCED_SEARCH_MENU_OPTIONS?.DROPDOWN,
+      header: "User Type",
+      value: "userType",
+      dropdownProps: {
+        width: "100%",
+        onItemSelect: (userTypePayload) => {
+          advancedFormResponseDispatch({
+            type: ACTIONS?.UPDATE_USER_TYPE,
+            payload: userTypePayload,
+          });
+        },
+        dropdownItems: USER_TYPE_DROPWDOWN,
+      },
+      onChangeFunction: "",
+    },
+    // {
+    //   type: ADVANCED_SEARCH_MENU_OPTIONS?.DATE,
+    //   header: "Created between",
+    //   value: "createdOn",
+    //   textboxProps: {
+    //     validationCheck: () => void 0,
+    //     onPayloadChange: () => void 0,
+    //   },
+    //   onChangeFunction: "",
+    // },
+  ];
+
+  const handleApplyFilterButtonClick = () => {};
+  const handleClearButtonClick = () => {
+    advancedFormResponseDispatch({
+      type: ACTIONS?.RESEST_STATE,
+    });
+  };
+
   const userPageProps = {
     headerTitle: constantStrings?.USER_PAGE_HEADER_TITLE,
     handleHeaderButton: handleHeaderButton,
@@ -425,6 +599,13 @@ export const UserPage = () => {
     SearchbarAcion: (text) => handleSearchBarAction(text),
     searchBoxPlaceholder: placeholderStrings?.SEARCH_BAR_USER_PAGE,
     showAdvancedSearch: true,
+    handleAdvancedSearch: () => void 0,
+    advancedSearchMenuItems: advancedSearchMenuItems,
+    isClearButtonDisabled: isClearButtonDisabled,
+    isApplyFilterDisabled: isApplyFilterDisabled,
+    handleApplyFilterButtonClick: handleApplyFilterButtonClick,
+    handleClearButtonClick: handleClearButtonClick,
+    advancedSearchValues: advancedFormResponseState,
   };
   if (!isLoading) {
     return <MainPage {...userPageProps} />;

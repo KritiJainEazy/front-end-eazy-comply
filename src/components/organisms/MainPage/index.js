@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   MainPageBodyContainer,
   HeaderContainer,
@@ -11,6 +11,8 @@ import { Button } from "../../molecules/Button";
 import Box from "../../atoms/box.atom";
 import { SearchBox } from "../../molecules/SearchBox";
 import AdvancedSearchBoxIcon from "../../../assets/advance filter.png";
+import { AdvancedSearchModal } from "../../molecules/AdvancedSearchModal";
+import { constantStrings } from "../../../constants/magicString";
 
 export const MainPage = ({
   headerTitle = "",
@@ -29,15 +31,23 @@ export const MainPage = ({
   showAdvancedSearch = false,
   SearchbarAcion = () => void 0,
   searchBoxPlaceholder = "",
+  advancedSearchMenuItems = [],
+  isClearButtonDisabled = true,
+  isApplyFilterDisabled = true,
+  handleClearButtonClick = () => void 0,
+  handleApplyFilterButtonClick = () => void 0,
+  advancedSearchValues = {},
 }) => {
+  const [isAdvancedSearchOpen, setIsAdvancedSearchOpen] = useState(false);
+  const handleAdvancedSearchClick = (e) => {
+    e.stopPropagation();
+    setIsAdvancedSearchOpen(!isAdvancedSearchOpen);
+  };
   return (
     <MainPageBodyContainer>
       <HeaderContainer>
         <Header>
-          <HeaderTitle>
-            {/* <BackButton src={BackButtonIcon}></BackButton> */}
-            {headerTitle}
-          </HeaderTitle>
+          <HeaderTitle>{headerTitle}</HeaderTitle>
           <Box display="flex">
             {showSearchBar && (
               <SearchBox
@@ -48,10 +58,32 @@ export const MainPage = ({
               />
             )}
             {showAdvancedSearch && (
-              <Box ml="1.25rem" height = "3.5rem">
+              <Box
+                ml="1.25rem"
+                height="3.5rem"
+                onClick={handleAdvancedSearchClick}
+                position="relative"
+              >
                 <img height="100%" src={AdvancedSearchBoxIcon} />
+                {isAdvancedSearchOpen && (
+                  <AdvancedSearchModal
+                    advancedSearchMenu={advancedSearchMenuItems}
+                    clearButtonText={constantStrings?.CLEAR}
+                    applyFilterText={constantStrings?.APPLY_FILTER}
+                    handleCloseModal={() => setIsAdvancedSearchOpen(false)}
+                    handleClearButtonClick={() => handleClearButtonClick()}
+                    handleApplyFilterButtonClick={() => {
+                      handleApplyFilterButtonClick();
+                      setIsAdvancedSearchOpen(false);
+                    }}
+                    isClearButtonDisabled={isClearButtonDisabled}
+                    isApplyFilterDisabled={isApplyFilterDisabled}
+                    advancedSearchValues={advancedSearchValues}
+                  />
+                )}
               </Box>
             )}
+
             {showHeaderButton && (
               <Button
                 margin="0 0 0 2.5em"

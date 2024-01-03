@@ -12,7 +12,6 @@ export const NavbarContainer = styled(Box)`
   border-bottom: 2px solid #e5e7eb;
   position: fixed;
   top: 0;
-  z-index: 1;
 `;
 
 export const LeftContainer = styled(Box)`
