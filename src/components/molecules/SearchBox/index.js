@@ -6,9 +6,11 @@ import { TextboxInputField } from "../TextBox/styles.textbox";
 export const SearchBox = ({
   width = "100%",
   height = "",
+  inputFieldHeight = "",
   searchBarIconHeight = "",
   searchAction = () => {},
   placeholder = "Search",
+  searchWhileTyping = false,
 }) => {
   const [searchedText, setSearchedText] = useState();
   const inputRef = useRef();
@@ -28,12 +30,12 @@ export const SearchBox = ({
 
   const handleSearchBoxInput = (e) => {
     setSearchedText(e.target.value);
+    if (searchWhileTyping) {
+      searchAction(e.target.value);
+    }
   };
   return (
-    <SearchBoxContainer
-      width={width}
-      height={height}
-    >
+    <SearchBoxContainer width={width} height={height}>
       <SearchBarIconContainer
         src={SearchbarIcon}
         onClick={handleSearchAction}
@@ -41,6 +43,7 @@ export const SearchBox = ({
       />
       <TextboxInputField
         placeholder={placeholder}
+        height={inputFieldHeight}
         border="none"
         focusBorder="none"
         onChange={handleSearchBoxInput}

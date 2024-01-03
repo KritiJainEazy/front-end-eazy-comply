@@ -11,6 +11,8 @@ import {
   DropdownErrorMessage,
 } from "./styles.dropdown";
 import DownArrow from "../../../assets/down-arrow-solid.png";
+import { SearchBox } from "../SearchBox";
+import { constantStrings } from "../../../constants/magicString";
 
 const Dropdown = ({
   width = "",
@@ -25,17 +27,22 @@ const Dropdown = ({
   isRequiredErrorMessage,
   border = "none",
 }) => {
+  const ELIGIBLE_SEARCH_LIMIT = 1;
   const dropdownRef = useRef(null);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(dropdownFieldBoxHeader);
   const [isValidationError, setIsValidationError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("is required");
+  const [dropdownItemsToShow, setDropDownItemsToShow] = useState(dropdownItems);
+
+  const isSearchable = dropdownItems?.length > ELIGIBLE_SEARCH_LIMIT;
 
   const handleDropdownOpen = () => {
     setDropdownOpen(true);
   };
   const handleDropdownClose = (isItemSelected = false) => {
     setDropdownOpen(false);
+    setDropDownItemsToShow(dropdownItems);
 
     if (isItemSelected) {
       setIsValidationError(false);
@@ -68,6 +75,15 @@ const Dropdown = ({
     handleDropdownClose(true);
   };
 
+  const handleSearch = (searchedItem) => {
+    const newDropdown = dropdownItems?.filter((item) => {
+      return item?.title?.toLowerCase()?.includes(searchedItem?.toLowerCase());
+    });
+    setDropDownItemsToShow(newDropdown);
+
+    console.log(dropdownItemsToShow, dropdownItems, "dropdownItemsshjdf");
+  };
+
   return (
     <DropdownBoxContainer width={width} height={height} ref={dropdownRef}>
       {title && <DropdownTitle>{title}</DropdownTitle>}
@@ -78,7 +94,38 @@ const Dropdown = ({
         </DropdownFieldBox>
         {isDropdownOpen && (
           <DropdownMenuContainer>
-            {dropdownItems?.map((dropdownItem, index) => {
+            {isSearchable && (
+              <SearchBox
+                width="100%"
+                height="1.8rem"
+                inputFieldHeight="1.3rem"
+                searchAction={(searchedItem) => {
+                  handleSearch(searchedItem);
+                }}
+                placeholder="Search"
+                searchWhileTyping={true}
+              />
+            )}
+            {dropdownItemsToShow?.length ? (
+              <>
+                {dropdownItemsToShow?.map((dropdownItem, index) => {
+                  return (
+                    <DropdownMenuItem
+                      key={`dropdownKey_${index}`}
+                      onClick={() => handleItemSelect(dropdownItem)}
+                      isSelected={selectedValue == dropdownItem?.title}
+                    >
+                      {dropdownItem?.title}
+                    </DropdownMenuItem>
+                  );
+                })}
+              </>
+            ) : (
+              <DropdownMenuItem>
+                {constantStrings?.NO_FIELD_FOUND}
+              </DropdownMenuItem>
+            )}
+            {/* {dropdownItemsToShow?.map((dropdownItem, index) => {
               return (
                 <DropdownMenuItem
                   key={`dropdownKey_${index}`}
@@ -88,7 +135,7 @@ const Dropdown = ({
                   {dropdownItem?.title}
                 </DropdownMenuItem>
               );
-            })}
+            })} */}
           </DropdownMenuContainer>
         )}
       </DropdownContainer>

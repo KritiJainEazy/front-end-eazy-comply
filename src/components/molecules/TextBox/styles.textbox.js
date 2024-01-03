@@ -21,6 +21,7 @@ export const TextboxTitle = styled(Box)`
 export const TextboxInputField = styled.input`
   ref: ${(props) => props?.ref};
   width: 100%;
+  height: ${(props) => props?.height};
   line-height: 1.5rem;
   font-size: 0.9rem;
   padding: ${(props) => props?.padding || "8px 10px"};

@@ -9,6 +9,7 @@ export const constantStrings = {
   DEFAULT_SUCCESS_MESSAGE: "Request successful!",
   EXPORT: "Export",
   NA: "NA",
+  NO_FIELD_FOUND: "No field found",
   TABLE_ACTION_MENU: "userActionMenu",
   USER_PAGE_EXPORT_FILENAME: "User Details",
   USER_PAGE_HEADER_BUTTON_TITLE: "Create",
