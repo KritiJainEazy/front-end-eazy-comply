@@ -573,7 +573,9 @@ export const UserPage = () => {
     // },
   ];
 
-  const handleApplyFilterButtonClick = () => {};
+  const handleApplyFilterButtonClick = () => {
+    console.log(advancedFormResponseState);
+  };
   const handleClearButtonClick = () => {
     advancedFormResponseDispatch({
       type: ACTIONS?.RESEST_STATE,
